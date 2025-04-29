@@ -1,0 +1,8 @@
+# Api
+fastapi==0.115.12
+yadisk==3.2.0
+aiofiles==24.1.0
+aiohttp==3.11.18
+
+# Pipeline video
+ffmpeg-python==0.2.0
