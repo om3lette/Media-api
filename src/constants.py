@@ -13,4 +13,4 @@ OUT_FOLDER: Path = PROJECT_ROOT_PATH / "out"
 # NUL for windows, /dev/null for linux
 NULL_PATH: Path = Path("NUL") if os.name == "nt" else Path("/dev/null")
 
-DEFAULT_WHISPER_MODEL: WhisperModelType = WhisperModelType.SMALL
+DEFAULT_WHISPER_MODEL: WhisperModelType = WhisperModelType.TURBO
