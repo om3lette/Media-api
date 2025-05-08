@@ -85,7 +85,7 @@ class VideoRequestsHandler:
         request_id: str = request.get_video_id()
         logger.info(f"Starting to process request: {request_id}")
         raw_file_path: Path = input_path_from_request_id(request_id)
-
+        # transcription
         # Recreate the request folder
         if raw_file_path.parent.is_dir():
             shutil.rmtree(raw_file_path.parent)

@@ -13,5 +13,5 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt --no-cache-dir --upgrade
 
 COPY src src
-EXPOSE 30000
-ENTRYPOINT ["uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "30000"]
+EXPOSE 8000
+ENTRYPOINT ["uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
