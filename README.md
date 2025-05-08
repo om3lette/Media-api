@@ -6,7 +6,7 @@ Originally made for automatic compression and transcription of lecture footage
 
 ### Locally
 
-`virtualenv` package is required to proceed\
+`virtualenv` package is required to proceed. [ffmpeg](https://www.ffmpeg.org/download.html) must also be present\
 Note that dependencies for the project exceed 6gb in size, if `/tmp` runs out of space one can create a folder elsewhere and
 [specify](https://stackoverflow.com/a/67123076/20957519) `TMPDIR` env for `pip install`.
 ```bash
