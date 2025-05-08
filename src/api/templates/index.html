@@ -92,10 +92,10 @@
                     if (res.status === 200) {
                         clearInterval(pollHandle);
                         submitBtn.disabled = false;
-                        showNotification("✅ Видео готово к загрузке!");
-                        downloadBtn.href = `v1/videos/download/?request_id=${requestId}`;
+                        showNotification("✅ Запрос обработан!");
+                        downloadBtn.href = `/output/${requestId}`;
                         downloadBtn.style.display = "block";
-                    } else if (res.status === 102) {
+                    } else if (res.status === 204) {
                         showNotification("Обрабатывается…");
                     } else if (res.status === 202) {
                         showNotification("В очереди…");

@@ -7,7 +7,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from src.api.templates.router import static_router
 from src.api.video.router import video_router
-from src.api.video.handlers import video_requests_handler
+from src.api.video.handlers import video_requests_handler, audio_helper
 
 logging.basicConfig(
     level=logging.INFO,
@@ -18,6 +18,7 @@ logging.basicConfig(
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     asyncio.create_task(video_requests_handler.start())
+    audio_helper.load_model()
     yield
     await video_requests_handler.queue.join()
 
@@ -26,7 +27,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=['*'],
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers=["*"]
 )
 
 app_router: APIRouter = APIRouter()

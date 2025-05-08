@@ -7,7 +7,7 @@ def preflight(video_stream: VideoStream, audio_stream: AudioStream, out_path: Ou
         .output(
             video_stream,
             audio_stream,
-            NULL_PATH,
+            str(NULL_PATH),
             vcodec='libx265',
             preset='medium',
             b='2500k',

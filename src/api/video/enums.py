@@ -2,6 +2,7 @@ from enum import IntEnum
 
 class VideoRequestType(IntEnum):
     COMPRESS = 0
+    COMPRESS_AND_TRANSCRIBE = 1
 
 class VideoProcessCodes(IntEnum):
     OK = 0
