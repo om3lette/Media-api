@@ -1,10 +1,11 @@
+from src.app_config import app_config
 from src.pipeline.types import VideoStream, AudioStream
 
 def normalize(video_stream: VideoStream, audio_stream: AudioStream) -> tuple[VideoStream, AudioStream]:
     filtered_video: VideoStream = (
         video_stream
-        .filter('scale', 1920, 1080, flags='lanczos')
-        .filter('fps', 24)
+        .filter('scale', app_config.ffmpeg.quality.width, app_config.ffmpeg.quality.height, flags='lanczos')
+        .filter('fps', app_config.ffmpeg.fps)
     )
     normalized_audio: AudioStream = (
         audio_stream

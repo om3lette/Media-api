@@ -8,6 +8,7 @@ from src.api.video.enums import VideoRequestType, VideoProcessCodes, FileRetriev
 from src.api.video.services.YaDiskHelper import YaDiskHelper
 from src.api.video.utils import out_path_from_request_id, input_path_from_request_id, audio_path_from_request_id, \
     transcription_path_from_request_id
+from src.app_config import app_config
 from src.pipeline.render import RendererBuilder, Renderer
 from src.pipeline.ffmpeg_utils import jobs, preprocessors, postprocessors
 
@@ -29,6 +30,10 @@ class VideoRequestsHandler:
             return VideoProcessCodes.ALREADY_QUEUED
         request_id: str = request.get_video_id()
         out_path: Path = out_path_from_request_id(request_id)
+
+        if app_config.dev_mode and out_path.parent.is_dir():
+            shutil.rmtree(out_path.parent)
+
         if request_type == VideoRequestType.COMPRESS and out_path.is_file():
             return VideoProcessCodes.ALREADY_PROCESSED
 
@@ -60,7 +65,6 @@ class VideoRequestsHandler:
         if request_type == VideoRequestType.COMPRESS:
             return (
                 RendererBuilder().use_file(str(file_path))
-                    .add_preprocessor(preprocessors.normalize)
                     .add_job(jobs.preflight)
                     .add_job(jobs.compress)
                     .build()
@@ -85,12 +89,13 @@ class VideoRequestsHandler:
         request_id: str = request.get_video_id()
         logger.info(f"Starting to process request: {request_id}")
         raw_file_path: Path = input_path_from_request_id(request_id)
-        # transcription
-        # Recreate the request folder
-        if raw_file_path.parent.is_dir():
-            shutil.rmtree(raw_file_path.parent)
+
         os.makedirs(raw_file_path.parent, exist_ok=True)
-        os.makedirs(out_path_from_request_id(request_id).parent, exist_ok=True)
+        # Recreate the request folder
+        out_dir: Path = out_path_from_request_id(request_id).parent
+        if out_dir.is_dir():
+            shutil.rmtree(out_dir)
+        os.makedirs(out_dir)
 
         if not raw_file_path.is_file():
             return_code: FileRetrievalCodes = await self.ya_disk_helper.get_file_by_url(request.video_url, raw_file_path)

@@ -1,4 +1,3 @@
-import ffmpeg
 import logging
 import os
 
@@ -24,7 +23,7 @@ class Renderer:
 
         for preprocessor in self.preprocessors:
             logger.info(f"Running preprocessor: {preprocessor.__name__}")
-            preprocessor(video_stream, audio_stream)
+            video_stream, audio_stream = preprocessor(video_stream, audio_stream)
 
         for job in self.jobs:
             logger.info(f"Running job: {job.__name__}")

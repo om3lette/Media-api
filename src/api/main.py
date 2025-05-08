@@ -1,5 +1,4 @@
 import asyncio
-import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, APIRouter
@@ -8,17 +7,14 @@ from starlette.middleware.cors import CORSMiddleware
 from src.api.templates.router import static_router
 from src.api.video.router import video_router
 from src.api.video.handlers import video_requests_handler, audio_helper
+from src.app_config import app_config
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(name)s - %(message)s",
-    datefmt="%H:%M:%S %d-%m-%Y"
-)
+# Logging is set up in src/app_config.py
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     asyncio.create_task(video_requests_handler.start())
-    audio_helper.load_model()
+    audio_helper.load_model(app_config.transcription.model)
     yield
     await video_requests_handler.queue.join()
 

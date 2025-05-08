@@ -4,14 +4,13 @@ import os
 from pathlib import Path
 
 from src.api.video.utils import get_transcription_filename
-from src.constants import DEFAULT_WHISPER_MODEL
 
 logger = logging.getLogger(os.path.basename(__file__))
 
 class Transcriber:
     _model: whisper.Whisper
 
-    def load_model(self, model_name: str = DEFAULT_WHISPER_MODEL):
+    def load_model(self, model_name: str):
         """Preloads the given model into memory"""
         logger.info(f"Loading {model_name} model...")
         self._model = whisper.load_model(model_name, in_memory=True)

@@ -4,3 +4,7 @@ __pycache__
 .venv
 data
 out
+
+config.yaml
+*.log
+*.log.mbtree
