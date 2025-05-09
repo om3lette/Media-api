@@ -3,18 +3,23 @@ import logging
 import os
 from pathlib import Path
 
+from src.api.request_helpers.BaseHelper import BaseHelper
 from src.api.video.utils import get_transcription_filename
+from src.config.ConfigParser import ConfigParser
 
 logger = logging.getLogger(os.path.basename(__file__))
 
-class Transcriber:
+class TranscriptionHelper(BaseHelper):
     _model: whisper.Whisper
 
-    def load_model(self, model_name: str):
+    def __init__(self):
+        super().__init__("transcriber")
+
+    async def init(self, app_config: ConfigParser):
         """Preloads the given model into memory"""
-        logger.info(f"Loading {model_name} model...")
-        self._model = whisper.load_model(model_name, in_memory=True)
-        logger.info(f"{model_name} model loaded!")
+        logger.info(f"Loading {app_config.transcription.model} model...")
+        self._model = whisper.load_model(app_config.transcription.model, in_memory=True)
+        logger.info(f"{app_config.transcription.model} model loaded!")
 
     def transcribe(self, file_path: Path) -> Path:
         if self._model is None:

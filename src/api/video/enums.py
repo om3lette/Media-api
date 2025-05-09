@@ -1,8 +1,8 @@
-from enum import IntEnum
+from enum import IntEnum, StrEnum
 
-class VideoRequestType(IntEnum):
-    COMPRESS = 0
-    COMPRESS_AND_TRANSCRIBE = 1
+class VideoRequestType(StrEnum):
+    COMPRESS = "compress"
+    COMPRESS_AND_TRANSCRIBE = "compress&transcribe"
 
 class VideoProcessCodes(IntEnum):
     OK = 0

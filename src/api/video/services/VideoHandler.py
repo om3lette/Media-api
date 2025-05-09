@@ -2,28 +2,34 @@ import os
 import logging
 import shutil
 from pathlib import Path
-from typing import Optional
 
+from src.api.request_helpers.HelpersHandler import HelpersHandler
 from src.api.video.enums import VideoRequestType, VideoProcessCodes, FileRetrievalCodes
-from src.api.video.services.YaDiskHelper import YaDiskHelper
+from src.api.video.schemas.requests.types import RequestHelper
 from src.api.video.utils import out_path_from_request_id, input_path_from_request_id, audio_path_from_request_id, \
     transcription_path_from_request_id
 from src.app_config import app_config
-from src.pipeline.render import RendererBuilder, Renderer
-from src.pipeline.ffmpeg_utils import jobs, preprocessors, postprocessors
 
-from src.api.video.schemas import VideoRequest
+from src.api.video.schemas import VideoRequest, RequestHandler
 from src.api.video.services.RequestQueue import RequestQueue
-from src.pipeline.transcription.Transcriber import Transcriber
 
 logger = logging.getLogger(os.path.basename(__file__))
 
 class VideoRequestsHandler:
     current_request_id: str = ""
-    def __init__(self, ya_disk_helper: YaDiskHelper, audio_helper: Transcriber):
+
+    def __init__(self, helpers_handler: HelpersHandler):
         self.queue: RequestQueue = RequestQueue()
-        self.ya_disk_helper = ya_disk_helper
-        self.audio_helper = audio_helper
+        self._handlers: list[RequestHandler] = []
+        self._helpers: HelpersHandler = helpers_handler
+
+    def register_request_handler(self, handler: RequestHandler):
+        logger.info(f"Registering {handler.event_type} request handler...")
+        self._handlers.append(handler)
+
+    async def register_request_helper(self, helper: RequestHelper):
+        logger.info(f"Initializing {helper.name} helper...")
+        await self._helpers.register_helper(helper)
 
     async def add_request(self, request: VideoRequest, request_type: VideoRequestType) -> VideoProcessCodes:
         if self.queue.exists(request.get_video_id()):
@@ -54,39 +60,19 @@ class VideoRequestsHandler:
             req, req_type, req_id = await self.queue.pop()
             self.current_request_id = req_id
             try:
-                await self._process_video(req, req_type)
+                await self._process_video(req, req.get_video_id(), req_type)
             except Exception as e:
                 logger.error(f"Error occurred when processing video:\n{e}")
             self.current_request_id = ""
             self.queue.task_done()
 
-    def _build_renderer(self, request_id: str, request_type: VideoRequestType, file_path: Path) -> Optional[Renderer]:
-        # TODO: Rewrite as a chain of responsibility
-        if request_type == VideoRequestType.COMPRESS:
-            return (
-                RendererBuilder().use_file(str(file_path))
-                    .add_job(jobs.preflight)
-                    .add_job(jobs.compress)
-                    .build()
-            )
-        if request_type == VideoRequestType.COMPRESS_AND_TRANSCRIBE:
-            return (
-                RendererBuilder().use_file(str(file_path))
-                    .add_preprocessor(preprocessors.normalize)
-                    .add_job(jobs.preflight)
-                    .add_job(jobs.compress)
-                    .add_postprocessor(postprocessors.extract_audio)
-                    .add_postprocessor(
-                        lambda x: self.audio_helper.transcribe(
-                            audio_path_from_request_id(request_id)
-                        )
-                    )
-                    .build()
-            )
-        return None
+    def _get_request_handler(self, request_type: VideoRequestType) -> RequestHandler:
+        for handler in self._handlers:
+            if handler.event_type == request_type:
+                return handler
+        raise NameError(f"Handler not found for request type: {request_type}")
 
-    async def _process_video(self, request: VideoRequest, request_type: VideoRequestType) -> VideoProcessCodes:
-        request_id: str = request.get_video_id()
+    async def _process_video(self, request: VideoRequest, request_id: str, request_type: VideoRequestType) -> VideoProcessCodes:
         logger.info(f"Starting to process request: {request_id}")
         raw_file_path: Path = input_path_from_request_id(request_id)
 
@@ -98,16 +84,13 @@ class VideoRequestsHandler:
         os.makedirs(out_dir)
 
         if not raw_file_path.is_file():
-            return_code: FileRetrievalCodes = await self.ya_disk_helper.get_file_by_url(request.video_url, raw_file_path)
+            return_code: FileRetrievalCodes = await self._helpers.get_helper_by_name("yadisk").get_file_by_url(request.video_url, raw_file_path)
             if return_code == FileRetrievalCodes.NOT_FOUND:
                return VideoProcessCodes.FILE_NOT_FOUND
         logger.info(f"Raw file retrieved")
-        renderer: Renderer = self._build_renderer(request_id, request_type, raw_file_path)
-        logger.info(f"Renderer created")
-        if renderer is None:
-            return VideoProcessCodes.UNKNOWN_ERROR
 
-        logger.info(f"Starting the renderer")
-        renderer.run(out_path_from_request_id(request_id))
+        request_handler = self._get_request_handler(request_type)
+        await request_handler.handle(self._helpers, request_id, raw_file_path)
+
         logger.info(f"Task done: {request_id}")
         return VideoProcessCodes.OK

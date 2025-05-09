@@ -1,2 +1,2 @@
 from .Compress import CompressRequestSchema
-from .types import VideoRequest
+from .types import VideoRequest, RequestHandler

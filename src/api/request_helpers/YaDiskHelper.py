@@ -4,13 +4,15 @@ from pydantic import HttpUrl
 from yadisk import AsyncClient
 from yadisk.exceptions import NotFoundError
 
+from src.api.request_helpers.BaseHelper import BaseHelper
 from src.api.video.enums import FileRetrievalCodes
 
 
-class YaDiskHelper:
+class YaDiskHelper(BaseHelper):
     client: AsyncClient
 
     def __init__(self):
+        super().__init__("yadisk")
         self.client = AsyncClient()
 
     async def get_file_by_url(self, url: HttpUrl, out_path: Path) -> FileRetrievalCodes:
