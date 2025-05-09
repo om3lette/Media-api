@@ -17,3 +17,13 @@ class VideoCodecs(StrEnum):
 class AudioCodecs(StrEnum):
 	MP3 = "libmp3lame"
 	AAC = "aac"
+
+class GigachatModels(StrEnum):
+	LITE = "GigaChat-2"
+	PRO  = "GigaChat-2-Pro"
+	Max  = "GigaChat-2-Max"
+
+class GigachatModelScopes(StrEnum):
+	PERS = "GIGACHAT_API_PERS"
+	B2B  = "GIGACHAT_API_B2B"
+	CORP = "GIGACHAT_API_CORP"

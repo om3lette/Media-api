@@ -4,7 +4,7 @@ from src.app_config import app_config
 from src.constants import PASSLOG_PATH
 from src.pipeline.types import VideoStream, AudioStream, OutputFilePath
 
-def compress(video_stream: VideoStream, audio_stream: AudioStream, out_path: OutputFilePath) -> bool:
+async def compress(video_stream: VideoStream, audio_stream: AudioStream, out_path: OutputFilePath) -> None:
     params = {
         "vcodec": app_config.ffmpeg.codecs.video,
         "preset": app_config.ffmpeg.preset,
@@ -19,4 +19,3 @@ def compress(video_stream: VideoStream, audio_stream: AudioStream, out_path: Out
     ffmpeg \
         .output(video_stream, audio_stream, str(out_path), **params) \
         .run()
-    return True

@@ -1,5 +1,4 @@
 import os
-import logging
 import shutil
 from pathlib import Path
 
@@ -12,8 +11,9 @@ from src.app_config import app_config
 
 from src.api.video.schemas import VideoRequest, RequestHandler
 from src.api.video.services.RequestQueue import RequestQueue
+from src.utils import get_logger_from_filepath
 
-logger = logging.getLogger(os.path.basename(__file__))
+logger = get_logger_from_filepath(__file__)
 
 class VideoRequestsHandler:
     current_request_id: str = ""
@@ -37,6 +37,7 @@ class VideoRequestsHandler:
         request_id: str = request.get_video_id()
         out_path: Path = out_path_from_request_id(request_id)
 
+        # Force reprocessing requests in dev mode
         if app_config.dev_mode and out_path.parent.is_dir():
             shutil.rmtree(out_path.parent)
 
@@ -77,7 +78,6 @@ class VideoRequestsHandler:
         raw_file_path: Path = input_path_from_request_id(request_id)
 
         os.makedirs(raw_file_path.parent, exist_ok=True)
-        # Recreate the request folder
         out_dir: Path = out_path_from_request_id(request_id).parent
         if out_dir.is_dir():
             shutil.rmtree(out_dir)

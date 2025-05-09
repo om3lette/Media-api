@@ -1,3 +1,4 @@
+from src.api.request_helpers.GigachatHelper import GigachatHelper
 from src.api.request_helpers.HelpersHandler import HelpersHandler
 from src.api.video.services.VideoHandler import VideoRequestsHandler
 from src.api.request_helpers.YaDiskHelper import YaDiskHelper
@@ -9,6 +10,7 @@ video_requests_handler: VideoRequestsHandler = VideoRequestsHandler(HelpersHandl
 
 async def register_video_helpers():
     await video_requests_handler.register_request_helper(YaDiskHelper())
+    await video_requests_handler.register_request_helper(GigachatHelper())
     await video_requests_handler.register_request_helper(TranscriptionHelper())
 
 def register_video_handlers():

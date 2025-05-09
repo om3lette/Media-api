@@ -1,10 +1,8 @@
-import logging
-import os
-
 from src.api.video.schemas.requests.types import RequestHelper
 from src.app_config import app_config
+from src.utils import get_logger_from_filepath
 
-logger = logging.getLogger(os.path.basename(__file__))
+logger = get_logger_from_filepath(__file__)
 
 class HelpersHandler:
     def __init__(self):

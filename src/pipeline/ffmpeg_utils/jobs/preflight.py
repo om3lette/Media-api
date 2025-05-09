@@ -5,7 +5,7 @@ from src.pipeline.types import VideoStream, AudioStream, OutputFilePath
 from src.constants import NULL_PATH, PASSLOG_PATH
 
 
-def preflight(video_stream: VideoStream, audio_stream: AudioStream, out_path: OutputFilePath) -> bool:
+async def preflight(video_stream: VideoStream, audio_stream: AudioStream, out_path: OutputFilePath) -> None:
     params = {
         "vcodec":  app_config.ffmpeg.codecs.video,
         "preset": app_config.ffmpeg.preset,

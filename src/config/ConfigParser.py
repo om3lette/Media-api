@@ -1,5 +1,3 @@
-import os
-import logging
 import yaml
 
 from typing import Self
@@ -8,9 +6,11 @@ from pydantic import Field
 
 from src.config.schemas.BaseEnumModel import BaseEnumModel
 from src.config.schemas.ffmpeg import FFMPEGProperties
+from src.config.schemas.summary import SummarySchema
 from src.config.schemas.transcription import TranscriptionSchema
+from src.utils import get_logger_from_filepath
 
-logger = logging.getLogger(os.path.basename(__file__))
+logger = get_logger_from_filepath(__file__)
 
 try:
 	from yaml import CLoader as Loader
@@ -19,9 +19,10 @@ except ImportError:
 
 
 class ConfigParser(BaseEnumModel):
+	dev_mode: bool = Field(default=False)
 	ffmpeg: FFMPEGProperties = Field(default_factory=FFMPEGProperties)
 	transcription: TranscriptionSchema = Field(default_factory=TranscriptionSchema)
-	dev_mode: bool = Field(default=False)
+	summary: SummarySchema = Field(default_factory=SummarySchema)
 
 	def model_save_yaml(self, save_path: Path) -> None:
 		with open(save_path, "w") as f:

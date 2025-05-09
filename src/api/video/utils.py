@@ -2,7 +2,8 @@ from typing import Union
 from pathlib import Path
 
 from src.api.video.constants import OUT_FILE_EXTENSION, INPUT_FILENAME, OUT_FILENAME, AUDIO_FILENAME, \
-    OUT_AUDIO_FILE_EXTENSION, OUT_TRANSCRIPTION_FILE_EXTENSION, TRANSCRIPTION_FILENAME
+    OUT_AUDIO_FILE_EXTENSION, OUT_TRANSCRIPTION_FILE_EXTENSION, TRANSCRIPTION_FILENAME, SUMMARY_FILENAME, \
+    OUT_SUMMARY_FILE_EXTENSION
 from src.constants import DATA_FOLDER, OUT_FOLDER
 
 def file_path_from_name(
@@ -30,3 +31,6 @@ def transcription_path_from_request_id(request_id: str, filename: str = TRANSCRI
 
 def get_transcription_filename() -> str:
     return TRANSCRIPTION_FILENAME + "." + OUT_TRANSCRIPTION_FILE_EXTENSION
+
+def get_summary_filename() -> str:
+    return SUMMARY_FILENAME + "." + OUT_SUMMARY_FILE_EXTENSION

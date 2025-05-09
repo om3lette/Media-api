@@ -1,13 +1,11 @@
-import logging
-import os
-
 from pathlib import Path
 
 from src import Renderer
 from src.api.video.enums import VideoRequestType, VideoProcessCodes
 from src.api.video.utils import out_path_from_request_id
+from src.utils import get_logger_from_filepath
 
-logger = logging.getLogger(os.path.basename(__file__))
+logger = get_logger_from_filepath(__file__)
 
 class BaseHandler:
     event_type: VideoRequestType
@@ -27,6 +25,6 @@ class BaseHandler:
             return VideoProcessCodes.UNKNOWN_ERROR
 
         logger.info(f"Starting the renderer")
-        renderer.run(out_path_from_request_id(request_id))
+        await renderer.run(out_path_from_request_id(request_id))
 
         return VideoProcessCodes.OK
