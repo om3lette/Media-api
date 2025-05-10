@@ -1,17 +1,8 @@
-from enum import IntEnum, StrEnum
+from enum import StrEnum
 
 class VideoRequestType(StrEnum):
-    COMPRESS = "compress"
-    COMPRESS_AND_TRANSCRIBE = "compress&transcribe"
-
-class VideoProcessCodes(IntEnum):
-    OK = 0
-    QUEUE_FULL = 1
-    ALREADY_QUEUED = 2
-    ALREADY_PROCESSED = 3
-    UNKNOWN_ERROR = 4
-    FILE_NOT_FOUND = 5
-
-class FileRetrievalCodes(IntEnum):
-    OK = 0
-    NOT_FOUND = 1
+    COMPRESS      = "video_compress"
+    TRANSCRIBE    = "video_transcribe"
+    EXTRACT_AUDIO = "video_extract_audio"
+    SUMMARIZE     = "video_summarize"
+    CUSTOM        = "video_custom"

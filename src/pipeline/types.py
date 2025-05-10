@@ -7,6 +7,9 @@ AudioStream = FilterableStream
 
 OutputFilePath = Path
 
+RequestDataDir = Path
+RequestOutDir = Path
+
 Preprocessor = Callable[[VideoStream, AudioStream], Awaitable[tuple[VideoStream, AudioStream]]]
 Job = Callable[[VideoStream, AudioStream, OutputFilePath], Awaitable[None]]
-Postprocessor = Callable[[OutputFilePath], Awaitable[None]]
+Postprocessor = Callable[[RequestDataDir, RequestOutDir], Awaitable[None]]

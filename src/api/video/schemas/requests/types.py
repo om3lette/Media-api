@@ -1,8 +1,8 @@
 from src.api.request_helpers.BaseHelper import BaseHelper
-from src.api.video.services.request_handlers.BaseHandler import BaseHandler
-from .Compress import CompressRequestSchema
+from src.api.common.services.BaseHandler import BaseHandler
+from .Compress import VideoRequestSchema
 
-VideoRequest = CompressRequestSchema
+VideoRequest = VideoRequestSchema
 
 RequestHandler = BaseHandler
 RequestHelper = BaseHelper

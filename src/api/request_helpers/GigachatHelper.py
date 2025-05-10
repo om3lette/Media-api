@@ -4,7 +4,7 @@ from gigachat import GigaChat
 from gigachat.models import Messages, MessagesRole, Chat
 
 from src.api.request_helpers.BaseHelper import BaseHelper
-from src.api.video.utils import get_summary_filename
+from src.api.common.utils import get_summary_filename
 from src.app_config import app_config, SYSTEM_PROMPT
 from src.config.enums import GigachatModels
 from src.utils import get_logger_from_filepath
@@ -43,4 +43,4 @@ class GigachatHelper(BaseHelper):
             ]
             chat = Chat(messages=messages)
             response = await giga.achat(chat)
-            self._write_output(response.choices[0].message.content)
+            self._write_output(transcription_path, response.choices[0].message.content)

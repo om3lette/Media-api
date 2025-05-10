@@ -1,6 +1,6 @@
 from pydantic import BaseModel, field_validator, HttpUrl
 
-class CompressRequestSchema(BaseModel):
+class VideoRequestSchema(BaseModel):
     video_url: HttpUrl
 
     @field_validator("video_url")

@@ -1,19 +1,18 @@
-import logging
 from pathlib import Path
 
 from src import Renderer, RendererBuilder
 from src.api.request_helpers.GigachatHelper import GigachatHelper
 from src.api.request_helpers.HelpersHandler import HelpersHandler
 from src.api.request_helpers.TranscriptionHelper import TranscriptionHelper
-from .BaseHandler import BaseHandler
+from src.api.common.services.BaseHandler import BaseHandler
 from src.api.video.enums import VideoRequestType
 from src.pipeline.ffmpeg_utils import jobs, preprocessors, postprocessors
-from src.api.video.utils import audio_path_from_request_id, transcription_path_from_request_id
+from src.api.common.utils import audio_path_from_request_id, transcription_path_from_request_id, get_audio_filename
 
 
-class CompressAndTranscribeHandler(BaseHandler):
+class SummarizeHandler(BaseHandler):
     def __init__(self):
-        super().__init__(VideoRequestType.COMPRESS_AND_TRANSCRIBE)
+        super().__init__(VideoRequestType.SUMMARIZE)
 
     def _build_renderer(self, helpers: HelpersHandler, request_id: str, raw_file_path: Path) -> Renderer:
         transcription_helper: TranscriptionHelper = helpers.get_helper_by_name("transcriber")
@@ -24,13 +23,12 @@ class CompressAndTranscribeHandler(BaseHandler):
             )
         async def summarize(*args):
             await gigachat_helper.summarize(transcription_path_from_request_id(request_id))
+        async def extract_audio(req_data_dir, req_out_dir):
+            await postprocessors.extract_audio(raw_file_path, req_out_dir / get_audio_filename())
         return (
             RendererBuilder()
                 .use_file(str(raw_file_path))
-                .add_preprocessor(preprocessors.normalize)
-                .add_job(jobs.preflight)
-                .add_job(jobs.compress)
-                .add_postprocessor(postprocessors.extract_audio)
+                .add_postprocessor(extract_audio)
                 .add_postprocessor(transcribe)
                 .add_postprocessor(summarize)
         ).build()

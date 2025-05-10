@@ -5,7 +5,7 @@ from yadisk import AsyncClient
 from yadisk.exceptions import NotFoundError
 
 from src.api.request_helpers.BaseHelper import BaseHelper
-from src.api.video.enums import FileRetrievalCodes
+from src.api.common.enums import FileRetrievalCodes
 
 
 class YaDiskHelper(BaseHelper):

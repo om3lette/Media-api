@@ -2,7 +2,7 @@ import whisper
 from pathlib import Path
 
 from src.api.request_helpers.BaseHelper import BaseHelper
-from src.api.video.utils import get_transcription_filename
+from src.api.common.utils import get_transcription_filename
 from src.config.ConfigParser import ConfigParser
 from src.utils import get_logger_from_filepath
 
