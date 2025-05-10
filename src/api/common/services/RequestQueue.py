@@ -1,12 +1,15 @@
 import asyncio
 
-from src.api.video.enums import VideoRequestType
-from src.api.video.schemas import VideoRequest
+from src.api.common import RequestType
+from src.api.common.schemas.MediaRequest import MediaRequestDTO
 from src.api.video.constants import MAX_REQUESTS_BACKLOG
+
 
 class RequestQueue:
     def __init__(self, maxsize: int = MAX_REQUESTS_BACKLOG):
-        self._queue: asyncio.Queue[tuple[VideoRequest, VideoRequestType, str]] = asyncio.Queue(maxsize)
+        self._queue: asyncio.Queue[tuple[MediaRequestDTO, RequestType, str]] = (
+            asyncio.Queue(maxsize)
+        )
         # for quick existence checks or de‐duplication
         self._ids: set[str] = set()
 
@@ -26,7 +29,9 @@ class RequestQueue:
         """Check if a request with this ID is already in the backlog."""
         return request_id in self._ids
 
-    async def push(self, request: VideoRequest, request_type: VideoRequestType, request_id: str) -> bool:
+    async def push(
+        self, request: MediaRequestDTO, request_type: RequestType, request_id: str
+    ) -> bool:
         """
         Try to enqueue.  Returns False if queue is full or duplicate.
         """
@@ -41,7 +46,7 @@ class RequestQueue:
         self._ids.add(request_id)
         return True
 
-    async def pop(self) -> tuple[VideoRequest, VideoRequestType, str]:
+    async def pop(self) -> tuple[MediaRequestDTO, RequestType, str]:
         """
         Wait for the next request, remove its ID from the lookup, and return it.
         """

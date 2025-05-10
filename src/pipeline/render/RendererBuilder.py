@@ -5,6 +5,7 @@ from src.constants import DATA_FOLDER
 from src.pipeline.types import Job, Preprocessor, Postprocessor
 from src.pipeline.render import Renderer
 
+
 class RendererBuilder:
     def __init__(self):
         self._renderer: Renderer = Renderer(Path(), [], [], [])
@@ -26,6 +27,11 @@ class RendererBuilder:
         return self
 
     def build(self) -> Renderer:
-        if len(self._renderer.jobs) + len(self._renderer.preprocessors) + len(self._renderer.postprocessors) == 0:
+        if (
+            len(self._renderer.jobs)
+            + len(self._renderer.preprocessors)
+            + len(self._renderer.postprocessors)
+            == 0
+        ):
             raise RuntimeError("No jobs were registered for renderer")
         return self._renderer

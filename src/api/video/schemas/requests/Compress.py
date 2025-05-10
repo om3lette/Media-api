@@ -1,21 +1,13 @@
-from pydantic import BaseModel, field_validator, HttpUrl
+from pydantic import Field
 
-class CompressRequestSchema(BaseModel):
-    video_url: HttpUrl
+from src.api.common.schemas import MediaRequestSchema
+from src.app_config import app_config
+from src.config.schemas.ffmpeg import FFMPEGProperties
 
-    @field_validator("video_url")
-    @classmethod
-    def check_video_url_host(cls, value: HttpUrl) -> HttpUrl:
-        """Checks url for the following pattern: https://disk.yandex.ru/[a-zA-Z]/<ID>"""
-        split_path: list[str] = value.path.split("/")
-        if (
-                value.host != "disk.yandex.ru"
-                or len(split_path) != 3
-                or not split_path[-2].isalpha()
-                or len(split_path[-1]) != 14
-        ):
-            raise ValueError("Invalid Yandex Disk URL format")
-        return value
 
-    def get_video_id(self):
-        return self.video_url.path.split("/")[-1]
+class CompressConfig(FFMPEGProperties):
+    pass
+
+
+class CompressSchema(MediaRequestSchema):
+    config: CompressConfig = Field(default=app_config.ffmpeg)

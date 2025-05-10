@@ -1,8 +1,6 @@
 from pathlib import Path
 import os
 
-from src.pipeline.enums import WhisperModelType
-
 PROJECT_ROOT_PATH: Path = Path(__file__).resolve().parents[1]
 SRC_PATH: Path = PROJECT_ROOT_PATH / "src"
 TEMPLATES_PATH: Path = SRC_PATH / "api" / "templates"
