@@ -1,7 +1,8 @@
 import whisper
 from pathlib import Path
 
-from src.api.request_helpers.BaseHelper import BaseHelper
+from src.api.common.enums import RequestHelpersNames
+from src.api.common.request_helpers.BaseHelper import BaseHelper
 from src.api.common.utils import get_transcription_filename
 from src.config.ConfigParser import ConfigParser
 from src.utils import get_logger_from_filepath
@@ -12,7 +13,7 @@ class TranscriptionHelper(BaseHelper):
     _model: whisper.Whisper
 
     def __init__(self):
-        super().__init__("transcriber")
+        super().__init__(RequestHelpersNames.TRANSCRIPTION)
 
     async def init(self, app_config: ConfigParser):
         """Preloads the given model into memory"""

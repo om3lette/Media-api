@@ -3,7 +3,8 @@ from pathlib import Path
 from gigachat import GigaChat
 from gigachat.models import Messages, MessagesRole, Chat
 
-from src.api.request_helpers.BaseHelper import BaseHelper
+from src.api.common.enums import RequestHelpersNames
+from src.api.common.request_helpers.BaseHelper import BaseHelper
 from src.api.common.utils import get_summary_filename
 from src.app_config import app_config, SYSTEM_PROMPT
 from src.config.enums import GigachatModels
@@ -13,7 +14,7 @@ logger = get_logger_from_filepath(__file__)
 
 class GigachatHelper(BaseHelper):
     def __init__(self):
-        super().__init__("gigachat")
+        super().__init__(RequestHelpersNames.GIGACHAT)
 
     async def init(self, _):
         logger.info(f"Using {app_config.summary.model}")

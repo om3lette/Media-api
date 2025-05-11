@@ -1,4 +1,4 @@
-from src.api.video.schemas.requests.types import RequestHelper
+from src.api.common.request_helpers.BaseHelper import BaseHelper
 from src.app_config import app_config
 from src.utils import get_logger_from_filepath
 
@@ -6,9 +6,9 @@ logger = get_logger_from_filepath(__file__)
 
 class HelpersHandler:
     def __init__(self):
-        self._helpers: list[RequestHelper] = []
+        self._helpers: list[BaseHelper] = []
 
-    async def register_helper(self, helper: RequestHelper):
+    async def register_helper(self, helper: BaseHelper):
         self._helpers.append(helper)
         await helper.init(app_config)
 

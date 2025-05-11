@@ -16,12 +16,12 @@ from starlette.middleware.cors import CORSMiddleware
 
 from src.api.templates.router import static_router
 from src.api.video.router import video_router
-from src.api.common.handlers import global_requests_handler, register_video_helpers, register_video_handlers
+from src.api.common.handlers import global_requests_handler, register_helpers, register_handlers
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    register_video_handlers()
-    await register_video_helpers()
+    register_handlers()
+    await register_helpers()
 
     asyncio.create_task(global_requests_handler.start())
     yield

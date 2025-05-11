@@ -1,12 +1,13 @@
 from pathlib import Path
 
 from src import Renderer, RendererBuilder
-from src.api.request_helpers.GigachatHelper import GigachatHelper
-from src.api.request_helpers.HelpersHandler import HelpersHandler
-from src.api.request_helpers.TranscriptionHelper import TranscriptionHelper
+from src.api.common.enums import RequestHelpersNames
+from src.api.common.request_helpers.GigachatHelper import GigachatHelper
+from src.api.common.request_helpers.HelpersHandler import HelpersHandler
+from src.api.common.request_helpers import TranscriptionHelper
 from src.api.common.services.BaseHandler import BaseHandler
 from src.api.video.enums import VideoRequestType
-from src.pipeline.ffmpeg_utils import jobs, preprocessors, postprocessors
+from src.pipeline.ffmpeg_utils import postprocessors
 from src.api.common.utils import audio_path_from_request_id, transcription_path_from_request_id, get_audio_filename
 
 
@@ -15,8 +16,8 @@ class SummarizeHandler(BaseHandler):
         super().__init__(VideoRequestType.SUMMARIZE)
 
     def _build_renderer(self, helpers: HelpersHandler, request_id: str, raw_file_path: Path) -> Renderer:
-        transcription_helper: TranscriptionHelper = helpers.get_helper_by_name("transcriber")
-        gigachat_helper: GigachatHelper = helpers.get_helper_by_name("gigachat")
+        transcription_helper: TranscriptionHelper = helpers.get_helper_by_name(RequestHelpersNames.TRANSCRIPTION)
+        gigachat_helper: GigachatHelper = helpers.get_helper_by_name(RequestHelpersNames.GIGACHAT)
         async def transcribe(*args):
             transcription_helper.transcribe(
                 audio_path_from_request_id(request_id)

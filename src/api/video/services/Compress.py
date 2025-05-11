@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from src import Renderer, RendererBuilder
-from src.api.request_helpers.HelpersHandler import HelpersHandler
+from src.api.common.request_helpers.HelpersHandler import HelpersHandler
 from src.api.common.services.BaseHandler import BaseHandler
 from src.api.video.enums import VideoRequestType
 from src.pipeline.ffmpeg_utils import jobs, preprocessors

@@ -1,11 +1,12 @@
 from pathlib import Path
 
 from src import Renderer, RendererBuilder
-from src.api.request_helpers.HelpersHandler import HelpersHandler
-from src.api.request_helpers.TranscriptionHelper import TranscriptionHelper
+from src.api.common.enums import RequestHelpersNames
+from src.api.common.request_helpers.HelpersHandler import HelpersHandler
+from src.api.common.request_helpers import TranscriptionHelper
 from src.api.common.services.BaseHandler import BaseHandler
 from src.api.video.enums import VideoRequestType
-from src.pipeline.ffmpeg_utils import jobs, preprocessors, postprocessors
+from src.pipeline.ffmpeg_utils import postprocessors
 from src.api.common.utils import audio_path_from_request_id, get_audio_filename
 
 
@@ -14,7 +15,7 @@ class TranscriptionHandler(BaseHandler):
         super().__init__(VideoRequestType.TRANSCRIBE)
 
     def _build_renderer(self, helpers: HelpersHandler, request_id: str, raw_file_path: Path) -> Renderer:
-        transcription_helper: TranscriptionHelper = helpers.get_helper_by_name("transcriber")
+        transcription_helper: TranscriptionHelper = helpers.get_helper_by_name(RequestHelpersNames.TRANSCRIPTION)
         async def transcribe(*args):
             transcription_helper.transcribe(
                 audio_path_from_request_id(request_id)
