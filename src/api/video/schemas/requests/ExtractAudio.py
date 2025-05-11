@@ -13,8 +13,8 @@ class AudioSettings(BaseEnumModel):
 
 
 class ExtractAudioConfig(BaseEnumModel):
-    audio: AudioSettings
+    audio: AudioSettings = Field(default_factory=AudioSettings)
 
 
 class ExtractAudioSchema(MediaRequestSchema):
-    config: ExtractAudioConfig
+    config: ExtractAudioConfig = Field(default_factory=ExtractAudioConfig)

@@ -7,6 +7,7 @@ from src.api.common.request_helpers.HelpersHandler import HelpersHandler
 from src.api.common.request_helpers import TranscriptionHelper
 from src.api.common.services.BaseHandler import BaseHandler
 from src.api.video.enums import VideoRequestType
+from src.api.video.schemas.requests.ExtractAudio import ExtractAudioConfig
 from src.pipeline.ffmpeg_utils import postprocessors
 from src.api.common.utils import (
     audio_path_from_request_id,
@@ -37,9 +38,9 @@ class SummarizeHandler(BaseHandler):
                 transcription_path_from_request_id(request_id)
             )
 
-        async def extract_audio(req_data_dir, req_out_dir):
+        async def extract_audio(config, req_data_dir, req_out_dir):
             await postprocessors.extract_audio(
-                raw_file_path, req_out_dir / get_audio_filename()
+                ExtractAudioConfig(), raw_file_path, req_out_dir / get_audio_filename()
             )
 
         return (

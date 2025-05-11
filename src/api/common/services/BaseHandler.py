@@ -27,7 +27,11 @@ class BaseHandler:
         pass
 
     async def handle(
-        self, helpers: "HelpersHandler", request_id: str, raw_file_path: Path
+        self,
+        request_config,
+        helpers: "HelpersHandler",
+        request_id: str,
+        raw_file_path: Path,
     ) -> RequestProcessCodes:
         logger.info(f"Building renderer for {self.event_type} request")
         renderer: "Renderer" = self._build_renderer(helpers, request_id, raw_file_path)
@@ -37,6 +41,7 @@ class BaseHandler:
 
         logger.info("Starting the renderer")
         await renderer.run(
+            request_config,
             request_data_dir_from_id(request_id),
             request_out_dir_from_id(request_id),
             out_path_from_request_id(request_id),

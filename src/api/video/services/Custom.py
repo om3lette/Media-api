@@ -37,10 +37,10 @@ class CompressAndTranscribeHandler(BaseHandler):
                 transcription_path_from_request_id(request_id)
             )
 
-        async def extract_audio(req_data_dir, req_out_dir):
+        async def extract_audio(config, req_data_dir, req_out_dir):
             # TODO: Remove hardcode out.mp4
             await postprocessors.extract_audio(
-                req_out_dir / "out.mp4", req_out_dir / get_audio_filename()
+                config, req_out_dir / "out.mp4", req_out_dir / get_audio_filename()
             )
 
         return (

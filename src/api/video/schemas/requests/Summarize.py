@@ -11,8 +11,8 @@ class SummarySettings(BaseEnumModel):
 
 
 class SummarizeConfig(BaseEnumModel):
-    summary: SummarySettings
+    summary: SummarySettings = Field(default_factory=SummarySettings)
 
 
 class SummarizeSchema(MediaRequestSchema):
-    config: SummarizeConfig
+    config: SummarizeConfig = Field(default_factory=SummarizeConfig)

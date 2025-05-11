@@ -103,7 +103,9 @@ class GlobalRequestsHandler:
         logger.info("Input file retrieved")
 
         request_handler = self._get_request_handler(request_type)
-        await request_handler.handle(self._helpers, request_id, input_file_path)
+        await request_handler.handle(
+            dto.request.config, self._helpers, request_id, input_file_path
+        )
         logger.info("Render complete")
 
         # Cleanup input files
