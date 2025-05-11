@@ -87,7 +87,7 @@
                 if (!requestId) return;
                 try {
                     const res = await fetch(
-                        `v1/videos/status/?request_id=${requestId}`,
+                        `v1/status/?request_id=${requestId}`,
                     );
                     if (res.status === 200) {
                         clearInterval(pollHandle);
@@ -123,11 +123,27 @@
                 downloadBtn.style.display = "none";
 
                 try {
-                    const res = await fetch("v1/videos/compress/", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ video_url: url }),
-                    });
+                    const formData = new FormData();
+                    formData.append(
+                        "data",
+                        JSON.stringify({
+                            url,
+                            actions: [
+                                "video_compress",
+                                "video_transcribe",
+                                "video_extract_audio",
+                                "video_summarize"
+                            ],
+                        }),
+                    );
+
+                    const res = await fetch(
+                        "http://localhost:8081/v1/videos/custom/",
+                        {
+                            method: "POST",
+                            body: formData,
+                        },
+                    );
 
                     if (!res.ok) {
                         const err = await res.json();
