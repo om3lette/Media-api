@@ -5,11 +5,14 @@ from pathlib import Path
 
 from src.api.common import RequestType
 from src.api.common.file_helpers import BaseFileHelper
-from src.api.common.schemas import MediaRequestSchema
 from src.api.common.request_helpers.HelpersHandler import HelpersHandler
 from src.api.common.schemas.MediaRequest import MediaRequestDTO
 from src.api.video.enums import VideoRequestType
-from src.api.common.enums import RequestProcessCodes, FileRetrievalCodes, FileHelperNames
+from src.api.common.enums import (
+    RequestProcessCodes,
+    FileRetrievalCodes,
+    FileHelperNames,
+)
 from src.api.common.utils import out_path_from_request_id, input_path_from_request_id
 
 from src.api.common.types import RequestHandler, RequestHelper, FileHelper
@@ -18,6 +21,7 @@ from src.app_config import app_config
 from src.utils import get_logger_from_filepath
 
 logger = get_logger_from_filepath(__file__)
+
 
 class GlobalRequestsHandler:
     current_request_id: str = ""
@@ -40,7 +44,9 @@ class GlobalRequestsHandler:
         logger.info(f"Initializing {helper.name} helper...")
         await self._helpers.register_helper(helper)
 
-    async def add_request(self, request_id: str, request: MediaRequestDTO, request_type: RequestType) -> RequestProcessCodes:
+    async def add_request(
+        self, request_id: str, request: MediaRequestDTO, request_type: RequestType
+    ) -> RequestProcessCodes:
         if self.queue.exists(request_id):
             return RequestProcessCodes.ALREADY_QUEUED
 
@@ -56,7 +62,7 @@ class GlobalRequestsHandler:
         return RequestProcessCodes.OK if success else RequestProcessCodes.QUEUE_FULL
 
     async def start(self):
-        logger.info(f"Startup completed")
+        logger.info("Startup completed")
         while True:
             req, req_type, req_id = await self.queue.pop()
             self.current_request_id = req_id
@@ -82,15 +88,19 @@ class GlobalRequestsHandler:
             shutil.rmtree(out_dir)
         os.makedirs(out_dir)
 
-    async def _process_request(self, dto: MediaRequestDTO, request_id: str, request_type: VideoRequestType) -> RequestProcessCodes:
+    async def _process_request(
+        self, dto: MediaRequestDTO, request_id: str, request_type: VideoRequestType
+    ) -> RequestProcessCodes:
         logger.info(f"Starting to process request: {request_id}")
         input_file_path: Path = input_path_from_request_id(request_id)
 
-        return_code: FileRetrievalCodes = await self._retrieve_file(dto, input_file_path)
+        return_code: FileRetrievalCodes = await self._retrieve_file(
+            dto, input_file_path
+        )
         if return_code == FileRetrievalCodes.NOT_FOUND:
-            logger.info(f"Failed to retrieve input file")
+            logger.info("Failed to retrieve input file")
             return RequestProcessCodes.FILE_NOT_FOUND
-        logger.info(f"Input file retrieved")
+        logger.info("Input file retrieved")
 
         request_handler = self._get_request_handler(request_type)
         await request_handler.handle(self._helpers, request_id, input_file_path)
@@ -105,7 +115,9 @@ class GlobalRequestsHandler:
         logger.info(f"Task done: {request_id}")
         return RequestProcessCodes.OK
 
-    async def _retrieve_file(self, request_body: MediaRequestDTO, save_path: Path) -> FileRetrievalCodes:
+    async def _retrieve_file(
+        self, request_body: MediaRequestDTO, save_path: Path
+    ) -> FileRetrievalCodes:
         if save_path.is_file():
             return FileRetrievalCodes.OK
         helper_name: FileHelperNames = FileHelperNames.UPLOAD_FILE
@@ -114,6 +126,5 @@ class GlobalRequestsHandler:
         helper: BaseFileHelper = self._file_helpers.get_helper_by_name(helper_name)
 
         return await helper.retrieve_file(
-            request_body.request.url or request_body.file,
-            save_path
+            request_body.request.url or request_body.file, save_path
         )

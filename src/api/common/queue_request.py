@@ -14,7 +14,7 @@ async def queue_request(
     request_type: RequestType,
     data_schema: Type[MediaRequestSchema],
     data: str,
-    file: Optional[UploadFile]
+    file: Optional[UploadFile],
 ):
     try:
         parsed_data: MediaRequestSchema = data_schema.model_validate_json(data)
@@ -24,11 +24,17 @@ async def queue_request(
     dto: MediaRequestDTO = MediaRequestDTO(parsed_data, file)
     request_id: str = dto.request.get_request_id()
     if dto.request.url and dto.file:
-        raise HTTPException(status_code=400, detail="File and url cannot be specified at the same time")
-    return_code: RequestProcessCodes = await global_requests_handler.add_request(request_id, dto, request_type)
+        raise HTTPException(
+            status_code=400, detail="File and url cannot be specified at the same time"
+        )
+    return_code: RequestProcessCodes = await global_requests_handler.add_request(
+        request_id, dto, request_type
+    )
 
     if return_code == RequestProcessCodes.ALREADY_QUEUED:
         raise HTTPException(status_code=400, detail="Already queued")
     if return_code == RequestProcessCodes.QUEUE_FULL:
-        raise HTTPException(status_code=503, detail="Queue limit has been reached. Try again later")
+        raise HTTPException(
+            status_code=503, detail="Queue limit has been reached. Try again later"
+        )
     return Response(status_code=200, content=request_id)

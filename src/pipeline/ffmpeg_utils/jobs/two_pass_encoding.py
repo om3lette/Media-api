@@ -5,7 +5,9 @@ from src.pipeline.types import VideoStream, AudioStream, OutputFilePath
 from src.constants import NULL_PATH, PASSLOG_PATH
 
 
-async def two_pass_encoding(video_stream: VideoStream, audio_stream: AudioStream, out_path: OutputFilePath) -> None:
+async def two_pass_encoding(
+    video_stream: VideoStream, audio_stream: AudioStream, out_path: OutputFilePath
+) -> None:
     first_pass_params = {
         "vcodec": app_config.ffmpeg.codecs.video,
         "preset": app_config.ffmpeg.preset,
@@ -14,11 +16,9 @@ async def two_pass_encoding(video_stream: VideoStream, audio_stream: AudioStream
         "passlogfile": PASSLOG_PATH,
         "f": "mp4",
         "an": None,
-        "y": None
+        "y": None,
     }
-    ffmpeg \
-        .output(video_stream, str(NULL_PATH), **first_pass_params) \
-        .run()
+    ffmpeg.output(video_stream, str(NULL_PATH), **first_pass_params).run()
 
     second_pass_params = {
         "vcodec": app_config.ffmpeg.codecs.video,
@@ -29,8 +29,6 @@ async def two_pass_encoding(video_stream: VideoStream, audio_stream: AudioStream
         "ar": app_config.ffmpeg.quality.audio_sample_rate,
         "pass": 2,
         "passlogfile": PASSLOG_PATH,
-        "y": None
+        "y": None,
     }
-    ffmpeg \
-        .output(video_stream, audio_stream, str(out_path), **second_pass_params) \
-        .run()
+    ffmpeg.output(video_stream, audio_stream, str(out_path), **second_pass_params).run()

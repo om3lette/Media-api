@@ -1,14 +1,6 @@
 import logging
-
-from src.api.status.router import request_status_router
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(name)s - %(message)s",
-    datefmt="%H:%M:%S %d-%m-%Y"
-)
-
 import asyncio
+
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, APIRouter
@@ -16,7 +8,19 @@ from starlette.middleware.cors import CORSMiddleware
 
 from src.api.templates.router import static_router
 from src.api.video.router import video_router
-from src.api.common.handlers import global_requests_handler, register_helpers, register_handlers
+from src.api.status.router import request_status_router
+from src.api.common.handlers import (
+    global_requests_handler,
+    register_helpers,
+    register_handlers,
+)
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s - %(message)s",
+    datefmt="%H:%M:%S %d-%m-%Y",
+)
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -27,12 +31,10 @@ async def lifespan(app: FastAPI):
     yield
     await global_requests_handler.queue.join()
 
+
 app: FastAPI = FastAPI(lifespan=lifespan)
 app.add_middleware(
-    CORSMiddleware,
-    allow_origins=['*'],
-    allow_methods=["*"],
-    allow_headers=["*"]
+    CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
 )
 
 app_router: APIRouter = APIRouter()

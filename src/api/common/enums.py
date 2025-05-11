@@ -13,9 +13,11 @@ class FileRetrievalCodes(IntEnum):
     OK = 0
     NOT_FOUND = 1
 
+
 class FileHelperNames(StrEnum):
     YADISK = "yadisk"
     UPLOAD_FILE = "upload_file"
+
 
 class RequestHelpersNames(StrEnum):
     GIGACHAT = "gigachat"

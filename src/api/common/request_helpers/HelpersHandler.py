@@ -4,6 +4,7 @@ from src.utils import get_logger_from_filepath
 
 logger = get_logger_from_filepath(__file__)
 
+
 class HelpersHandler:
     def __init__(self):
         self._helpers: list[BaseHelper] = []

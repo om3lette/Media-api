@@ -8,6 +8,6 @@ from src.config.schemas.quality import QualitySchema
 class CompressConfig(BaseModel):
     quality: QualitySchema = Field(default=app_config.ffmpeg.quality)
 
+
 class CompressSchema(MediaRequestSchema):
     config: CompressConfig
-

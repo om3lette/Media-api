@@ -1,0 +1,13 @@
+[format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = false
+skip-magic-trailing-comma = true
+
+[lint]
+exclude = ["__init__.py"]
+[lint.flake8-annotations]
+ignore-fully-untyped = false
+
+[lint.per-file-ignores]
+"src/api/common/services/BaseHandler.py" = ["F821"]

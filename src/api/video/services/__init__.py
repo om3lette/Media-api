@@ -1,4 +1,4 @@
-from .Summarize import SummarizeHandler as VideoSummarization
-from .ExtractAudio import ExtractAudioHandler as VideoAudioExtraction
-from .Transcribe import TranscriptionHandler as VideoTranscription
-from .Compress import CompressHandler as VideoCompression
+from .Summarize import SummarizeHandler as Summarization
+from .ExtractAudio import ExtractAudioHandler as AudioExtraction
+from .Transcribe import TranscriptionHandler as Transcription
+from .Compress import CompressHandler as Compression

@@ -6,6 +6,7 @@ from src.api.common.utils import out_path_from_request_id
 
 request_status_router: APIRouter = APIRouter()
 
+
 @request_status_router.get("/")
 async def get_request_status(request_id: str):
     if global_requests_handler.queue.exists(request_id):

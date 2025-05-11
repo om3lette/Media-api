@@ -6,6 +6,7 @@ from .requests import (
     ExtractAudioSchema,
 )
 
+
 class VideoRequests:
     summarize = SummarizeSchema
     compress = CompressSchema

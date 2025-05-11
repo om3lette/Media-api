@@ -6,6 +6,7 @@ from pydantic import BaseModel, field_validator, HttpUrl, Field
 
 from dataclasses import dataclass
 
+
 class MediaRequestSchema(BaseModel):
     url: Optional[HttpUrl] = Field(default=None)
     config: dict[str, dict]
@@ -18,10 +19,10 @@ class MediaRequestSchema(BaseModel):
         """Checks url for the following pattern: https://disk.yandex.ru/[a-zA-Z]/<ID>"""
         split_path: list[str] = value.path.split("/")
         if (
-                value.host != "disk.yandex.ru"
-                or len(split_path) != 3
-                or not split_path[-2].isalpha()
-                or len(split_path[-1]) != 14
+            value.host != "disk.yandex.ru"
+            or len(split_path) != 3
+            or not split_path[-2].isalpha()
+            or len(split_path[-1]) != 14
         ):
             raise ValueError("Invalid Yandex Disk URL format")
         return value
@@ -33,6 +34,7 @@ class MediaRequestSchema(BaseModel):
         if not self.url:
             return uuid.uuid4().hex
         return self.url.path.split("/")[-1]
+
 
 @dataclass
 class MediaRequestDTO:

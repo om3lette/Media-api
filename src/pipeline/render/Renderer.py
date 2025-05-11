@@ -2,10 +2,17 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from src.pipeline.ffmpeg_utils.utils import get_streams_from_file
-from src.pipeline.types import Job, Preprocessor, Postprocessor, RequestDataDir, RequestOutDir
+from src.pipeline.types import (
+    Job,
+    Preprocessor,
+    Postprocessor,
+    RequestDataDir,
+    RequestOutDir,
+)
 from src.utils import get_logger_from_filepath
 
 logger = get_logger_from_filepath(__file__)
+
 
 @dataclass
 class Renderer:
@@ -14,9 +21,13 @@ class Renderer:
     jobs: list[Job]
     postprocessors: list[Postprocessor]
 
-    async def run(self, req_data_dir: RequestDataDir, req_out_dir: RequestOutDir, save_path: Path) -> bool:
+    async def run(
+        self, req_data_dir: RequestDataDir, req_out_dir: RequestOutDir, save_path: Path
+    ) -> bool:
         if not self.file_path.is_file():
-            raise RuntimeError(f"Incorrect file path provided for renderer: {self.file_path}")
+            raise RuntimeError(
+                f"Incorrect file path provided for renderer: {self.file_path}"
+            )
         video_stream, audio_stream = get_streams_from_file(self.file_path)
 
         for preprocessor in self.preprocessors:

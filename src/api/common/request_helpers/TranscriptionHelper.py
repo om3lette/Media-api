@@ -9,6 +9,7 @@ from src.utils import get_logger_from_filepath
 
 logger = get_logger_from_filepath(__file__)
 
+
 class TranscriptionHelper(BaseHelper):
     _model: whisper.Whisper
 
@@ -23,7 +24,9 @@ class TranscriptionHelper(BaseHelper):
 
     def transcribe(self, file_path: Path) -> Path:
         if self._model is None:
-            raise RuntimeError("Model was not loaded when 'transcribe' was called. Use 'load_model' first")
+            raise RuntimeError(
+                "Model was not loaded when 'transcribe' was called. Use 'load_model' first"
+            )
         result = self._model.transcribe(str(file_path))
         out_path: Path = file_path.parent / get_transcription_filename()
         with open(out_path, "w") as f:

@@ -11,9 +11,12 @@ class CompressHandler(BaseHandler):
     def __init__(self):
         super().__init__(VideoRequestType.COMPRESS)
 
-    def _build_renderer(self, helpers: HelpersHandler, request_id: str, raw_file_path: Path) -> Renderer:
+    def _build_renderer(
+        self, helpers: HelpersHandler, request_id: str, raw_file_path: Path
+    ) -> Renderer:
         return (
-            RendererBuilder().use_file(str(raw_file_path))
+            RendererBuilder()
+            .use_file(str(raw_file_path))
             .add_preprocessor(preprocessors.normalize)
             .add_job(jobs.two_pass_encoding)
             .build()

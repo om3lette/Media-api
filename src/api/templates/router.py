@@ -12,6 +12,7 @@ static_router: APIRouter = APIRouter()
 
 templates = Jinja2Templates(directory=TEMPLATES_PATH)
 
+
 @static_router.get("/output/{subpath:path}", response_class=HTMLResponse)
 async def output_browser(subpath: str):
     target_path: Path = OUT_FOLDER / subpath
@@ -20,8 +21,10 @@ async def output_browser(subpath: str):
         return FileResponse(
             target_path,
             filename=target_path.name,
-            media_type='application/octet-stream',
-            headers={"Content-Disposition": f'attachment; filename="{target_path.name}"'}
+            media_type="application/octet-stream",
+            headers={
+                "Content-Disposition": f'attachment; filename="{target_path.name}"'
+            },
         )
 
     if len(subpath) == 0 or not target_path.exists():
@@ -36,6 +39,7 @@ async def output_browser(subpath: str):
         return f"<h1>Contents of /output/{subpath}</h1><ul>{''.join(links)}</ul>"
 
     raise HTTPException(status_code=400, detail="Invalid path")
+
 
 @static_router.get("/", response_class=HTMLResponse)
 async def serve_form(request: Request):
