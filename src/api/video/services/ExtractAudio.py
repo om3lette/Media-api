@@ -14,7 +14,7 @@ class ExtractAudioHandler(BaseHandler):
         super().__init__(VideoRequestType.EXTRACT_AUDIO)
 
     def _build_renderer(
-        self, helpers: HelpersHandler, request_id: str, raw_file_path: Path
+        self, request, helpers: HelpersHandler, request_id: str, raw_file_path: Path
     ) -> Renderer:
         async def extract_audio(config: ExtractAudioConfig, req_data_dir, req_out_dir):
             await postprocessors.extract_audio(

@@ -34,7 +34,7 @@ class Renderer:
                 f"Incorrect file path provided for renderer: {self.file_path}"
             )
         video_stream, audio_stream = get_streams_from_file(self.file_path)
-
+        # TODO: Rethink arguments of preprocessors/jobs/postprocessors
         for preprocessor in self.preprocessors:
             logger.info(f"Running preprocessor: {preprocessor.__name__}")
             video_stream, audio_stream = await preprocessor(

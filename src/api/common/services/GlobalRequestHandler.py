@@ -104,7 +104,7 @@ class GlobalRequestsHandler:
 
         request_handler = self._get_request_handler(request_type)
         await request_handler.handle(
-            dto.request.config, self._helpers, request_id, input_file_path
+            dto.request, self._helpers, request_id, input_file_path
         )
         logger.info("Render complete")
 

@@ -4,6 +4,7 @@ from pathlib import Path
 from src.api.common.enums import RequestHelpersNames
 from src.api.common.request_helpers.BaseHelper import BaseHelper
 from src.api.common.utils import get_transcription_filename
+from src.api.video.schemas.requests.Transcribe import TranscribeConfig
 from src.config.ConfigParser import ConfigParser
 from src.utils import get_logger_from_filepath
 
@@ -22,7 +23,7 @@ class TranscriptionHelper(BaseHelper):
         self._model = whisper.load_model(app_config.transcription.model, in_memory=True)
         logger.info(f"{app_config.transcription.model.capitalize()} model loaded!")
 
-    def transcribe(self, file_path: Path) -> Path:
+    def transcribe(self, config: TranscribeConfig, file_path: Path) -> Path:
         if self._model is None:
             raise RuntimeError(
                 "Model was not loaded when 'transcribe' was called. Use 'load_model' first"

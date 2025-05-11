@@ -6,12 +6,12 @@ from src.config.enums import GigachatModels
 from src.config.schemas.BaseEnumModel import BaseEnumModel
 
 
-class SummarySettings(BaseEnumModel):
+class SummarizeSettings(BaseEnumModel):
     model: GigachatModels = Field(default=app_config.summary.model)
 
 
 class SummarizeConfig(BaseEnumModel):
-    summary: SummarySettings = Field(default_factory=SummarySettings)
+    summary: SummarizeSettings = Field(default_factory=SummarizeSettings)
 
 
 class SummarizeSchema(MediaRequestSchema):

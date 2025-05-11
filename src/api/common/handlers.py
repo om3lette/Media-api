@@ -22,3 +22,4 @@ def register_handlers():
     global_requests_handler.register_request_handler(video_services.AudioExtraction())
     global_requests_handler.register_request_handler(video_services.Transcription())
     global_requests_handler.register_request_handler(video_services.Summarization())
+    global_requests_handler.register_request_handler(video_services.Custom())

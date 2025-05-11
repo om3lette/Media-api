@@ -41,3 +41,10 @@ async def summarize(data: Annotated[str, Form()], file: UploadFile | None = File
     return await queue_request(
         VideoRequestType.SUMMARIZE, VideoRequests.summarize, data, file
     )
+
+
+@video_router.post("/custom/")
+async def custom(data: Annotated[str, Form()], file: UploadFile | None = File(None)):
+    return await queue_request(
+        VideoRequestType.CUSTOM, VideoRequests.custom, data, file
+    )

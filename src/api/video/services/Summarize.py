@@ -8,6 +8,7 @@ from src.api.common.request_helpers import TranscriptionHelper
 from src.api.common.services.BaseHandler import BaseHandler
 from src.api.video.enums import VideoRequestType
 from src.api.video.schemas.requests.ExtractAudio import ExtractAudioConfig
+from src.api.video.schemas.requests.Summarize import SummarizeConfig
 from src.pipeline.ffmpeg_utils import postprocessors
 from src.api.common.utils import (
     audio_path_from_request_id,
@@ -21,7 +22,7 @@ class SummarizeHandler(BaseHandler):
         super().__init__(VideoRequestType.SUMMARIZE)
 
     def _build_renderer(
-        self, helpers: HelpersHandler, request_id: str, raw_file_path: Path
+        self, request, helpers: HelpersHandler, request_id: str, raw_file_path: Path
     ) -> Renderer:
         transcription_helper: TranscriptionHelper = helpers.get_helper_by_name(
             RequestHelpersNames.TRANSCRIPTION
@@ -33,12 +34,12 @@ class SummarizeHandler(BaseHandler):
         async def transcribe(*args):
             transcription_helper.transcribe(audio_path_from_request_id(request_id))
 
-        async def summarize(*args):
+        async def summarize(config: SummarizeConfig, *args):
             await gigachat_helper.summarize(
-                transcription_path_from_request_id(request_id)
+                config, transcription_path_from_request_id(request_id)
             )
 
-        async def extract_audio(config, req_data_dir, req_out_dir):
+        async def extract_audio(config: SummarizeConfig, req_data_dir, req_out_dir):
             await postprocessors.extract_audio(
                 ExtractAudioConfig(), raw_file_path, req_out_dir / get_audio_filename()
             )

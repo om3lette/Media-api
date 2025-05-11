@@ -14,7 +14,7 @@ async def two_pass_encoding(
     first_pass_params = {
         "vcodec": config.codecs.video,
         "preset": config.preset,
-        "video_bitrate": f"{config.quality.video_bitrate}k",
+        "video_bitrate": f"{config.video.video_bitrate}k",
         "pass": 1,
         "passlogfile": PASSLOG_PATH,
         "f": "mp4",
@@ -26,10 +26,10 @@ async def two_pass_encoding(
     second_pass_params = {
         "vcodec": config.codecs.video,
         "preset": config.preset,
-        "video_bitrate": f"{config.quality.video_bitrate}k",
+        "video_bitrate": f"{config.video.video_bitrate}k",
         "acodec": config.codecs.audio,
-        "audio_bitrate": f"{config.quality.audio_bitrate}k",
-        "ar": config.quality.audio_sample_rate,
+        "audio_bitrate": f"{config.video.audio_bitrate}k",
+        "ar": config.video.audio_sample_rate,
         "pass": 2,
         "passlogfile": PASSLOG_PATH,
         "y": None,

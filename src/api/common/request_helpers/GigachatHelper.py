@@ -6,6 +6,7 @@ from gigachat.models import Messages, MessagesRole, Chat
 from src.api.common.enums import RequestHelpersNames
 from src.api.common.request_helpers.BaseHelper import BaseHelper
 from src.api.common.utils import get_summary_filename
+from src.api.video.schemas.requests.Summarize import SummarizeConfig
 from src.app_config import app_config, SYSTEM_PROMPT
 from src.config.enums import GigachatModels
 from src.utils import get_logger_from_filepath
@@ -33,13 +34,13 @@ class GigachatHelper(BaseHelper):
         with open(transcription_path.parent / get_summary_filename(), "w") as f:
             f.write(content)
 
-    async def summarize(self, transcription_path: Path):
+    async def summarize(self, config: SummarizeConfig, transcription_path: Path):
         if app_config.summary.gigachat_api_token in [None, "", "<YOUR_TOKEN>"]:
             self._write_output(transcription_path, "Api token was not provided")
             return
         with GigaChat(
             credentials=app_config.summary.gigachat_api_token,
-            model=app_config.summary.model
+            model=config.summary.model
             if not app_config.dev_mode
             else GigachatModels.LITE,
             scope=app_config.summary.scope,

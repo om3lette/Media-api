@@ -1,9 +1,9 @@
-from ...common.types import RequestHandler
 from .requests import (
     SummarizeSchema,
     CompressSchema,
     TranscribeSchema,
     ExtractAudioSchema,
+    CustomSchema,
 )
 
 
@@ -12,3 +12,4 @@ class VideoRequests:
     compress = CompressSchema
     transcribe = TranscribeSchema
     extract_audio = ExtractAudioSchema
+    custom = CustomSchema
