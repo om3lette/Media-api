@@ -1,7 +1,7 @@
 from src.api.common.file_helpers import UploadFileHelper
-from src.api.common.request_helpers.GigachatHelper import GigachatHelper
-from src.api.common.services.GlobalRequestHandler import GlobalRequestsHandler
-from src.api.common.file_helpers.YaDiskHelper import YaDiskHelper
+from src.api.common.request_helpers.gigachat_helper import GigachatHelper
+from src.api.common.services.global_request_handler import GlobalRequestsHandler
+from src.api.common.file_helpers.ya_disk_helper import YaDiskHelper
 from src.api.common.request_helpers import TranscriptionHelper
 
 import src.api.video.services as video_services

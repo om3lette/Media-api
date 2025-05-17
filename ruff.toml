@@ -1,7 +1,6 @@
 [format]
 quote-style = "double"
 indent-style = "space"
-docstring-code-format = false
 skip-magic-trailing-comma = true
 
 [lint]

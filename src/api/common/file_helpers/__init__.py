@@ -1,3 +1,3 @@
-from .BaseFileHelper import BaseFileHelper
-from .UploadFileHelper import UploadFileHelper
-from .YaDiskHelper import YaDiskHelper
+from .base_file_helper import BaseFileHelper
+from .upload_file_helper import UploadFileHelper
+from .ya_disk_helper import YaDiskHelper

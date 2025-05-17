@@ -1,7 +1,7 @@
 from pydantic import Field
 
 from src.config.enums import FfmpegPresets
-from src.config.schemas.BaseEnumModel import BaseEnumModel
+from src.config.schemas.base_enum_model import BaseEnumModel
 from src.config.schemas.codecs import CodecsSchema
 from src.config.schemas.video import VideoSchema
 

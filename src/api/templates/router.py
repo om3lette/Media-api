@@ -32,8 +32,9 @@ async def output_browser(subpath: str):
 
     if target_path.is_dir():
         files = list(target_path.iterdir())
+        s = subpath.replace("/", "")
         links = [
-            f'<li><a style="font-size: 16pt"href="/output/{subpath.replace("/", "")}/{f.name}">{f.name}</a></li>'
+            f'<li><a style="font-size: 16pt"href="/output/{s}/{f.name}">{f.name}</a></li>'
             for f in files
         ]
         return f"<h1>Contents of /output/{subpath}</h1><ul>{''.join(links)}</ul>"

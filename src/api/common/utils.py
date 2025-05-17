@@ -32,18 +32,22 @@ def request_out_dir_from_id(request_id: str):
     return OUT_FOLDER / request_id
 
 
-def input_path_from_request_id(request_id: str, filename: str = INPUT_FILENAME) -> Path:
-    return file_path_from_name(DATA_FOLDER, request_id, filename, OUT_FILE_EXTENSION)
+def input_path_from_request_id(
+    request_id: str, filename: str = INPUT_FILENAME, extension: str = OUT_FILE_EXTENSION
+) -> Path:
+    return file_path_from_name(DATA_FOLDER, request_id, filename, extension)
 
 
-def out_path_from_request_id(request_id: str, filename: str = OUT_FILENAME) -> Path:
-    return file_path_from_name(OUT_FOLDER, request_id, filename, OUT_FILE_EXTENSION)
+def out_path_from_request_id(
+    request_id: str, filename: str = OUT_FILENAME, extension: str = OUT_FILE_EXTENSION
+) -> Path:
+    return file_path_from_name(OUT_FOLDER, request_id, filename, extension)
 
 
-def audio_path_from_request_id(request_id: str, filename: str = AUDIO_FILENAME) -> Path:
-    return file_path_from_name(
-        OUT_FOLDER, request_id, filename, OUT_AUDIO_FILE_EXTENSION
-    )
+def audio_path_from_request_id(
+    request_id: str, filename: str = AUDIO_FILENAME, extension=OUT_AUDIO_FILE_EXTENSION
+) -> Path:
+    return file_path_from_name(OUT_FOLDER, request_id, filename, extension)
 
 
 def get_audio_filename() -> str:
@@ -64,3 +68,9 @@ def get_transcription_filename() -> str:
 
 def get_summary_filename() -> str:
     return SUMMARY_FILENAME + "." + OUT_SUMMARY_FILE_EXTENSION
+
+
+def summary_path_from_request_id(request_id: str, filename: str = SUMMARY_FILENAME):
+    return file_path_from_name(
+        OUT_FOLDER, request_id, filename, OUT_SUMMARY_FILE_EXTENSION
+    )

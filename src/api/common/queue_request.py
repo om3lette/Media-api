@@ -4,10 +4,10 @@ from fastapi import HTTPException, UploadFile
 from pydantic import ValidationError
 from starlette.responses import Response
 
-from src.api.common import RequestType
+from src.api.common.types.request import RequestType
 from src.api.common.handlers import global_requests_handler
 from src.api.common.enums import RequestProcessCodes
-from src.api.common.schemas.MediaRequest import MediaRequestDTO, MediaRequestSchema
+from src.api.common.schemas.media_request import MediaRequestDTO, MediaRequestSchema
 
 
 async def queue_request(
@@ -19,14 +19,19 @@ async def queue_request(
     try:
         parsed_data: MediaRequestSchema = data_schema.model_validate_json(data)
     except ValidationError as e:
-        raise HTTPException(status_code=422, detail=e.errors())
+        raise HTTPException(
+            status_code=422,
+            detail=list(
+                map(lambda x: {"loc": ".".join(x["loc"]), "msg": x["msg"]}, e.errors())
+            ),
+        ) from e
 
+    if (not parsed_data.url and file is None) or (parsed_data.url and file):
+        raise HTTPException(
+            status_code=400, detail="Either a file or a url must be provided"
+        )
     dto: MediaRequestDTO = MediaRequestDTO(parsed_data, file)
     request_id: str = dto.request.get_request_id()
-    if dto.request.url and dto.file:
-        raise HTTPException(
-            status_code=400, detail="File and url cannot be specified at the same time"
-        )
     return_code: RequestProcessCodes = await global_requests_handler.add_request(
         request_id, dto, request_type
     )

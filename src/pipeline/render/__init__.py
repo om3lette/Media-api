@@ -1,2 +1,2 @@
-from .Renderer import Renderer
-from .RendererBuilder import RendererBuilder
+from .renderer import Renderer
+from .renderer_builder import RendererBuilder
