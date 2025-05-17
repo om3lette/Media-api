@@ -31,4 +31,10 @@ class BaseTask(BaseModel):
         return full_config
 
     def __hash__(self):
-        return hash((self.type, self.request_type, tuple(dep.__class__.__name__ for dep in self.dependencies)))
+        return hash(
+            (
+                self.type,
+                self.request_type,
+                tuple(dep.__class__.__name__ for dep in self.dependencies),
+            )
+        )

@@ -55,5 +55,4 @@ class RendererBuilder:
             == 0
         ):
             raise RuntimeError("No jobs were registered for renderer")
-        print(len(list(self.__seen_tasks)))
         return self.__renderer

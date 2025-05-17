@@ -29,5 +29,4 @@ class CustomHandler(BaseHandler):
         if VideoRequestType.COMPRESS in actions:
             render_builder.add_task(jobs.TwoPassEncodingTask())
 
-
         return render_builder.build()

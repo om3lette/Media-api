@@ -7,6 +7,7 @@ from src.api.video.schemas.requests.ExtractAudio import ExtractAudioConfig
 from src.pipeline.schemas.Paths import PathsSchema
 from src.pipeline.schemas.Streams import StreamsSchema
 from src.pipeline.tasks.jobs.BaseJob import BaseJob
+from src.pipeline.tasks.utils import extract_config_by_field_name
 from src.pipeline.types import RenderConfig
 
 
@@ -15,11 +16,7 @@ class ExtractAudioTask(BaseJob):
 
     @staticmethod
     def extract_config(full_config: RenderConfig) -> ExtractAudioConfig:
-        if isinstance(full_config, ExtractAudioConfig):
-            return full_config
-        if "audio" in full_config.model_fields:
-            return full_config.audio
-        return ExtractAudioConfig()
+        return extract_config_by_field_name(full_config, "audio", ExtractAudioConfig)
 
     async def execute(
         self,
@@ -28,12 +25,15 @@ class ExtractAudioTask(BaseJob):
         streams: StreamsSchema,
         paths: PathsSchema,
     ):
+        # TODO: Construct audio path according to codec
         ffmpeg.output(
             streams.audio,
             filename=paths.audio_path,
             vn=None,
             acodec=config.audio.codec,
-            loglevel="quiet",
+            audio_bitrate=f"{config.audio.bitrate}k",
+            ar=config.audio.sample_rate,
+            loglevel="warning",
             stats=None,
             y=None,
         ).run()

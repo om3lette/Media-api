@@ -7,4 +7,5 @@ class VideoRequestType(StrEnum):
     EXTRACT_AUDIO = "video_extract_audio"
     SUMMARIZE = "video_summarize"
     CUSTOM = "video_custom"
-    UTILITY = "video_util" # Used for preprocessors which can only be called as a dependency of another task
+    # Used for preprocessors which can only be called as a dependency of another task
+    UTILITY = "video_util"

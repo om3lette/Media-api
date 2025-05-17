@@ -1,12 +1,10 @@
 from pathlib import Path
 
-from src.api.audio.enums import AudioRequestType
 from src.api.common.request_helpers import HelpersHandler
 from src.api.common.schemas import MediaRequest
 
 from src.api.common.enums import RequestProcessCodes
 from src.api.common.types.request import RequestType
-from src.api.video.enums import VideoRequestType
 from src.pipeline.render import Renderer
 from src.pipeline.schemas.Paths import PathsSchema
 
@@ -27,10 +25,7 @@ class BaseHandler:
         raise NotImplementedError("No implementation provided for _build_renderer")
 
     async def handle(
-        self,
-        request: MediaRequest,
-        helpers: HelpersHandler,
-        paths: PathsSchema,
+        self, request: MediaRequest, helpers: HelpersHandler, paths: PathsSchema
     ) -> RequestProcessCodes:
         logger.info("Building renderer for %s request", self.event_type)
 

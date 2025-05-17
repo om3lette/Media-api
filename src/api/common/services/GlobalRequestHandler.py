@@ -73,8 +73,10 @@ class GlobalRequestsHandler:
             self.current_request_id = req_id
             try:
                 await self._process_request(req, req_id, req_type)
+            # pylint: disable=broad-exception-caught
             except Exception as e:
                 logger.error("Error occurred when processing video:\n%s", e)
+            # pylint: enable=broad-exception-caught
             self.current_request_id = ""
             self.queue.task_done()
 
@@ -135,7 +137,6 @@ class GlobalRequestsHandler:
         if request_body.request.url:
             helper_name = FileHelperNames.YADISK
         helper: BaseFileHelper = self._file_helpers.get_helper_by_name(helper_name)
-
         return await helper.retrieve_file(
             request_body.request.url or request_body.file, save_path
         )

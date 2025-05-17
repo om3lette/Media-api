@@ -10,8 +10,8 @@ class CompressConfig(FFMPEGProperties):
 
 
 class CompressSchema(MediaRequestSchema):
-    # extract_config() of BaseTask runs isinstance() and expects CompressConfig
-    # Without explicit convertion isinstance() for default value will output FFMPEGProperties instead
+    # extract_config() of BaseTask runs isinstance and expects CompressConfig
+    # Without explicit convertion isinstance for default value will output FFMPEGProperties instead
     config: CompressConfig = Field(
         default=CompressConfig.model_validate(app_config.ffmpeg.model_dump())
     )

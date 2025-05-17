@@ -10,6 +10,7 @@ from src.pipeline.schemas.Streams import StreamsSchema
 from src.pipeline.tasks import preprocessors
 from src.pipeline.tasks.jobs.BaseJob import BaseJob
 from src.constants import NULL_PATH, PASSLOG_PATH
+from src.pipeline.tasks.utils import extract_config_by_field_name
 from src.pipeline.types import RenderConfig
 
 
@@ -19,11 +20,7 @@ class TwoPassEncodingTask(BaseJob):
 
     @staticmethod
     def extract_config(full_config: RenderConfig) -> CompressConfig:
-        if isinstance(full_config, CompressConfig):
-            return full_config
-        if "ffmpeg" in full_config.model_fields:
-            return full_config.ffmpeg
-        return CompressConfig()
+        return extract_config_by_field_name(full_config, "ffmpeg", CompressConfig)
 
     async def execute(
         self,

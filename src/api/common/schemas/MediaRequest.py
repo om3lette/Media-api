@@ -31,7 +31,9 @@ class MediaRequestSchema(BaseModel):
         """
         if not self.url:
             return uuid.uuid4().hex
+        # pylint: disable=no-member
         return self.url.path.split("/")[-1]
+        # pylint: enable=no-member
 
 
 @dataclass

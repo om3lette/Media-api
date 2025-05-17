@@ -8,6 +8,7 @@ from src.pipeline.schemas.Paths import PathsSchema
 from src.pipeline.schemas.Streams import StreamsSchema
 from src.pipeline.tasks.jobs import TranscribeTask
 from src.pipeline.tasks.postprocessors.BasePostprocessor import BasePostprocessor
+from src.pipeline.tasks.utils import extract_config_by_field_name
 from src.pipeline.types import RenderConfig
 
 
@@ -17,11 +18,7 @@ class SummarizeTask(BasePostprocessor):
 
     @staticmethod
     def extract_config(full_config: RenderConfig) -> SummarizeConfig:
-        if isinstance(full_config, SummarizeConfig):
-            return full_config
-        if "summary" in full_config.model_fields:
-            return full_config.summary
-        return SummarizeConfig()
+        return extract_config_by_field_name(full_config, "summary", SummarizeConfig)
 
     async def execute(
         self,
@@ -30,5 +27,7 @@ class SummarizeTask(BasePostprocessor):
         streams: StreamsSchema,
         paths: PathsSchema,
     ):
-        gigachat_helper: GigachatHelper = helpers.get_helper_by_name(RequestHelpersNames.GIGACHAT)
+        gigachat_helper: GigachatHelper = helpers.get_helper_by_name(
+            RequestHelpersNames.GIGACHAT
+        )
         await gigachat_helper.summarize(config, paths.transcription_path)
