@@ -11,7 +11,7 @@ Note that dependencies for the project exceed 6gb in size, if `/tmp` runs out of
 [specify](https://stackoverflow.com/a/67123076/20957519) `TMPDIR` env for `pip install`.
 ```bash
 git clone https://github.com/om3lette/Simple-ffmpeg-wrapper.git && \
-cd Simple-tasks-wrapper && \
+cd Simple-ffmpeg-wrapper && \
 python3 -m venv .venv && source .venv/bin/activate && \
 pip install -r requirements.txt && \
 uvicorn src.api.main:app --host 0.0.0.0 --port 8081
