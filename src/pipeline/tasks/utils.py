@@ -3,7 +3,7 @@ from typing import Type
 
 import ffmpeg
 
-from src.pipeline.schemas.Streams import StreamsSchema
+from src.pipeline.schemas.streams import StreamsSchema
 from src.pipeline.types import RenderConfig
 
 

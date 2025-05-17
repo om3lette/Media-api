@@ -1,3 +1,3 @@
-from src.api.common.services.BaseHandler import BaseHandler
+from src.api.common.services.base_handler import BaseHandler
 
 RequestHandler = BaseHandler

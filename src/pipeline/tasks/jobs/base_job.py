@@ -1,4 +1,4 @@
-from src.pipeline.BaseTask import BaseTask
+from src.pipeline.base_task import BaseTask
 from src.pipeline.enums import TaskType
 
 

@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from src.api.common.request_helpers import HelpersHandler
-from src.pipeline.schemas.Paths import PathsSchema
-from src.pipeline.schemas.Streams import StreamsSchema
+from src.pipeline.schemas.paths import PathsSchema
+from src.pipeline.schemas.streams import StreamsSchema
 from src.pipeline.schemas.task_wrapper import TaskWrapper
 from src.pipeline.tasks.utils import get_streams_from_file
 from src.pipeline.types import RenderConfig

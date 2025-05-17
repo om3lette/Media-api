@@ -3,12 +3,12 @@ import ffmpeg
 from src.api.common.request_helpers import HelpersHandler
 from src.api.common.types.request import RequestType
 from src.api.video.enums import VideoRequestType
-from src.api.video.schemas.requests.Compress import CompressConfig
-from src.pipeline.BaseTask import BaseTask
-from src.pipeline.schemas.Paths import PathsSchema
-from src.pipeline.schemas.Streams import StreamsSchema
+from src.api.video.schemas.requests.compress import CompressConfig
+from src.pipeline.base_task import BaseTask
+from src.pipeline.schemas.paths import PathsSchema
+from src.pipeline.schemas.streams import StreamsSchema
 from src.pipeline.tasks import preprocessors
-from src.pipeline.tasks.jobs.BaseJob import BaseJob
+from src.pipeline.tasks.jobs.base_job import BaseJob
 from src.constants import NULL_PATH, PASSLOG_PATH
 from src.pipeline.tasks.utils import extract_config_by_field_name
 from src.pipeline.types import RenderConfig

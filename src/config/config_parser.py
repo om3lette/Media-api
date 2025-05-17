@@ -4,7 +4,7 @@ from pydantic import Field
 
 import yaml
 
-from src.config.schemas.BaseEnumModel import BaseEnumModel
+from src.config.schemas.base_enum_model import BaseEnumModel
 from src.config.schemas.ffmpeg import FFMPEGProperties
 from src.config.schemas.summary import SummarySchema
 from src.config.schemas.transcription import TranscriptionSchema

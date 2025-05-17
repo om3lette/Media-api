@@ -1,4 +1,4 @@
-from src.api.common.request_helpers.BaseHelper import BaseHelper
+from src.api.common.request_helpers.base_helper import BaseHelper
 from src.app_config import app_config
 from src.utils import get_logger_from_filepath
 

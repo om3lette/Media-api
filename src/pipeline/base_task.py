@@ -3,8 +3,8 @@ from pydantic import BaseModel, Field
 from src.api.common.request_helpers import HelpersHandler
 from src.api.common.types.request import RequestType
 from src.pipeline.enums import TaskType
-from src.pipeline.schemas.Paths import PathsSchema
-from src.pipeline.schemas.Streams import StreamsSchema
+from src.pipeline.schemas.paths import PathsSchema
+from src.pipeline.schemas.streams import StreamsSchema
 from src.pipeline.types import RenderConfig
 
 

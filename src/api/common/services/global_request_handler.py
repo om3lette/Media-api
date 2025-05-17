@@ -5,8 +5,8 @@ from pathlib import Path
 
 from src.api.common.types.request import RequestType
 from src.api.common.file_helpers import BaseFileHelper
-from src.api.common.request_helpers.HelpersHandler import HelpersHandler
-from src.api.common.schemas.MediaRequest import MediaRequestDTO
+from src.api.common.request_helpers.helpers_handler import HelpersHandler
+from src.api.common.schemas.media_request import MediaRequestDTO
 from src.api.video.enums import VideoRequestType
 from src.api.common.enums import (
     RequestProcessCodes,
@@ -20,9 +20,9 @@ from src.api.common.types.file_helper import FileHelper
 from src.api.common.types.request_helper import RequestHelper
 
 # from src.api.common.types import RequestHandler, RequestHelper, FileHelper
-from src.api.common.services.RequestQueue import RequestQueue
+from src.api.common.services.request_queue import RequestQueue
 from src.app_config import app_config
-from src.pipeline.schemas.Paths import PathsSchema
+from src.pipeline.schemas.paths import PathsSchema
 from src.utils import get_logger_from_filepath
 
 logger = get_logger_from_filepath(__file__)

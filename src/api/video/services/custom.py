@@ -2,7 +2,7 @@ from pathlib import Path
 
 from src.api.common.types.request import RequestType
 from src.pipeline.render import RendererBuilder, Renderer
-from src.api.common.services.BaseHandler import BaseHandler
+from src.api.common.services.base_handler import BaseHandler
 from src.api.video.enums import VideoRequestType
 
 from src.pipeline.tasks import jobs, postprocessors

@@ -2,12 +2,12 @@ from src.api.common.enums import RequestHelpersNames
 from src.api.common.request_helpers import HelpersHandler, GigachatHelper
 from src.api.common.types.request import RequestType
 from src.api.video.enums import VideoRequestType
-from src.api.video.schemas.requests.Summarize import SummarizeConfig
-from src.pipeline.BaseTask import BaseTask
-from src.pipeline.schemas.Paths import PathsSchema
-from src.pipeline.schemas.Streams import StreamsSchema
+from src.api.video.schemas.requests.summarize import SummarizeConfig
+from src.pipeline.base_task import BaseTask
+from src.pipeline.schemas.paths import PathsSchema
+from src.pipeline.schemas.streams import StreamsSchema
 from src.pipeline.tasks.jobs import TranscribeTask
-from src.pipeline.tasks.postprocessors.BasePostprocessor import BasePostprocessor
+from src.pipeline.tasks.postprocessors.base_postprocessor import BasePostprocessor
 from src.pipeline.tasks.utils import extract_config_by_field_name
 from src.pipeline.types import RenderConfig
 

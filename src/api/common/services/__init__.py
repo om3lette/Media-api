@@ -1,3 +1,3 @@
-from .RequestQueue import RequestQueue
-from .GlobalRequestHandler import GlobalRequestsHandler
-from .BaseHandler import BaseHandler
+from .request_queue import RequestQueue
+from .global_request_handler import GlobalRequestsHandler
+from .base_handler import BaseHandler

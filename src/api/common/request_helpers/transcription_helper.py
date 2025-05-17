@@ -3,10 +3,10 @@ from pathlib import Path
 import whisper
 
 from src.api.common.enums import RequestHelpersNames
-from src.api.common.request_helpers.BaseHelper import BaseHelper
+from src.api.common.request_helpers.base_helper import BaseHelper
 from src.api.common.utils import get_transcription_filename
-from src.api.video.schemas.requests.Transcribe import TranscribeConfig
-from src.config.ConfigParser import ConfigParser
+from src.api.video.schemas.requests.transcribe import TranscribeConfig
+from src.config.config_parser import ConfigParser
 from src.utils import get_logger_from_filepath
 
 logger = get_logger_from_filepath(__file__)

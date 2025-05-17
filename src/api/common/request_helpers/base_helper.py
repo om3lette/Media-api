@@ -1,4 +1,4 @@
-from src.config.ConfigParser import ConfigParser
+from src.config.config_parser import ConfigParser
 
 
 class BaseHelper:

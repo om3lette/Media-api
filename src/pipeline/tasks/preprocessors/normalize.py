@@ -1,10 +1,10 @@
 from src.api.common.request_helpers import HelpersHandler
 from src.api.common.types.request import RequestType
 from src.api.video.enums import VideoRequestType
-from src.api.video.schemas.requests.Compress import CompressConfig
-from src.pipeline.schemas.Paths import PathsSchema
-from src.pipeline.schemas.Streams import StreamsSchema
-from src.pipeline.tasks.preprocessors.BasePreprocessor import BasePreprocessor
+from src.api.video.schemas.requests.compress import CompressConfig
+from src.pipeline.schemas.paths import PathsSchema
+from src.pipeline.schemas.streams import StreamsSchema
+from src.pipeline.tasks.preprocessors.base_preprocessor import BasePreprocessor
 from src.pipeline.tasks.utils import extract_config_by_field_name
 from src.pipeline.types import VideoStream, AudioStream, RenderConfig
 

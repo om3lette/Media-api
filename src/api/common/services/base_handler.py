@@ -1,12 +1,12 @@
 from pathlib import Path
 
 from src.api.common.request_helpers import HelpersHandler
-from src.api.common.schemas import MediaRequest
 
 from src.api.common.enums import RequestProcessCodes
+from src.api.common.schemas import MediaRequestSchema
 from src.api.common.types.request import RequestType
 from src.pipeline.render import Renderer
-from src.pipeline.schemas.Paths import PathsSchema
+from src.pipeline.schemas.paths import PathsSchema
 
 from src.utils import get_logger_from_filepath
 
@@ -25,7 +25,7 @@ class BaseHandler:
         raise NotImplementedError("No implementation provided for _build_renderer")
 
     async def handle(
-        self, request: MediaRequest, helpers: HelpersHandler, paths: PathsSchema
+        self, request: MediaRequestSchema, helpers: HelpersHandler, paths: PathsSchema
     ) -> RequestProcessCodes:
         logger.info("Building renderer for %s request", self.event_type)
 

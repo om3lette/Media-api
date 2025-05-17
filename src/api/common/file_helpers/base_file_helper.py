@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from src.api.common.enums import FileRetrievalCodes
-from src.api.common.request_helpers.BaseHelper import BaseHelper
+from src.api.common.request_helpers.base_helper import BaseHelper
 
 
 class BaseFileHelper(BaseHelper):
