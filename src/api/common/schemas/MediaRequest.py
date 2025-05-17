@@ -1,10 +1,9 @@
 import uuid
 from typing import Optional
+from dataclasses import dataclass
 
 from fastapi import UploadFile
 from pydantic import BaseModel, field_validator, HttpUrl, Field
-
-from dataclasses import dataclass
 
 
 class MediaRequestSchema(BaseModel):
@@ -16,7 +15,6 @@ class MediaRequestSchema(BaseModel):
     def validate_url(cls, value: Optional[HttpUrl]) -> Optional[HttpUrl]:
         if value is None:
             return value
-        """Checks url for the following pattern: https://disk.yandex.ru/[a-zA-Z]/<ID>"""
         split_path: list[str] = value.path.split("/")
         if (
             value.host != "disk.yandex.ru"

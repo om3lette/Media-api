@@ -1,10 +1,10 @@
 from pathlib import Path
 
-from src import Renderer, RendererBuilder
-from src.api.common.request_helpers.HelpersHandler import HelpersHandler
+from src.api.common.types.request import RequestType
+from src.pipeline.render import RendererBuilder, Renderer
 from src.api.common.services.BaseHandler import BaseHandler
 from src.api.video.enums import VideoRequestType
-from src.pipeline.ffmpeg_utils import jobs, preprocessors
+from src.pipeline.tasks import jobs, preprocessors
 
 
 class CompressHandler(BaseHandler):
@@ -12,12 +12,11 @@ class CompressHandler(BaseHandler):
         super().__init__(VideoRequestType.COMPRESS)
 
     def _build_renderer(
-        self, request, helpers: HelpersHandler, request_id: str, raw_file_path: Path
+        self, actions: list[RequestType], raw_file_path: Path
     ) -> Renderer:
         return (
             RendererBuilder()
             .use_file(str(raw_file_path))
-            .add_preprocessor(preprocessors.normalize)
-            .add_job(jobs.two_pass_encoding)
+            .add_task(jobs.TwoPassEncodingTask())
             .build()
         )

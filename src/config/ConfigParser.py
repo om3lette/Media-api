@@ -1,8 +1,8 @@
-import yaml
-
 from typing import Self
 from pathlib import Path
 from pydantic import Field
+
+import yaml
 
 from src.config.schemas.BaseEnumModel import BaseEnumModel
 from src.config.schemas.ffmpeg import FFMPEGProperties
@@ -26,7 +26,7 @@ class ConfigParser(BaseEnumModel):
     summary: SummarySchema = Field(default_factory=SummarySchema)
 
     def model_save_yaml(self, save_path: Path) -> None:
-        with open(save_path, "w") as f:
+        with open(save_path, "w", encoding="UTF-8") as f:
             f.write(yaml.dump(self.model_dump()))
 
     @classmethod
@@ -38,7 +38,7 @@ class ConfigParser(BaseEnumModel):
         if config_path.is_file() and config_path.suffix != ".yaml":
             raise FileNotFoundError("Config must have .yaml extension")
 
-        with open(config_path, "r") as config_file:
+        with open(config_path, "r", encoding="UTF-8") as config_file:
             logger.info("Config loaded!")
             data = yaml.load(config_file, Loader)
         return cls.model_validate(data)

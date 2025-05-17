@@ -23,7 +23,7 @@ logging.basicConfig(
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(fastapi_app: FastAPI):
     register_handlers()
     await register_helpers()
 

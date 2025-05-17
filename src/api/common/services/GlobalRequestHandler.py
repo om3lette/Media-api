@@ -3,7 +3,7 @@ import os
 import shutil
 from pathlib import Path
 
-from src.api.common import RequestType
+from src.api.common.types.request import RequestType
 from src.api.common.file_helpers import BaseFileHelper
 from src.api.common.request_helpers.HelpersHandler import HelpersHandler
 from src.api.common.schemas.MediaRequest import MediaRequestDTO
@@ -15,9 +15,14 @@ from src.api.common.enums import (
 )
 from src.api.common.utils import out_path_from_request_id, input_path_from_request_id
 
-from src.api.common.types import RequestHandler, RequestHelper, FileHelper
+from src.api.common.types.request_handler import RequestHandler
+from src.api.common.types.file_helper import FileHelper
+from src.api.common.types.request_helper import RequestHelper
+
+# from src.api.common.types import RequestHandler, RequestHelper, FileHelper
 from src.api.common.services.RequestQueue import RequestQueue
 from src.app_config import app_config
+from src.pipeline.schemas.Paths import PathsSchema
 from src.utils import get_logger_from_filepath
 
 logger = get_logger_from_filepath(__file__)
@@ -33,15 +38,15 @@ class GlobalRequestsHandler:
         self._helpers: HelpersHandler = HelpersHandler()
 
     def register_request_handler(self, handler: RequestHandler):
-        logger.info(f"Registering {handler.event_type} request handler...")
+        logger.info("Registering %s request handler...", handler.event_type)
         self._handlers.append(handler)
 
     async def register_file_helper(self, file_helper: FileHelper):
-        logger.info(f"Initializing {file_helper.name} file helper...")
+        logger.info("Initializing %s helper...", file_helper.name)
         await self._file_helpers.register_helper(file_helper)
 
     async def register_request_helper(self, helper: RequestHelper):
-        logger.info(f"Initializing {helper.name} helper...")
+        logger.info("Initializing %s helper...", helper.name)
         await self._helpers.register_helper(helper)
 
     async def add_request(
@@ -57,7 +62,7 @@ class GlobalRequestsHandler:
         if request.file:
             await self._retrieve_file(request, input_path_from_request_id(request_id))
 
-        logger.info(f"Queued request: {request_id}")
+        logger.info("Queued request: %s", request_id)
         success = await self.queue.push(request, request_type, request_id)
         return RequestProcessCodes.OK if success else RequestProcessCodes.QUEUE_FULL
 
@@ -69,7 +74,7 @@ class GlobalRequestsHandler:
             try:
                 await self._process_request(req, req_id, req_type)
             except Exception as e:
-                logger.error(f"Error occurred when processing video:\n{e}")
+                logger.error("Error occurred when processing video:\n%s", e)
             self.current_request_id = ""
             self.queue.task_done()
 
@@ -91,12 +96,14 @@ class GlobalRequestsHandler:
     async def _process_request(
         self, dto: MediaRequestDTO, request_id: str, request_type: VideoRequestType
     ) -> RequestProcessCodes:
-        logger.info(f"Starting to process request: {request_id}")
+        logger.info("Starting to process request: %s", request_id)
+
         input_file_path: Path = input_path_from_request_id(request_id)
 
         return_code: FileRetrievalCodes = await self._retrieve_file(
             dto, input_file_path
         )
+
         if return_code == FileRetrievalCodes.NOT_FOUND:
             logger.info("Failed to retrieve input file")
             return RequestProcessCodes.FILE_NOT_FOUND
@@ -104,7 +111,9 @@ class GlobalRequestsHandler:
 
         request_handler = self._get_request_handler(request_type)
         await request_handler.handle(
-            dto.request, self._helpers, request_id, input_file_path
+            dto.request,
+            self._helpers,
+            PathsSchema(input_file_path.suffix.replace(".", ""), request_id),
         )
         logger.info("Render complete")
 
@@ -114,7 +123,7 @@ class GlobalRequestsHandler:
             logging.info("Deleting input file")
             shutil.rmtree(input_file_path.parent)
 
-        logger.info(f"Task done: {request_id}")
+        logger.info("Task done: %s", request_id)
         return RequestProcessCodes.OK
 
     async def _retrieve_file(

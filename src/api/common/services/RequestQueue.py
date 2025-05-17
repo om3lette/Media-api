@@ -1,6 +1,6 @@
 import asyncio
 
-from src.api.common import RequestType
+from src.api.common.types.request import RequestType
 from src.api.common.schemas.MediaRequest import MediaRequestDTO
 from src.api.video.constants import MAX_REQUESTS_BACKLOG
 

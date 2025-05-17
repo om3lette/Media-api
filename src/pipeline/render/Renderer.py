@@ -1,15 +1,12 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from src.pipeline.ffmpeg_utils.utils import get_streams_from_file
-from src.pipeline.types import (
-    Job,
-    Preprocessor,
-    Postprocessor,
-    RequestDataDir,
-    RequestOutDir,
-    RenderConfig,
-)
+from src.api.common.request_helpers import HelpersHandler
+from src.pipeline.schemas.Paths import PathsSchema
+from src.pipeline.schemas.Streams import StreamsSchema
+from src.pipeline.schemas.task_wrapper import TaskWrapper
+from src.pipeline.tasks.utils import get_streams_from_file
+from src.pipeline.types import RenderConfig
 from src.utils import get_logger_from_filepath
 
 logger = get_logger_from_filepath(__file__)
@@ -18,35 +15,35 @@ logger = get_logger_from_filepath(__file__)
 @dataclass
 class Renderer:
     file_path: Path
-    preprocessors: list[Preprocessor]
-    jobs: list[Job]
-    postprocessors: list[Postprocessor]
+    preprocessors: list[TaskWrapper]
+    jobs: list[TaskWrapper]
+    postprocessors: list[TaskWrapper]
+
+    @staticmethod
+    def __get_task_name(task: TaskWrapper) -> str:
+        return task.execute.__qualname__.split(".")[0]
 
     async def run(
-        self,
-        config: RenderConfig,
-        data_dir: RequestDataDir,
-        out_dir: RequestOutDir,
-        save_path: Path,
+        self, config: RenderConfig, helpers: HelpersHandler, paths: PathsSchema
     ) -> bool:
         if not self.file_path.is_file():
             raise RuntimeError(
                 f"Incorrect file path provided for renderer: {self.file_path}"
             )
-        video_stream, audio_stream = get_streams_from_file(self.file_path)
-        # TODO: Rethink arguments of preprocessors/jobs/postprocessors
-        for preprocessor in self.preprocessors:
-            logger.info(f"Running preprocessor: {preprocessor.__name__}")
-            video_stream, audio_stream = await preprocessor(
-                config, video_stream, audio_stream
+        streams: StreamsSchema = get_streams_from_file(self.file_path)
+
+        for p in self.preprocessors:
+            logger.info("Running preprocessor: %s", self.__get_task_name(p))
+            streams: StreamsSchema = await p.execute(
+                p.extract_config(config), helpers, streams, paths
             )
 
-        for job in self.jobs:
-            logger.info(f"Running job: {job.__name__}")
-            await job(config, video_stream, audio_stream, save_path)
+        for j in self.jobs:
+            logger.info("Running job: %s", self.__get_task_name(j))
+            await j.execute(j.extract_config(config), helpers, streams, paths)
 
-        for postprocessor in self.postprocessors:
-            logger.info(f"Running postprocessor: {postprocessor.__name__}")
-            await postprocessor(config, data_dir, out_dir)
+        for p in self.postprocessors:
+            logger.info("Running postprocessor: %s", self.__get_task_name(p))
+            await p.execute(p.extract_config(config), helpers, streams, paths)
 
         return True

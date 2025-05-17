@@ -1,5 +1,6 @@
-import whisper
 from pathlib import Path
+
+import whisper
 
 from src.api.common.enums import RequestHelpersNames
 from src.api.common.request_helpers.BaseHelper import BaseHelper
@@ -19,9 +20,9 @@ class TranscriptionHelper(BaseHelper):
 
     async def init(self, app_config: ConfigParser):
         """Preloads the given model into memory"""
-        logger.info(f"Loading {app_config.transcription.model} model...")
+        logger.info("Loading %s model...", app_config.transcription.model)
         self._model = whisper.load_model(app_config.transcription.model, in_memory=True)
-        logger.info(f"{app_config.transcription.model.capitalize()} model loaded!")
+        logger.info("%s model loaded!", app_config.transcription.model.capitalize())
 
     def transcribe(self, config: TranscribeConfig, file_path: Path) -> Path:
         if self._model is None:
@@ -30,6 +31,6 @@ class TranscriptionHelper(BaseHelper):
             )
         result = self._model.transcribe(str(file_path))
         out_path: Path = file_path.parent / get_transcription_filename()
-        with open(out_path, "w") as f:
+        with open(out_path, "w", encoding="UTF-8") as f:
             f.write(result["text"] or "No words detected")
         return out_path

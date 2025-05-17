@@ -25,7 +25,7 @@ class AudioCodecs(StrEnum):
 class GigachatModels(StrEnum):
     LITE = "GigaChat-2"
     PRO = "GigaChat-2-Pro"
-    Max = "GigaChat-2-Max"
+    MAX = "GigaChat-2-Max"
 
 
 class GigachatModelScopes(StrEnum):

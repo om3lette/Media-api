@@ -2,55 +2,58 @@ from typing import Self
 from pathlib import Path
 
 from src.constants import DATA_FOLDER
-from src.pipeline.types import Job, Preprocessor, Postprocessor
+from src.pipeline.BaseTask import BaseTask
+from src.pipeline.enums import TaskType
+from src.pipeline.schemas.task_wrapper import TaskWrapper
 from src.pipeline.render import Renderer
+from src.utils import get_logger_from_filepath
+
+logger = get_logger_from_filepath(__file__)
 
 
 class RendererBuilder:
     def __init__(self):
-        self._renderer: Renderer = Renderer(Path(), [], [], [])
+        self.__renderer: Renderer = Renderer(Path(), [], [], [])
+        self.__seen_tasks: set[BaseTask] = set()
 
-    @staticmethod
-    def _check_if_registered(
-        container: list[Preprocessor | Job | Postprocessor], name: str
-    ) -> bool:
-        for func in container:
-            if func.__name__ == name:
-                return True
-        return False
+    def __register_task(self, task: BaseTask):
+        container: list = self.__renderer.preprocessors
+        if task.type == TaskType.JOB:
+            container = self.__renderer.jobs
+        elif task.type == TaskType.POSTPROCESSOR:
+            container = self.__renderer.postprocessors
+        elif task.type != TaskType.PREPROCESSOR:
+            raise NotImplementedError(f"Task type {task.type} is not supported")
+        container.append(
+            TaskWrapper(execute=task.execute, extract_config=task.extract_config)
+        )
+
+    def add_task(self, task: BaseTask) -> Self:
+        def collect(to_collect: BaseTask):
+            if to_collect in self.__seen_tasks:
+                return
+            logger.info("Added task: %s to Renderer", to_collect.__class__.__name__)
+            self.__seen_tasks.add(to_collect)
+
+            for d in to_collect.dependencies:
+                collect(d)
+
+            self.__register_task(to_collect)
+
+        collect(task)
+        return self
 
     def use_file(self, file_name: str) -> Self:
-        self._renderer.file_path = DATA_FOLDER / file_name
-        return self
-
-    def add_preprocessor(self, preprocessor: Preprocessor) -> Self:
-        if self._check_if_registered(
-            self._renderer.preprocessors, preprocessor.__name__
-        ):
-            return self
-        self._renderer.preprocessors.append(preprocessor)
-        return self
-
-    def add_job(self, job: Job) -> Self:
-        if self._check_if_registered(self._renderer.jobs, job.__name__):
-            return self
-        self._renderer.jobs.append(job)
-        return self
-
-    def add_postprocessor(self, postprocessor: Postprocessor) -> Self:
-        if self._check_if_registered(
-            self._renderer.postprocessors, postprocessor.__name__
-        ):
-            return self
-        self._renderer.postprocessors.append(postprocessor)
+        self.__renderer.file_path = DATA_FOLDER / file_name
         return self
 
     def build(self) -> Renderer:
         if (
-            len(self._renderer.jobs)
-            + len(self._renderer.preprocessors)
-            + len(self._renderer.postprocessors)
+            len(self.__renderer.jobs)
+            + len(self.__renderer.preprocessors)
+            + len(self.__renderer.postprocessors)
             == 0
         ):
             raise RuntimeError("No jobs were registered for renderer")
-        return self._renderer
+        print(len(list(self.__seen_tasks)))
+        return self.__renderer

@@ -5,8 +5,8 @@ FROM python:3.12-slim
 
 WORKDIR /render-app
 
-# Install ffmpeg
-RUN apt-get update && apt-get install -y ffmpeg && \
+# Install tasks
+RUN apt-get update && apt-get install -y tasks && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .

@@ -8,3 +8,9 @@ class WhisperModelType(StrEnum):
     MEDIUM = "medium"
     LARGE = "large"
     TURBO = "turbo"
+
+
+class TaskType:
+    PREPROCESSOR = 0
+    JOB = 1
+    POSTPROCESSOR = 2
