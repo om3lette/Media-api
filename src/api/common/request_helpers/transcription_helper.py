@@ -29,7 +29,7 @@ class TranscriptionHelper(BaseHelper):
             raise RuntimeError(
                 "Model was not loaded when 'transcribe' was called. Use 'load_model' first"
             )
-        result = self._model.transcribe(str(file_path))
+        result = self._model.transcribe(str(file_path), verbose=False)
         out_path: Path = file_path.parent / get_transcription_filename()
         with open(out_path, "w", encoding="UTF-8") as f:
             f.write(result["text"] or "No words detected")

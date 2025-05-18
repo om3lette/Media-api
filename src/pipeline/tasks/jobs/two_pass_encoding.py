@@ -10,7 +10,7 @@ from src.pipeline.schemas.streams import StreamsSchema
 from src.pipeline.tasks import preprocessors
 from src.pipeline.tasks.jobs.base_job import BaseJob
 from src.constants import NULL_PATH, PASSLOG_PATH
-from src.pipeline.tasks.utils import extract_config_by_field_name
+from src.pipeline.tasks.utils import extract_config_by_field_name, ffmpeg_run
 from src.pipeline.types import RenderConfig
 
 
@@ -39,7 +39,8 @@ class TwoPassEncodingTask(BaseJob):
             "an": None,
             "y": None,
         }
-        ffmpeg.output(streams.video, str(NULL_PATH), **first_pass_params).run()
+        output = ffmpeg.output(streams.video, str(NULL_PATH), **first_pass_params)
+        await ffmpeg_run(paths.raw_path, output)
 
         second_pass_params = {
             "vcodec": config.codecs.video,
@@ -52,6 +53,7 @@ class TwoPassEncodingTask(BaseJob):
             "passlogfile": PASSLOG_PATH,
             "y": None,
         }
-        ffmpeg.output(
+        output = ffmpeg.output(
             streams.video, streams.audio, str(paths.out_path), **second_pass_params
-        ).run()
+        )
+        await ffmpeg_run(paths.raw_path, output)

@@ -1,3 +1,5 @@
+import asyncio
+
 from src.api.common.enums import RequestHelpersNames
 from src.api.common.request_helpers import HelpersHandler, TranscriptionHelper
 from src.api.common.types.request import RequestType
@@ -30,4 +32,6 @@ class TranscribeTask(BaseJob):
         transcription_helper: TranscriptionHelper = helpers.get_helper_by_name(
             RequestHelpersNames.TRANSCRIPTION
         )
-        transcription_helper.transcribe(config, paths.audio_path)
+        await asyncio.to_thread(
+            lambda: transcription_helper.transcribe(config, paths.audio_path)
+        )

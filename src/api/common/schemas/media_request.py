@@ -8,7 +8,7 @@ from pydantic import BaseModel, field_validator, HttpUrl, Field
 
 class MediaRequestSchema(BaseModel):
     url: Optional[HttpUrl] = Field(default=None)
-    config: dict[str, dict]
+    config: dict[str, BaseModel]
 
     @field_validator("url")
     @classmethod

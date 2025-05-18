@@ -1,4 +1,3 @@
-import logging
 import os
 import shutil
 from pathlib import Path
@@ -7,7 +6,6 @@ from src.api.common.types.request import RequestType
 from src.api.common.file_helpers import BaseFileHelper
 from src.api.common.request_helpers.helpers_handler import HelpersHandler
 from src.api.common.schemas.media_request import MediaRequestDTO
-from src.api.video.enums import VideoRequestType
 from src.api.common.enums import (
     RequestProcessCodes,
     FileRetrievalCodes,
@@ -19,9 +17,10 @@ from src.api.common.types.request_handler import RequestHandler
 from src.api.common.types.file_helper import FileHelper
 from src.api.common.types.request_helper import RequestHelper
 
-# from src.api.common.types import RequestHandler, RequestHelper, FileHelper
 from src.api.common.services.request_queue import RequestQueue
+from src.api.video.constants import INPUT_FILENAME
 from src.app_config import app_config
+from src.config.enums import VideoCodecs, AudioCodecs
 from src.pipeline.schemas.paths import PathsSchema
 from src.utils import get_logger_from_filepath
 
@@ -80,7 +79,7 @@ class GlobalRequestsHandler:
             self.current_request_id = ""
             self.queue.task_done()
 
-    def _get_request_handler(self, request_type: VideoRequestType) -> RequestHandler:
+    def _get_request_handler(self, request_type: RequestType) -> RequestHandler:
         for handler in self._handlers:
             if handler.event_type == request_type:
                 return handler
@@ -96,14 +95,12 @@ class GlobalRequestsHandler:
         os.makedirs(out_dir)
 
     async def _process_request(
-        self, dto: MediaRequestDTO, request_id: str, request_type: VideoRequestType
+        self, dto: MediaRequestDTO, request_id: str, request_type: RequestType
     ) -> RequestProcessCodes:
         logger.info("Starting to process request: %s", request_id)
 
-        input_file_path: Path = input_path_from_request_id(request_id)
-
-        return_code: FileRetrievalCodes = await self._retrieve_file(
-            dto, input_file_path
+        return_code, input_file_path = await self._retrieve_file(
+            dto, input_path_from_request_id(request_id)
         )
 
         if return_code == FileRetrievalCodes.NOT_FOUND:
@@ -111,18 +108,29 @@ class GlobalRequestsHandler:
             return RequestProcessCodes.FILE_NOT_FOUND
         logger.info("Input file retrieved")
 
+        # TODO: Look at request type?
+        video_codec: VideoCodecs = app_config.ffmpeg.codecs.video
+        if "codecs" in dto.request.config.model_fields:
+            video_codec = dto.request.config.codecs.video
+        elif "ffmpeg" in dto.request.config:
+            video_codec = dto.request.config.ffmpeg.codecs.video
+
+        audio_codec: AudioCodecs = app_config.ffmpeg.codecs.audio
+        if "audio" in dto.request.config.model_fields:
+            audio_codec = dto.request.config.audio.codec
+
         request_handler = self._get_request_handler(request_type)
         await request_handler.handle(
             dto.request,
             self._helpers,
-            PathsSchema(input_file_path.suffix.replace(".", ""), request_id),
+            PathsSchema(input_file_path, request_id, video_codec, audio_codec),
         )
         logger.info("Render complete")
 
         # Cleanup input files
         # Save files retrieved from url in dev move
         if not app_config.dev_mode or dto.file:
-            logging.info("Deleting input file")
+            logger.info("Deleting input file")
             shutil.rmtree(input_file_path.parent)
 
         logger.info("Task done: %s", request_id)
@@ -130,9 +138,19 @@ class GlobalRequestsHandler:
 
     async def _retrieve_file(
         self, request_body: MediaRequestDTO, save_path: Path
-    ) -> FileRetrievalCodes:
-        if save_path.is_file():
-            return FileRetrievalCodes.OK
+    ) -> tuple[FileRetrievalCodes, Path]:
+        """
+        :param request_body:
+        :param save_path:
+        :return: Path where file was saved. save_path with correct suffix
+        """
+        # Check if input file is present in directory
+        for f in save_path.parent.iterdir():
+            if not f.is_file():
+                continue
+            if f.name.startswith(INPUT_FILENAME):
+                return FileRetrievalCodes.OK, save_path.parent / f.name
+
         helper_name: FileHelperNames = FileHelperNames.UPLOAD_FILE
         if request_body.request.url:
             helper_name = FileHelperNames.YADISK
