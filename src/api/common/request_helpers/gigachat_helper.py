@@ -24,7 +24,7 @@ class GigachatHelper(BaseHelper):
 
     @staticmethod
     def _assemble_user_query(transcription_path: Path):
-        with open(transcription_path, "r", encoding="UTF-8") as f:
+        with open(transcription_path, encoding="UTF-8") as f:
             return (
                 "Предоставь краткое содержание следующего текстового файла/текста:\n"
                 + f.read()

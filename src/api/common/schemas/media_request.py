@@ -1,5 +1,4 @@
 import uuid
-from typing import Optional
 from dataclasses import dataclass
 
 from fastapi import UploadFile
@@ -7,12 +6,12 @@ from pydantic import BaseModel, field_validator, HttpUrl, Field
 
 
 class MediaRequestSchema(BaseModel):
-    url: Optional[HttpUrl] = Field(default=None)
+    url: HttpUrl | None = Field(default=None)
     config: dict[str, BaseModel]
 
     @field_validator("url")
     @classmethod
-    def validate_url(cls, value: Optional[HttpUrl]) -> Optional[HttpUrl]:
+    def validate_url(cls, value: HttpUrl | None) -> HttpUrl | None:
         if value is None:
             return value
         split_path: list[str] = value.path.split("/")
@@ -39,4 +38,4 @@ class MediaRequestSchema(BaseModel):
 @dataclass
 class MediaRequestDTO:
     request: MediaRequestSchema
-    file: Optional[UploadFile]
+    file: UploadFile | None

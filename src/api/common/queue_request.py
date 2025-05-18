@@ -1,4 +1,3 @@
-from typing import Optional, Type
 
 from fastapi import HTTPException, UploadFile
 from pydantic import ValidationError
@@ -12,9 +11,9 @@ from src.api.common.schemas.media_request import MediaRequestDTO, MediaRequestSc
 
 async def queue_request(
     request_type: RequestType,
-    data_schema: Type[MediaRequestSchema],
+    data_schema: type[MediaRequestSchema],
     data: str,
-    file: Optional[UploadFile],
+    file: UploadFile | None,
 ):
     try:
         parsed_data: MediaRequestSchema = data_schema.model_validate_json(data)

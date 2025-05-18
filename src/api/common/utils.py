@@ -1,4 +1,3 @@
-from typing import Union
 from pathlib import Path
 
 from src.api.video.constants import (
@@ -16,10 +15,7 @@ from src.constants import DATA_FOLDER, OUT_FOLDER
 
 
 def file_path_from_name(
-    base_path: Union[DATA_FOLDER, OUT_FOLDER],
-    request_id: str,
-    filename: str,
-    file_extension: str,
+    base_path: Path, request_id: str, filename: str, file_extension: str
 ) -> Path:
     return base_path / request_id / (filename + "." + file_extension)
 

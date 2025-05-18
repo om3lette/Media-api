@@ -1,6 +1,5 @@
 import asyncio
 from pathlib import Path
-from typing import Type
 
 import ffmpeg
 from tqdm import tqdm
@@ -18,7 +17,7 @@ def get_streams_from_file(file_path: Path) -> StreamsSchema:
 
 
 def extract_config_by_field_name(
-    extract_from: RenderConfig, field_name: str, config_type: Type[RenderConfig]
+    extract_from: RenderConfig, field_name: str, config_type: type[RenderConfig]
 ) -> RenderConfig:
     if isinstance(extract_from, config_type):
         return extract_from
