@@ -1,9 +1,8 @@
 import ffmpeg
 
-from src.api.common.request_helpers import HelpersHandler
-from src.api.common.types.request import RequestType
-from src.api.video.enums import VideoRequestType
-from src.api.video.schemas.requests.compress import CompressConfig
+from src.api.common.request_helpers.helpers_handler import HelpersHandler
+from src.api.common.types.request import RequestType, GeneralRequestType
+from src.api.common.schemas.requests.compress import CompressConfig
 from src.pipeline.base_task import BaseTask
 from src.pipeline.schemas.paths import PathsSchema
 from src.pipeline.schemas.streams import StreamsSchema
@@ -15,7 +14,7 @@ from src.pipeline.types import RenderConfig
 
 
 class TwoPassEncodingTask(BaseJob):
-    request_type: RequestType = VideoRequestType.COMPRESS
+    request_type: RequestType = GeneralRequestType.COMPRESS
     dependencies: list[BaseTask] = [preprocessors.NormalizeTask()]
 
     @staticmethod

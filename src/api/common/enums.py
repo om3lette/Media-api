@@ -1,5 +1,6 @@
 from enum import IntEnum, StrEnum
 
+
 class FileType(IntEnum):
     TEXT = 0
     DOCUMENT = 1
@@ -8,6 +9,7 @@ class FileType(IntEnum):
     IMAGE = 4
     EXECUTABLE = 5
     OTHER = 6
+
 
 class RequestProcessCodes(IntEnum):
     OK = 0

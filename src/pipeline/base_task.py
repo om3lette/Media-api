@@ -1,11 +1,12 @@
 from pydantic import BaseModel, Field
 
-from src.api.common.request_helpers import HelpersHandler
+from src.api.common.request_helpers.helpers_handler import HelpersHandler
 from src.api.common.types.request import RequestType
 from src.pipeline.enums import TaskType
 from src.pipeline.schemas.paths import PathsSchema
 from src.pipeline.schemas.streams import StreamsSchema
 from src.pipeline.types import RenderConfig
+
 
 class BaseTask(BaseModel):
     type: TaskType
@@ -14,9 +15,6 @@ class BaseTask(BaseModel):
 
     class Config:
         arbitrary_types_allowed = True
-    
-    def with_dependencies(self, dependencies: list["BaseTask"]):
-        self.dependencies = dependencies
 
     async def execute(
         self,

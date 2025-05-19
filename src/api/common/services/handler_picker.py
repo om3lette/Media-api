@@ -8,6 +8,7 @@ from src.utils import get_logger_from_filepath
 
 logger = get_logger_from_filepath(__file__)
 
+
 class HandlerPicker:
     def __init__(self):
         self.__handlers: list[RequestHandler] = []
@@ -24,7 +25,7 @@ class HandlerPicker:
             _type, subtype = mime_type.split("/")
 
             if _type == "video":
-                # .m4a is recognised as video/mp4 because m4a is a mp4 container with no video stream
+                # .m4a is recognised as video/mp4 (m4a is a mp4 container with no video stream)
                 if file_path.suffix == ".m4a":
                     return FileType.AUDIO
                 return FileType.VIDEO
@@ -40,7 +41,9 @@ class HandlerPicker:
                 return FileType.DOCUMENT
             return FileType.OTHER
 
-    def pick_handler(self, file_path: Path, request_type: GeneralRequestType) -> RequestHandler | None:
+    def pick_handler(
+        self, file_path: Path, request_type: GeneralRequestType
+    ) -> RequestHandler | None:
         file_type: FileType = self.__deduce_file_type(file_path)
         if file_type == FileType.EXECUTABLE:
             logger.warning("Found executable file. Aborting request")
@@ -50,7 +53,11 @@ class HandlerPicker:
             return None
 
         for handler in self.__handlers:
-            if handler.file_type == file_type and handler.event_type == request_type:
+            if handler.event_type == request_type and file_type in handler.file_types:
                 return handler
-        logger.info("No handler found for request_type: %s and file_type: %s", request_type, file_type)
+        logger.info(
+            "No handler found for request_type: %s and file_type: %s",
+            request_type,
+            file_type,
+        )
         return None

@@ -1,10 +1,10 @@
 import asyncio
 
 from src.api.common.enums import RequestHelpersNames
-from src.api.common.request_helpers import HelpersHandler, TranscriptionHelper
-from src.api.common.types.request import RequestType
-from src.api.video.enums import VideoRequestType
-from src.api.video.schemas.requests.transcribe import TranscribeConfig
+from src.api.common.request_helpers.helpers_handler import HelpersHandler
+from src.api.common.request_helpers.transcription_helper import TranscriptionHelper
+from src.api.common.types.request import RequestType, GeneralRequestType
+from src.api.common.schemas.requests.transcribe import TranscribeConfig
 from src.pipeline.base_task import BaseTask
 from src.pipeline.schemas.paths import PathsSchema
 from src.pipeline.schemas.streams import StreamsSchema
@@ -15,7 +15,7 @@ from src.pipeline.types import RenderConfig
 
 
 class TranscribeTask(BaseJob):
-    request_type: RequestType = VideoRequestType.TRANSCRIBE
+    request_type: RequestType = GeneralRequestType.TRANSCRIBE
     dependencies: list[BaseTask] = [ExtractAudioTask()]
 
     @staticmethod
@@ -33,5 +33,9 @@ class TranscribeTask(BaseJob):
             RequestHelpersNames.TRANSCRIPTION
         )
         await asyncio.to_thread(
-            lambda: transcription_helper.transcribe(config, paths.audio_path)
+            lambda: transcription_helper.transcribe(
+                config,
+                paths.audio_path if paths.audio_path.is_file() else paths.raw_path,
+                paths.transcription_path,
+            )
         )

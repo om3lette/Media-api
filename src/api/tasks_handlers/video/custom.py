@@ -1,17 +1,17 @@
 from pathlib import Path
 
 from src.api.common.enums import FileType
-from src.api.common.types.request import RequestType, GeneralRequestType
+from src.api.common.types.request import GeneralRequestType
 from src.pipeline.render import RendererBuilder, Renderer
 from src.api.common.services.base_handler import BaseHandler
-from src.api.video.enums import VideoRequestType, VideoActions
+from src.api.tasks_handlers.enums import VideoActions
 
 from src.pipeline.tasks import jobs, postprocessors
 
 
-class CustomHandler(BaseHandler):
+class CustomVideoHandler(BaseHandler):
     def __init__(self):
-        super().__init__(GeneralRequestType.CUSTOM, FileType.VIDEO)
+        super().__init__(GeneralRequestType.CUSTOM, [FileType.VIDEO])
 
     def _build_renderer(
         self, actions: list[VideoActions], raw_file_path: Path

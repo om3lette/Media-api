@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from src.api.video.constants import (
+from src.api.tasks_handlers.constants import (
     OUT_FILE_EXTENSION,
     INPUT_FILENAME,
     OUT_FILENAME,

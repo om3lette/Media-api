@@ -1,10 +1,10 @@
 from pathlib import Path
 
-from src.api.common.request_helpers import HelpersHandler
+from src.api.common.request_helpers.helpers_handler import HelpersHandler
 
 from src.api.common.enums import RequestProcessCodes, FileType
 from src.api.common.schemas import MediaRequestSchema
-from src.api.common.types.request import RequestType, GeneralRequestType
+from src.api.common.types.request import GeneralRequestType
 from src.pipeline.render import Renderer
 from src.pipeline.schemas.paths import PathsSchema
 
@@ -14,16 +14,14 @@ logger = get_logger_from_filepath(__file__)
 
 
 class BaseHandler:
-    file_type: FileType
     event_type: GeneralRequestType
+    file_types: list[FileType]
 
-    def __init__(self, event_type: GeneralRequestType, file_type: FileType):
+    def __init__(self, event_type: GeneralRequestType, file_types: list[FileType]):
         self.event_type = event_type
-        self.file_type = file_type
+        self.file_types = file_types
 
-    def _build_renderer(
-        self, actions: list, raw_file_path: Path
-    ) -> Renderer:
+    def _build_renderer(self, actions: list, raw_file_path: Path) -> Renderer:
         raise NotImplementedError("No implementation provided for _build_renderer")
 
     async def handle(

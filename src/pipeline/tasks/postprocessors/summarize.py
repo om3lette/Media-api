@@ -1,8 +1,8 @@
 from src.api.common.enums import RequestHelpersNames
-from src.api.common.request_helpers import HelpersHandler, GigachatHelper
-from src.api.common.types.request import RequestType
-from src.api.video.enums import VideoRequestType
-from src.api.video.schemas.requests.summarize import SummarizeConfig
+from src.api.common.request_helpers.gigachat_helper import GigachatHelper
+from src.api.common.request_helpers.helpers_handler import HelpersHandler
+from src.api.common.types.request import RequestType, GeneralRequestType
+from src.api.common.schemas.requests.summarize import SummarizeConfig
 from src.pipeline.base_task import BaseTask
 from src.pipeline.schemas.paths import PathsSchema
 from src.pipeline.schemas.streams import StreamsSchema
@@ -13,7 +13,7 @@ from src.pipeline.types import RenderConfig
 
 
 class SummarizeTask(BasePostprocessor):
-    request_type: RequestType = VideoRequestType.SUMMARIZE
+    request_type: RequestType = GeneralRequestType.SUMMARIZE
     dependencies: list[BaseTask] = [TranscribeTask()]
 
     @staticmethod

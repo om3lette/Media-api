@@ -1,11 +1,11 @@
 from pydantic import Field
 
 from src.api.common.schemas import MediaRequestSchema
-from src.api.video.enums import VideoRequestType, VideoActions
-from src.api.video.schemas.requests.compress import CompressConfig
-from src.api.video.schemas.requests.extract_audio import ExtractAudioConfig
-from src.api.video.schemas.requests.summarize import SummarizeConfig
-from src.api.video.schemas.requests.transcribe import TranscribeConfig
+from src.api.tasks_handlers.enums import VideoActions
+from src.api.common.schemas.requests.compress import CompressConfig
+from src.api.common.schemas.requests.extract_audio import ExtractAudioConfig
+from src.api.common.schemas.requests.summarize import SummarizeConfig
+from src.api.common.schemas.requests.transcribe import TranscribeConfig
 
 
 class CustomConfig(ExtractAudioConfig, SummarizeConfig, TranscribeConfig):

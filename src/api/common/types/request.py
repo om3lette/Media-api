@@ -1,8 +1,7 @@
 from enum import StrEnum
 from typing import Union
 
-from src.api.audio.enums import AudioRequestType
-from src.api.video.enums import VideoRequestType
+from src.api.tasks_handlers.enums import VideoRequestType, AudioRequestType
 
 
 class GeneralRequestType(StrEnum):
@@ -11,5 +10,6 @@ class GeneralRequestType(StrEnum):
     EXTRACT_AUDIO = "extract_audio"
     SUMMARIZE = "summarize"
     CUSTOM = "custom"
+
 
 RequestType = Union[VideoRequestType, AudioRequestType]

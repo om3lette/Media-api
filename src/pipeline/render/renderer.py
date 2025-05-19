@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
 
-from src.api.common.request_helpers import HelpersHandler
+from src.api.common.request_helpers.helpers_handler import HelpersHandler
 from src.pipeline.schemas.paths import PathsSchema
 from src.pipeline.schemas.streams import StreamsSchema
 from src.pipeline.schemas.task_wrapper import TaskWrapper

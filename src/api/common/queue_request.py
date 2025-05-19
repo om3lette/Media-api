@@ -1,9 +1,8 @@
-
 from fastapi import HTTPException, UploadFile
 from pydantic import ValidationError
 from starlette.responses import Response
 
-from src.api.common.types.request import RequestType, GeneralRequestType
+from src.api.common.types.request import GeneralRequestType
 from src.api.common.handlers import global_requests_handler
 from src.api.common.enums import RequestProcessCodes
 from src.api.common.schemas.media_request import MediaRequestDTO, MediaRequestSchema
@@ -18,10 +17,7 @@ async def queue_request(
     try:
         parsed_data: MediaRequestSchema = data_schema.model_validate_json(data)
     except ValidationError as e:
-        raise HTTPException(
-            status_code=422,
-            detail=str(e.errors())
-        ) from e
+        raise HTTPException(status_code=422, detail=str(e.errors())) from e
 
     if (not parsed_data.url and file is None) or (parsed_data.url and file):
         raise HTTPException(

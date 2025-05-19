@@ -1,8 +1,8 @@
 import asyncio
 
-from src.api.common.types.request import RequestType, GeneralRequestType
+from src.api.common.types.request import GeneralRequestType
 from src.api.common.schemas.media_request import MediaRequestDTO
-from src.api.video.constants import MAX_REQUESTS_BACKLOG
+from src.api.tasks_handlers.constants import MAX_REQUESTS_BACKLOG
 
 
 class RequestQueue:
@@ -30,7 +30,10 @@ class RequestQueue:
         return request_id in self._ids
 
     async def push(
-        self, request: MediaRequestDTO, request_type: GeneralRequestType, request_id: str
+        self,
+        request: MediaRequestDTO,
+        request_type: GeneralRequestType,
+        request_id: str,
     ) -> bool:
         """
         Try to enqueue.  Returns False if queue is full or duplicate.

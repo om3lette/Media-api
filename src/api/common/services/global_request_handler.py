@@ -19,7 +19,7 @@ from src.api.common.types.file_helper import FileHelper
 from src.api.common.types.request_helper import RequestHelper
 
 from src.api.common.services.request_queue import RequestQueue
-from src.api.video.constants import INPUT_FILENAME
+from src.api.tasks_handlers.constants import INPUT_FILENAME
 from src.app_config import app_config
 from src.config.enums import VideoCodecs, AudioCodecs
 from src.pipeline.schemas.paths import PathsSchema
@@ -38,7 +38,11 @@ class GlobalRequestsHandler:
         self._helpers: HelpersHandler = HelpersHandler()
 
     def register_request_handler(self, handler: RequestHandler):
-        logger.info("Registering %s request handler...", handler.event_type)
+        logger.info(
+            "Registering %s handler with file_types=[%s]...",
+            handler.event_type,
+            ", ".join(map(str, handler.file_types)),
+        )
         self.__handler_picker.add_handler(handler)
 
     async def register_file_helper(self, file_helper: FileHelper):
@@ -50,7 +54,10 @@ class GlobalRequestsHandler:
         await self._helpers.register_helper(helper)
 
     async def add_request(
-        self, request_id: str, request: MediaRequestDTO, request_type: GeneralRequestType
+        self,
+        request_id: str,
+        request: MediaRequestDTO,
+        request_type: GeneralRequestType,
     ) -> RequestProcessCodes:
         if self.queue.exists(request_id):
             return RequestProcessCodes.ALREADY_QUEUED
@@ -75,7 +82,9 @@ class GlobalRequestsHandler:
                 await self._process_request(req, req_id, req_type)
             # pylint: disable=broad-exception-caught
             except Exception as e:
-                logger.error("Error occurred when processing request %s:\n%s", req_type, e)
+                logger.error(
+                    "Error occurred when processing request %s:\n%s", req_type, e
+                )
             # pylint: enable=broad-exception-caught
             self.current_request_id = ""
             self.queue.task_done()
@@ -103,13 +112,14 @@ class GlobalRequestsHandler:
             return RequestProcessCodes.FILE_NOT_FOUND
         logger.info("Input file retrieved")
 
-        request_handler = self.__handler_picker.pick_handler(input_file_path, request_type)
+        request_handler = self.__handler_picker.pick_handler(
+            input_file_path, request_type
+        )
         if request_handler is None:
             # TODO: More descriptive error
             shutil.rmtree(input_file_path.parent)
             return RequestProcessCodes.UNKNOWN_ERROR
 
-        # TODO: Look at request type?
         video_codec: VideoCodecs = app_config.ffmpeg.codecs.video
         if "codecs" in dto.request.config.model_fields:
             video_codec = dto.request.config.codecs.video
