@@ -2,9 +2,9 @@ from pathlib import Path
 
 from src.api.common.enums import FileType
 from src.api.common.services.base_handler import BaseHandler
-from src.api.common.types.request import RequestType, GeneralRequestType
+from src.api.common.types.request import CustomRequestActions, GeneralRequestType
+from src.api.tasks_handlers.audio.adjusted_tasks import audio_summarize_task
 from src.pipeline.render import Renderer, RendererBuilder
-from src.pipeline.tasks import postprocessors, jobs
 
 
 class SummarizeAudioHandler(BaseHandler):
@@ -12,14 +12,10 @@ class SummarizeAudioHandler(BaseHandler):
         super().__init__(GeneralRequestType.SUMMARIZE, [FileType.AUDIO])
 
     def _build_renderer(
-        self, actions: list[RequestType], raw_file_path: Path
+        self, actions: list[CustomRequestActions], raw_file_path: Path
     ) -> Renderer:
         return (
             RendererBuilder()
             .use_file(str(raw_file_path))
-            .add_task(
-                postprocessors.SummarizeTask(
-                    dependencies=[jobs.TranscribeTask(dependencies=[])]
-                )
-            )
+            .add_task(audio_summarize_task)
         ).build()

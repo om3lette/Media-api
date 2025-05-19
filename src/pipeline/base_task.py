@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 
 from src.api.common.request_helpers.helpers_handler import HelpersHandler
-from src.api.common.types.request import RequestType
+from src.api.common.types.request import CustomRequestActions
 from src.pipeline.enums import TaskType
 from src.pipeline.schemas.paths import PathsSchema
 from src.pipeline.schemas.streams import StreamsSchema
@@ -10,7 +10,7 @@ from src.pipeline.types import RenderConfig
 
 class BaseTask(BaseModel):
     type: TaskType
-    request_type: RequestType
+    request_type: CustomRequestActions
     dependencies: list["BaseTask"] = Field(default_factory=list)
 
     class Config:

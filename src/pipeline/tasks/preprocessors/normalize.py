@@ -1,5 +1,5 @@
 from src.api.common.request_helpers.helpers_handler import HelpersHandler
-from src.api.common.types.request import RequestType
+from src.api.common.types.request import CustomRequestActions
 from src.api.tasks_handlers.enums import VideoRequestType
 from src.api.common.schemas.requests.compress import CompressConfig
 from src.pipeline.schemas.paths import PathsSchema
@@ -10,7 +10,7 @@ from src.pipeline.types import VideoStream, AudioStream, RenderConfig
 
 
 class NormalizeTask(BasePreprocessor):
-    request_type: RequestType = VideoRequestType.UTILITY
+    request_type: CustomRequestActions = VideoRequestType.UTILITY
 
     @staticmethod
     def extract_config(full_config: RenderConfig) -> CompressConfig:

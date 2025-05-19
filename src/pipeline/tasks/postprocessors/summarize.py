@@ -1,7 +1,7 @@
 from src.api.common.enums import RequestHelpersNames
 from src.api.common.request_helpers.gigachat_helper import GigachatHelper
 from src.api.common.request_helpers.helpers_handler import HelpersHandler
-from src.api.common.types.request import RequestType, GeneralRequestType
+from src.api.common.types.request import CustomRequestActions, GeneralRequestType
 from src.api.common.schemas.requests.summarize import SummarizeConfig
 from src.pipeline.base_task import BaseTask
 from src.pipeline.schemas.paths import PathsSchema
@@ -13,7 +13,7 @@ from src.pipeline.types import RenderConfig
 
 
 class SummarizeTask(BasePostprocessor):
-    request_type: RequestType = GeneralRequestType.SUMMARIZE
+    request_type: CustomRequestActions = GeneralRequestType.SUMMARIZE
     dependencies: list[BaseTask] = [TranscribeTask()]
 
     @staticmethod

@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from src.api.common.enums import FileType
-from src.api.common.types.request import RequestType, GeneralRequestType
+from src.api.common.types.request import CustomRequestActions, GeneralRequestType
 from src.pipeline.render import RendererBuilder, Renderer
 from src.api.common.services.base_handler import BaseHandler
 from src.pipeline.tasks import jobs
@@ -12,7 +12,7 @@ class CompressVideoHandler(BaseHandler):
         super().__init__(GeneralRequestType.COMPRESS, [FileType.VIDEO])
 
     def _build_renderer(
-        self, actions: list[RequestType], raw_file_path: Path
+        self, actions: list[CustomRequestActions], raw_file_path: Path
     ) -> Renderer:
         return (
             RendererBuilder()

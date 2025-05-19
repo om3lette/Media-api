@@ -3,7 +3,7 @@ import asyncio
 from src.api.common.enums import RequestHelpersNames
 from src.api.common.request_helpers.helpers_handler import HelpersHandler
 from src.api.common.request_helpers.transcription_helper import TranscriptionHelper
-from src.api.common.types.request import RequestType, GeneralRequestType
+from src.api.common.types.request import CustomRequestActions, GeneralRequestType
 from src.api.common.schemas.requests.transcribe import TranscribeConfig
 from src.pipeline.base_task import BaseTask
 from src.pipeline.schemas.paths import PathsSchema
@@ -15,7 +15,7 @@ from src.pipeline.types import RenderConfig
 
 
 class TranscribeTask(BaseJob):
-    request_type: RequestType = GeneralRequestType.TRANSCRIBE
+    request_type: CustomRequestActions = GeneralRequestType.TRANSCRIBE
     dependencies: list[BaseTask] = [ExtractAudioTask()]
 
     @staticmethod

@@ -3,6 +3,7 @@ from src.api.common.request_helpers.gigachat_helper import GigachatHelper
 from src.api.common.services.global_request_handler import GlobalRequestsHandler
 from src.api.common.file_helpers.ya_disk_helper import YaDiskHelper
 from src.api.common.request_helpers.transcription_helper import TranscriptionHelper
+from src.api.tasks_handlers.audio.custom import CustomAudioHandler
 
 from src.api.tasks_handlers.common.extract_audio import ExtractAudioHandler
 
@@ -22,6 +23,7 @@ task_handlers = [
     CustomVideoHandler,
     TranscriptionAudioHandler,
     SummarizeAudioHandler,
+    CustomAudioHandler,
 ]
 
 global_requests_handler: GlobalRequestsHandler = GlobalRequestsHandler()

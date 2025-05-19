@@ -1,7 +1,7 @@
 import ffmpeg
 
 from src.api.common.request_helpers.helpers_handler import HelpersHandler
-from src.api.common.types.request import RequestType, GeneralRequestType
+from src.api.common.types.request import CustomRequestActions, GeneralRequestType
 from src.api.common.schemas.requests import ExtractAudioConfig
 from src.pipeline.schemas.paths import PathsSchema
 from src.pipeline.schemas.streams import StreamsSchema
@@ -11,7 +11,7 @@ from src.pipeline.types import RenderConfig
 
 
 class ExtractAudioTask(BaseJob):
-    request_type: RequestType = GeneralRequestType.EXTRACT_AUDIO
+    request_type: CustomRequestActions = GeneralRequestType.EXTRACT_AUDIO
 
     @staticmethod
     def extract_config(full_config: RenderConfig) -> ExtractAudioConfig:

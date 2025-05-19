@@ -1,7 +1,7 @@
 from enum import StrEnum
 from typing import Union
 
-from src.api.tasks_handlers.enums import VideoRequestType, AudioRequestType
+from src.api.tasks_handlers.enums import VideoActions, AudioActions
 
 
 class GeneralRequestType(StrEnum):
@@ -12,4 +12,4 @@ class GeneralRequestType(StrEnum):
     CUSTOM = "custom"
 
 
-RequestType = Union[VideoRequestType, AudioRequestType]
+CustomRequestActions = Union[VideoActions, AudioActions]
