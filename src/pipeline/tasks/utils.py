@@ -4,6 +4,7 @@ from pathlib import Path
 import ffmpeg
 from tqdm import tqdm
 
+from src.app_config import app_config
 from src.pipeline.schemas.ffmpeg_progress import FFMPEGProgressSchema
 
 from src.pipeline.schemas.streams import StreamsSchema
@@ -37,7 +38,7 @@ async def ffmpeg_run(
     input_file_path: Path,
     stream: ffmpeg.nodes.OutputStream,
     on_progress=display_progress,
-    show_cmd=False,
+    show_cmd=app_config.dev_mode,
 ):
     # Convert to command list
     cmd = stream.compile()

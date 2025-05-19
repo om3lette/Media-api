@@ -2,7 +2,8 @@ import os
 import shutil
 from pathlib import Path
 
-from src.api.common.types.request import RequestType
+from src.api.common.services.handler_picker import HandlerPicker
+from src.api.common.types.request import GeneralRequestType
 from src.api.common.file_helpers import BaseFileHelper
 from src.api.common.request_helpers.helpers_handler import HelpersHandler
 from src.api.common.schemas.media_request import MediaRequestDTO
@@ -32,13 +33,13 @@ class GlobalRequestsHandler:
 
     def __init__(self):
         self.queue: RequestQueue = RequestQueue()
-        self._handlers: list[RequestHandler] = []
+        self.__handler_picker: HandlerPicker = HandlerPicker()
         self._file_helpers: HelpersHandler = HelpersHandler()
         self._helpers: HelpersHandler = HelpersHandler()
 
     def register_request_handler(self, handler: RequestHandler):
         logger.info("Registering %s request handler...", handler.event_type)
-        self._handlers.append(handler)
+        self.__handler_picker.add_handler(handler)
 
     async def register_file_helper(self, file_helper: FileHelper):
         logger.info("Initializing %s helper...", file_helper.name)
@@ -49,7 +50,7 @@ class GlobalRequestsHandler:
         await self._helpers.register_helper(helper)
 
     async def add_request(
-        self, request_id: str, request: MediaRequestDTO, request_type: RequestType
+        self, request_id: str, request: MediaRequestDTO, request_type: GeneralRequestType
     ) -> RequestProcessCodes:
         if self.queue.exists(request_id):
             return RequestProcessCodes.ALREADY_QUEUED
@@ -74,16 +75,10 @@ class GlobalRequestsHandler:
                 await self._process_request(req, req_id, req_type)
             # pylint: disable=broad-exception-caught
             except Exception as e:
-                logger.error("Error occurred when processing video:\n%s", e)
+                logger.error("Error occurred when processing request %s:\n%s", req_type, e)
             # pylint: enable=broad-exception-caught
             self.current_request_id = ""
             self.queue.task_done()
-
-    def _get_request_handler(self, request_type: RequestType) -> RequestHandler:
-        for handler in self._handlers:
-            if handler.event_type == request_type:
-                return handler
-        raise NameError(f"Handler not found for request type: {request_type}")
 
     @staticmethod
     def _request_folders_setup(request_id: str):
@@ -95,7 +90,7 @@ class GlobalRequestsHandler:
         os.makedirs(out_dir)
 
     async def _process_request(
-        self, dto: MediaRequestDTO, request_id: str, request_type: RequestType
+        self, dto: MediaRequestDTO, request_id: str, request_type: GeneralRequestType
     ) -> RequestProcessCodes:
         logger.info("Starting to process request: %s", request_id)
 
@@ -108,6 +103,12 @@ class GlobalRequestsHandler:
             return RequestProcessCodes.FILE_NOT_FOUND
         logger.info("Input file retrieved")
 
+        request_handler = self.__handler_picker.pick_handler(input_file_path, request_type)
+        if request_handler is None:
+            # TODO: More descriptive error
+            shutil.rmtree(input_file_path.parent)
+            return RequestProcessCodes.UNKNOWN_ERROR
+
         # TODO: Look at request type?
         video_codec: VideoCodecs = app_config.ffmpeg.codecs.video
         if "codecs" in dto.request.config.model_fields:
@@ -119,7 +120,6 @@ class GlobalRequestsHandler:
         if "audio" in dto.request.config.model_fields:
             audio_codec = dto.request.config.audio.codec
 
-        request_handler = self._get_request_handler(request_type)
         await request_handler.handle(
             dto.request,
             self._helpers,

@@ -34,4 +34,4 @@ class ExtractAudioTask(BaseJob):
             ar=config.audio.sample_rate,
             y=None,
         )
-        await ffmpeg_run(paths.raw_path, output, show_cmd=True)
+        await ffmpeg_run(paths.raw_path, output)

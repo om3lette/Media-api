@@ -3,14 +3,14 @@ from fastapi import HTTPException, UploadFile
 from pydantic import ValidationError
 from starlette.responses import Response
 
-from src.api.common.types.request import RequestType
+from src.api.common.types.request import RequestType, GeneralRequestType
 from src.api.common.handlers import global_requests_handler
 from src.api.common.enums import RequestProcessCodes
 from src.api.common.schemas.media_request import MediaRequestDTO, MediaRequestSchema
 
 
 async def queue_request(
-    request_type: RequestType,
+    request_type: GeneralRequestType,
     data_schema: type[MediaRequestSchema],
     data: str,
     file: UploadFile | None,
@@ -20,9 +20,7 @@ async def queue_request(
     except ValidationError as e:
         raise HTTPException(
             status_code=422,
-            detail=list(
-                map(lambda x: {"loc": ".".join(x["loc"]), "msg": x["msg"]}, e.errors())
-            ),
+            detail=str(e.errors())
         ) from e
 
     if (not parsed_data.url and file is None) or (parsed_data.url and file):

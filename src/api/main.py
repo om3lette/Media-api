@@ -7,13 +7,14 @@ from fastapi import FastAPI, APIRouter
 from starlette.middleware.cors import CORSMiddleware
 
 from src.api.templates.router import static_router
-from src.api.video.router import video_router
+from src.api.common.router import requests_router
 from src.api.status.router import request_status_router
 from src.api.common.handlers import (
     global_requests_handler,
     register_helpers,
     register_handlers,
 )
+from src.app_config import app_config
 
 logging.basicConfig(
     level=logging.INFO,
@@ -29,7 +30,8 @@ async def lifespan(fastapi_app: FastAPI):
 
     asyncio.create_task(global_requests_handler.start())
     yield
-    await global_requests_handler.queue.join()
+    if not app_config.dev_mode:
+        await global_requests_handler.queue.join()
 
 
 app: FastAPI = FastAPI(lifespan=lifespan)
@@ -38,7 +40,7 @@ app.add_middleware(
 )
 
 app_router: APIRouter = APIRouter()
-app_router.include_router(video_router, prefix="/videos")
+app_router.include_router(requests_router)
 app_router.include_router(request_status_router, prefix="/status")
 
 app.include_router(app_router, prefix="/v1")

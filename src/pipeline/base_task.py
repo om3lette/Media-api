@@ -7,7 +7,6 @@ from src.pipeline.schemas.paths import PathsSchema
 from src.pipeline.schemas.streams import StreamsSchema
 from src.pipeline.types import RenderConfig
 
-
 class BaseTask(BaseModel):
     type: TaskType
     request_type: RequestType
@@ -15,6 +14,9 @@ class BaseTask(BaseModel):
 
     class Config:
         arbitrary_types_allowed = True
+    
+    def with_dependencies(self, dependencies: list["BaseTask"]):
+        self.dependencies = dependencies
 
     async def execute(
         self,

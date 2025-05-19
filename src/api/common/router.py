@@ -3,48 +3,48 @@ from typing import Annotated
 from fastapi import APIRouter, UploadFile, Form, File
 
 from src.api.common.queue_request import queue_request
-from src.api.video.enums import VideoRequestType
+from src.api.common.types.request import GeneralRequestType
 from src.api.video.schemas import VideoRequests
 
-video_router: APIRouter = APIRouter()
+requests_router: APIRouter = APIRouter()
 
 
-@video_router.post("/compress/")
-async def compress_video(
+@requests_router.post("/compress/")
+async def compress(
     data: Annotated[str, Form()], file: UploadFile | None = File(None)
 ):
     return await queue_request(
-        VideoRequestType.COMPRESS, VideoRequests.compress, data, file
+        GeneralRequestType.COMPRESS, VideoRequests.compress, data, file
     )
 
 
-@video_router.post("/extract-audio/")
-async def extract_audio(
+@requests_router.post("/extract-audio/")
+async def extract(
     data: Annotated[str, Form()], file: UploadFile | None = File(None)
 ):
     return await queue_request(
-        VideoRequestType.EXTRACT_AUDIO, VideoRequests.extract_audio, data, file
+        GeneralRequestType.EXTRACT_AUDIO, VideoRequests.extract_audio, data, file
     )
 
 
-@video_router.post("/transcribe/")
+@requests_router.post("/transcribe/")
 async def transcribe(
     data: Annotated[str, Form()], file: UploadFile | None = File(None)
 ):
     return await queue_request(
-        VideoRequestType.TRANSCRIBE, VideoRequests.transcribe, data, file
+        GeneralRequestType.TRANSCRIBE, VideoRequests.transcribe, data, file
     )
 
 
-@video_router.post("/summarize/")
+@requests_router.post("/summarize/")
 async def summarize(data: Annotated[str, Form()], file: UploadFile | None = File(None)):
     return await queue_request(
-        VideoRequestType.SUMMARIZE, VideoRequests.summarize, data, file
+        GeneralRequestType.SUMMARIZE, VideoRequests.summarize, data, file
     )
 
 
-@video_router.post("/custom/")
+@requests_router.post("/custom/")
 async def custom(data: Annotated[str, Form()], file: UploadFile | None = File(None)):
     return await queue_request(
-        VideoRequestType.CUSTOM, VideoRequests.custom, data, file
+        GeneralRequestType.CUSTOM, VideoRequests.custom, data, file
     )

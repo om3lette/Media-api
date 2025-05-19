@@ -1,13 +1,13 @@
 import asyncio
 
-from src.api.common.types.request import RequestType
+from src.api.common.types.request import RequestType, GeneralRequestType
 from src.api.common.schemas.media_request import MediaRequestDTO
 from src.api.video.constants import MAX_REQUESTS_BACKLOG
 
 
 class RequestQueue:
     def __init__(self, maxsize: int = MAX_REQUESTS_BACKLOG):
-        self._queue: asyncio.Queue[tuple[MediaRequestDTO, RequestType, str]] = (
+        self._queue: asyncio.Queue[tuple[MediaRequestDTO, GeneralRequestType, str]] = (
             asyncio.Queue(maxsize)
         )
         # for quick existence checks or de‐duplication
@@ -30,7 +30,7 @@ class RequestQueue:
         return request_id in self._ids
 
     async def push(
-        self, request: MediaRequestDTO, request_type: RequestType, request_id: str
+        self, request: MediaRequestDTO, request_type: GeneralRequestType, request_id: str
     ) -> bool:
         """
         Try to enqueue.  Returns False if queue is full or duplicate.
@@ -46,7 +46,7 @@ class RequestQueue:
         self._ids.add(request_id)
         return True
 
-    async def pop(self) -> tuple[MediaRequestDTO, RequestType, str]:
+    async def pop(self) -> tuple[MediaRequestDTO, GeneralRequestType, str]:
         """
         Wait for the next request, remove its ID from the lookup, and return it.
         """

@@ -2,9 +2,9 @@ from pathlib import Path
 
 from src.api.common.request_helpers import HelpersHandler
 
-from src.api.common.enums import RequestProcessCodes
+from src.api.common.enums import RequestProcessCodes, FileType
 from src.api.common.schemas import MediaRequestSchema
-from src.api.common.types.request import RequestType
+from src.api.common.types.request import RequestType, GeneralRequestType
 from src.pipeline.render import Renderer
 from src.pipeline.schemas.paths import PathsSchema
 
@@ -14,13 +14,15 @@ logger = get_logger_from_filepath(__file__)
 
 
 class BaseHandler:
-    event_type: RequestType
+    file_type: FileType
+    event_type: GeneralRequestType
 
-    def __init__(self, event_type: RequestType):
+    def __init__(self, event_type: GeneralRequestType, file_type: FileType):
         self.event_type = event_type
+        self.file_type = file_type
 
     def _build_renderer(
-        self, actions: list[RequestType], raw_file_path: Path
+        self, actions: list, raw_file_path: Path
     ) -> Renderer:
         raise NotImplementedError("No implementation provided for _build_renderer")
 
@@ -29,7 +31,7 @@ class BaseHandler:
     ) -> RequestProcessCodes:
         logger.info("Building renderer for %s request", self.event_type)
 
-        actions: list[RequestType] = []
+        actions: list[GeneralRequestType] = []
         if "actions" in request.model_fields:
             actions = request.actions
 

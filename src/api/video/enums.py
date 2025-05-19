@@ -1,5 +1,10 @@
 from enum import StrEnum
 
+class VideoActions(StrEnum):
+    COMPRESS = "compress"
+    TRANSCRIBE = "transcribe"
+    EXTRACT_AUDIO = "extract_audio"
+    SUMMARIZE = "summarize"
 
 class VideoRequestType(StrEnum):
     COMPRESS = "video_compress"

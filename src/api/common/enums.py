@@ -1,5 +1,13 @@
 from enum import IntEnum, StrEnum
 
+class FileType(IntEnum):
+    TEXT = 0
+    DOCUMENT = 1
+    VIDEO = 2
+    AUDIO = 3
+    IMAGE = 4
+    EXECUTABLE = 5
+    OTHER = 6
 
 class RequestProcessCodes(IntEnum):
     OK = 0
