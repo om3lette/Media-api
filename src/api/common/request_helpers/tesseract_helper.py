@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import pytesseract
-from PIL import Image
 
 from src.api.common.enums import FileToTextLanguages, RequestHelpersNames
 from src.api.common.request_helpers.base_helper import BaseHelper
@@ -25,7 +24,16 @@ class TesseractHelper(BaseHelper):
             else None
         )
         with open(save_path, "w", encoding="UTF-8") as f:
-            output: str = pytesseract.image_to_string(
-                Image.open(image_path), lang=language
+            data = pytesseract.image_to_data(
+                str(image_path),
+                lang=language,
+                config="--oem 3 --psm 6",
+                output_type=pytesseract.Output.DATAFRAME,
             )
-            f.write(output)
+            f.write(
+                " ".join(
+                    row["text"]
+                    for _, row in data.iterrows()
+                    if row["conf"] > config.file_to_text.min_confidence
+                )
+            )

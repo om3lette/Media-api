@@ -11,6 +11,8 @@ from src.api.tasks_handlers.audio.transcribe import TranscriptionAudioHandler
 from src.api.tasks_handlers.common.extract_audio import ExtractAudioHandler
 from src.api.tasks_handlers.image.custom import CustomImageHandler
 from src.api.tasks_handlers.image.image_to_text import ImageToTextHandler
+from src.api.tasks_handlers.text.custom import CustomTextHandler
+from src.api.tasks_handlers.text.summarize import SummarizeTextHandler
 from src.api.tasks_handlers.video.compress import CompressVideoHandler
 from src.api.tasks_handlers.video.custom import CustomVideoHandler
 from src.api.tasks_handlers.video.summarize import SummarizeVideoHandler
@@ -27,6 +29,8 @@ task_handlers = [
     CustomAudioHandler,
     ImageToTextHandler,
     CustomImageHandler,
+    SummarizeTextHandler,
+    CustomTextHandler,
 ]
 
 request_helpers: list = [GigachatHelper, TranscriptionHelper, TesseractHelper]

@@ -7,7 +7,7 @@ from src.api.tasks_handlers.audio.adjusted_tasks import (
     audio_summarize_task,
     audio_transcribe_task,
 )
-from src.api.tasks_handlers.enums import VideoActions
+from src.api.tasks_handlers.enums import AudioActions
 from src.pipeline.render import Renderer, RendererBuilder
 from src.pipeline.tasks import jobs
 
@@ -17,17 +17,17 @@ class CustomAudioHandler(BaseHandler):
         super().__init__(GeneralRequestType.CUSTOM, [FileType.AUDIO])
 
     def _build_renderer(
-        self, actions: list[VideoActions], raw_file_path: Path
+        self, actions: list[AudioActions], raw_file_path: Path
     ) -> Renderer:
         render_builder: RendererBuilder = RendererBuilder().use_file(str(raw_file_path))
 
-        if VideoActions.SUMMARIZE in actions:
+        if AudioActions.SUMMARIZE in actions:
             render_builder.add_task(audio_summarize_task)
 
-        if VideoActions.TRANSCRIBE in actions:
+        if AudioActions.TRANSCRIBE in actions:
             render_builder.add_task(audio_transcribe_task)
 
-        if VideoActions.EXTRACT_AUDIO in actions:
+        if AudioActions.EXTRACT_AUDIO in actions:
             render_builder.add_task(jobs.ExtractAudioTask())
 
         return render_builder.build()

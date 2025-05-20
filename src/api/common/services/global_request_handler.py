@@ -18,7 +18,11 @@ from src.api.common.types.file_helper import FileHelper
 from src.api.common.types.request import GeneralRequestType
 from src.api.common.types.request_handler import RequestHandler
 from src.api.common.types.request_helper import RequestHelper
-from src.api.common.utils import input_path_from_request_id, out_path_from_request_id
+from src.api.common.utils import (
+    input_path_from_request_id,
+    out_path_from_request_id,
+    request_data_dir_from_id,
+)
 from src.api.tasks_handlers.constants import INPUT_FILENAME
 from src.app_config import app_config
 from src.config.enums import AudioCodecs, VideoCodecs
@@ -124,7 +128,7 @@ class GlobalRequestsHandler:
         )
         if request_handler is None:
             # TODO: More descriptive error
-            shutil.rmtree(input_file_path.parent)
+            shutil.rmtree(request_data_dir_from_id(request_id))
             return RequestProcessCodes.UNKNOWN_ERROR
 
         video_codec: VideoCodecs = app_config.ffmpeg.codecs.video
@@ -148,7 +152,7 @@ class GlobalRequestsHandler:
         # Save files retrieved from url in dev move
         if not app_config.dev_mode or dto.file:
             logger.info("Deleting input file")
-            shutil.rmtree(input_file_path.parent)
+            shutil.rmtree(request_data_dir_from_id(request_id))
 
         logger.info("Task done: %s", request_id)
         return RequestProcessCodes.OK

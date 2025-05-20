@@ -18,6 +18,10 @@ class ImageActions(StrEnum):
     TO_TEXT = "to_text"
 
 
+class TextActions(StrEnum):
+    SUMMARIZE = "summarize"
+
+
 class VideoRequestType(StrEnum):
     COMPRESS = "video_compress"
     TRANSCRIBE = "video_transcribe"

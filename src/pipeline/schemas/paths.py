@@ -45,9 +45,6 @@ class PathsSchema:
 
         self.transcription_path = transcription_path_from_request_id(request_id)
         self.summary_path = summary_path_from_request_id(request_id)
-        self.clean_image_path = self.out_path.with_name("clean").with_suffix(
-            self.raw_path.suffix
-        )
 
         self.data_dir = request_data_dir_from_id(request_id)
         self.out_dir = request_out_dir_from_id(request_id)

@@ -8,6 +8,7 @@ from src.config.schemas.base_enum_model import BaseEnumModel
 class FileToTextSettings(BaseEnumModel):
     image_model: FileToTextModels = Field(default=FileToTextModels.TESSERACT)
     language: FileToTextLanguages = Field(default=FileToTextLanguages.RU)
+    min_confidence: int = Field(default=60)
 
 
 class FileToTextConfig(BaseEnumModel):

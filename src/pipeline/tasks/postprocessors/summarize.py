@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from src.api.common.enums import RequestHelpersNames
 from src.api.common.request_helpers.gigachat_helper import GigachatHelper
 from src.api.common.request_helpers.helpers_handler import HelpersHandler
@@ -30,4 +32,9 @@ class SummarizeTask(BasePostprocessor):
         gigachat_helper: GigachatHelper = helpers.get_helper_by_name(
             RequestHelpersNames.GIGACHAT
         )
-        await gigachat_helper.summarize(config, paths.transcription_path)
+        transcription_path: Path = (
+            paths.transcription_path
+            if paths.transcription_path.is_file()
+            else paths.raw_path
+        )
+        await gigachat_helper.summarize(config, transcription_path, paths.summary_path)

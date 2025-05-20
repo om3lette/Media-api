@@ -1,7 +1,12 @@
 from enum import StrEnum
 from typing import Union
 
-from src.api.tasks_handlers.enums import AudioActions, ImageActions, VideoActions
+from src.api.tasks_handlers.enums import (
+    AudioActions,
+    ImageActions,
+    TextActions,
+    VideoActions,
+)
 
 
 class GeneralRequestType(StrEnum):
@@ -13,4 +18,4 @@ class GeneralRequestType(StrEnum):
     FILE_TO_TEXT = "extract_text"
 
 
-CustomRequestActions = Union[VideoActions, AudioActions, ImageActions]
+CustomRequestActions = Union[VideoActions, AudioActions, ImageActions, TextActions]

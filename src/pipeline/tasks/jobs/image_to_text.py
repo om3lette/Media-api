@@ -9,13 +9,12 @@ from src.pipeline.base_task import BaseTask
 from src.pipeline.schemas.paths import PathsSchema
 from src.pipeline.schemas.streams import StreamsSchema
 from src.pipeline.tasks.jobs.base_job import BaseJob
-from src.pipeline.tasks.preprocessors import NormalizeImageTask
 from src.pipeline.tasks.utils import extract_config_by_field_name
 
 
 class ImageToTextTask(BaseJob):
     request_type: CustomRequestActions = GeneralRequestType.TRANSCRIBE
-    dependencies: list[BaseTask] = [NormalizeImageTask()]
+    dependencies: list[BaseTask] = []
 
     @staticmethod
     def extract_config(full_config: FileToTextConfig) -> FileToTextConfig:
@@ -35,6 +34,6 @@ class ImageToTextTask(BaseJob):
         )
         await asyncio.to_thread(
             lambda: tesseract_helper.image_to_text(
-                config, paths.clean_image_path, paths.transcription_path
+                config, paths.raw_path, paths.transcription_path
             )
         )

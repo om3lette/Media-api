@@ -6,7 +6,6 @@ from gigachat.models import Chat, Messages, MessagesRole
 from src.api.common.enums import RequestHelpersNames
 from src.api.common.request_helpers.base_helper import BaseHelper
 from src.api.common.schemas.requests.summarize import SummarizeConfig
-from src.api.common.utils import get_summary_filename
 from src.app_config import app_config
 from src.config.enums import GigachatModels
 from src.config.schemas.default_system_prompt import SYSTEM_PROMPT
@@ -31,15 +30,15 @@ class GigachatHelper(BaseHelper):
             )
 
     @staticmethod
-    def _write_output(transcription_path: Path, content: str):
-        with open(
-            transcription_path.parent / get_summary_filename(), "w", encoding="UTF-8"
-        ) as f:
+    def _write_output(save_path: Path, content: str):
+        with open(save_path, "w", encoding="UTF-8") as f:
             f.write(content)
 
-    async def summarize(self, config: SummarizeConfig, transcription_path: Path):
+    async def summarize(
+        self, config: SummarizeConfig, transcription_path: Path, save_path: Path
+    ):
         if app_config.summary.gigachat_api_token in [None, "", "<YOUR_TOKEN>"]:
-            self._write_output(transcription_path, "Api token was not provided")
+            self._write_output(save_path, "Api token was not provided")
             return
         with GigaChat(
             credentials=app_config.summary.gigachat_api_token,
@@ -58,4 +57,4 @@ class GigachatHelper(BaseHelper):
             ]
             chat = Chat(messages=messages)
             response = await giga.achat(chat)
-            self._write_output(transcription_path, response.choices[0].message.content)
+            self._write_output(save_path, response.choices[0].message.content)
