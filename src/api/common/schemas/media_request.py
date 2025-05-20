@@ -1,18 +1,19 @@
 import uuid
 from dataclasses import dataclass
+from pathlib import Path
 
 from fastapi import UploadFile
 from pydantic import BaseModel, Field, HttpUrl, field_validator
 
 
 class MediaRequestSchema(BaseModel):
-    url: HttpUrl | None = Field(default=None)
+    url: HttpUrl | Path | None = Field(default=None)
     config: dict[str, BaseModel]
 
     @field_validator("url")
     @classmethod
-    def validate_url(cls, value: HttpUrl | None) -> HttpUrl | None:
-        if value is None:
+    def validate_url(cls, value: HttpUrl | Path | None) -> HttpUrl | Path | None:
+        if value is None or isinstance(value, Path):
             return value
         split_path: list[str] = value.path.split("/")
         if (
@@ -28,7 +29,7 @@ class MediaRequestSchema(BaseModel):
         """
         Extracts id from url if present, otherwise generates it using uuid4
         """
-        if not self.url:
+        if not self.url or isinstance(self.url, Path):
             return uuid.uuid4().hex
         # pylint: disable=no-member
         return self.url.path.split("/")[-1]

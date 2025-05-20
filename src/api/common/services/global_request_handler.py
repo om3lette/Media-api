@@ -2,6 +2,8 @@ import os
 import shutil
 from pathlib import Path
 
+from pydantic import HttpUrl
+
 from src.api.common.enums import (
     FileHelperNames,
     FileRetrievalCodes,
@@ -20,6 +22,7 @@ from src.api.common.utils import input_path_from_request_id, out_path_from_reque
 from src.api.tasks_handlers.constants import INPUT_FILENAME
 from src.app_config import app_config
 from src.config.enums import AudioCodecs, VideoCodecs
+from src.constants import NULL_PATH
 from src.pipeline.schemas.paths import PathsSchema
 from src.utils import get_logger_from_filepath
 
@@ -65,7 +68,13 @@ class GlobalRequestsHandler:
         # To fix that file needs to be saved during add_request
         self._request_folders_setup(request_id)
         if request.file:
-            await self._retrieve_file(request, input_path_from_request_id(request_id))
+            return_code, _ = await self._retrieve_file(
+                request, input_path_from_request_id(request_id)
+            )
+
+            if return_code != FileRetrievalCodes.OK:
+                logger.info("Failed to retrieve input file")
+                return RequestProcessCodes.FILE_NOT_FOUND
 
         logger.info("Queued request: %s", request_id)
         success = await self.queue.push(request, request_type, request_id)
@@ -105,7 +114,7 @@ class GlobalRequestsHandler:
             dto, input_path_from_request_id(request_id)
         )
 
-        if return_code == FileRetrievalCodes.NOT_FOUND:
+        if return_code != FileRetrievalCodes.OK:
             logger.info("Failed to retrieve input file")
             return RequestProcessCodes.FILE_NOT_FOUND
         logger.info("Input file retrieved")
@@ -159,9 +168,17 @@ class GlobalRequestsHandler:
             if f.name.startswith(INPUT_FILENAME):
                 return FileRetrievalCodes.OK, save_path.parent / f.name
 
-        helper_name: FileHelperNames = FileHelperNames.UPLOAD_FILE
-        if request_body.request.url:
+        helper_name: FileHelperNames | None = FileHelperNames.UPLOAD_FILE
+        if isinstance(request_body.request.url, HttpUrl):
             helper_name = FileHelperNames.YADISK
+        elif isinstance(request_body.request.url, Path):
+            helper_name = (
+                FileHelperNames.LOCAL if app_config.allow_local_files else None
+            )
+
+        if not helper_name:
+            return FileRetrievalCodes.UNSUPPORTED_METHOD, NULL_PATH
+
         helper: BaseFileHelper = self._file_helpers.get_helper_by_name(helper_name)
         return await helper.retrieve_file(
             request_body.request.url or request_body.file, save_path

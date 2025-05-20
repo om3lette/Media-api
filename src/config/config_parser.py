@@ -20,6 +20,7 @@ except ImportError:
 
 class ConfigParser(BaseEnumModel):
     dev_mode: bool = Field(default=False)
+    allow_local_files: bool = Field(default=False)
     file_read_chunk_size: int = Field(default=8192)
     ffmpeg: FFMPEGProperties = Field(default_factory=FFMPEGProperties)
     transcription: TranscriptionSchema = Field(default_factory=TranscriptionSchema)

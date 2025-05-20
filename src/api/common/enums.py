@@ -22,11 +22,13 @@ class RequestProcessCodes(IntEnum):
 class FileRetrievalCodes(IntEnum):
     OK = 0
     NOT_FOUND = 1
+    UNSUPPORTED_METHOD = 2
 
 
 class FileHelperNames(StrEnum):
     YADISK = "yadisk"
     UPLOAD_FILE = "upload_file"
+    LOCAL = "local_file"
 
 
 class RequestHelpersNames(StrEnum):

@@ -1,4 +1,5 @@
 from src.api.common.file_helpers import UploadFileHelper
+from src.api.common.file_helpers.local_file_helper import LocalFileHelper
 from src.api.common.file_helpers.ya_disk_helper import YaDiskHelper
 from src.api.common.request_helpers.gigachat_helper import GigachatHelper
 from src.api.common.request_helpers.tesseract_helper import TesseractHelper
@@ -29,7 +30,7 @@ task_handlers = [
 ]
 
 request_helpers: list = [GigachatHelper, TranscriptionHelper, TesseractHelper]
-file_helpers: list = [YaDiskHelper, UploadFileHelper]
+file_helpers: list = [YaDiskHelper, UploadFileHelper, LocalFileHelper]
 
 global_requests_handler: GlobalRequestsHandler = GlobalRequestsHandler()
 

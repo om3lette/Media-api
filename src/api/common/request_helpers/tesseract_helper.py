@@ -19,7 +19,7 @@ class TesseractHelper(BaseHelper):
     def image_to_text(
         config: FileToTextConfig, image_path: Path, save_path: Path
     ) -> None:
-        language: str| None = (
+        language: str | None = (
             config.file_to_text.language
             if config.file_to_text.language != FileToTextLanguages.AUTO
             else None
