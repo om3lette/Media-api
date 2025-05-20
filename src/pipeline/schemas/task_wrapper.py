@@ -2,7 +2,7 @@ from collections.abc import Callable
 
 from pydantic import BaseModel
 
-from src.pipeline.types import RenderConfig, ExecuteMethod
+from src.pipeline.types import ExecuteMethod, RenderConfig
 
 
 class TaskWrapper(BaseModel):

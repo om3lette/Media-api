@@ -2,26 +2,24 @@ import os
 import shutil
 from pathlib import Path
 
-from src.api.common.services.handler_picker import HandlerPicker
-from src.api.common.types.request import GeneralRequestType
+from src.api.common.enums import (
+    FileHelperNames,
+    FileRetrievalCodes,
+    RequestProcessCodes,
+)
 from src.api.common.file_helpers import BaseFileHelper
 from src.api.common.request_helpers.helpers_handler import HelpersHandler
 from src.api.common.schemas.media_request import MediaRequestDTO
-from src.api.common.enums import (
-    RequestProcessCodes,
-    FileRetrievalCodes,
-    FileHelperNames,
-)
-from src.api.common.utils import out_path_from_request_id, input_path_from_request_id
-
-from src.api.common.types.request_handler import RequestHandler
-from src.api.common.types.file_helper import FileHelper
-from src.api.common.types.request_helper import RequestHelper
-
+from src.api.common.services.handler_picker import HandlerPicker
 from src.api.common.services.request_queue import RequestQueue
+from src.api.common.types.file_helper import FileHelper
+from src.api.common.types.request import GeneralRequestType
+from src.api.common.types.request_handler import RequestHandler
+from src.api.common.types.request_helper import RequestHelper
+from src.api.common.utils import input_path_from_request_id, out_path_from_request_id
 from src.api.tasks_handlers.constants import INPUT_FILENAME
 from src.app_config import app_config
-from src.config.enums import VideoCodecs, AudioCodecs
+from src.config.enums import AudioCodecs, VideoCodecs
 from src.pipeline.schemas.paths import PathsSchema
 from src.utils import get_logger_from_filepath
 

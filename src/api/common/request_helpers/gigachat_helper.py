@@ -1,12 +1,12 @@
 from pathlib import Path
 
 from gigachat import GigaChat
-from gigachat.models import Messages, MessagesRole, Chat
+from gigachat.models import Chat, Messages, MessagesRole
 
 from src.api.common.enums import RequestHelpersNames
 from src.api.common.request_helpers.base_helper import BaseHelper
-from src.api.common.utils import get_summary_filename
 from src.api.common.schemas.requests.summarize import SummarizeConfig
+from src.api.common.utils import get_summary_filename
 from src.app_config import app_config
 from src.config.enums import GigachatModels
 from src.config.schemas.default_system_prompt import SYSTEM_PROMPT

@@ -1,5 +1,5 @@
-from pathlib import Path
 import os
+from pathlib import Path
 
 PROJECT_ROOT_PATH: Path = Path(__file__).resolve().parents[1]
 SRC_PATH: Path = PROJECT_ROOT_PATH / "src"

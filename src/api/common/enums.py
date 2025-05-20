@@ -32,3 +32,14 @@ class FileHelperNames(StrEnum):
 class RequestHelpersNames(StrEnum):
     GIGACHAT = "gigachat"
     TRANSCRIPTION = "transcriber"
+    TESSERACT = "tesseract"
+
+
+class FileToTextModels(StrEnum):
+    TESSERACT = "tesseract"
+
+
+class FileToTextLanguages(StrEnum):
+    RU = "rus"
+    ENG = "eng"
+    AUTO = "auto"

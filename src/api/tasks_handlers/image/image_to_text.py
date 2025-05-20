@@ -7,9 +7,9 @@ from src.pipeline.render import Renderer, RendererBuilder
 from src.pipeline.tasks import jobs
 
 
-class CompressVideoHandler(BaseHandler):
+class ImageToTextHandler(BaseHandler):
     def __init__(self):
-        super().__init__(GeneralRequestType.COMPRESS, [FileType.VIDEO])
+        super().__init__(GeneralRequestType.FILE_TO_TEXT, [FileType.IMAGE])
 
     def _build_renderer(
         self, actions: list[CustomRequestActions], raw_file_path: Path
@@ -17,6 +17,6 @@ class CompressVideoHandler(BaseHandler):
         return (
             RendererBuilder()
             .use_file(str(raw_file_path))
-            .add_task(jobs.TwoPassEncodingTask())
+            .add_task(jobs.ImageToTextTask())
             .build()
         )

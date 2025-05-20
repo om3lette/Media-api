@@ -1,4 +1,4 @@
-from collections.abc import Callable, Awaitable
+from collections.abc import Awaitable, Callable
 
 from src.api.common.request_helpers.helpers_handler import HelpersHandler
 from src.pipeline.schemas.paths import PathsSchema

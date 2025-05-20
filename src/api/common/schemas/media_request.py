@@ -2,7 +2,7 @@ import uuid
 from dataclasses import dataclass
 
 from fastapi import UploadFile
-from pydantic import BaseModel, field_validator, HttpUrl, Field
+from pydantic import BaseModel, Field, HttpUrl, field_validator
 
 
 class MediaRequestSchema(BaseModel):

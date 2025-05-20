@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import magic
+
 from src.api.common.enums import FileType
 from src.api.common.types.request import GeneralRequestType
 from src.api.common.types.request_handler import RequestHandler

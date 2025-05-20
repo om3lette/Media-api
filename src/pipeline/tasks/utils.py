@@ -6,7 +6,6 @@ from tqdm import tqdm
 
 from src.app_config import app_config
 from src.pipeline.schemas.ffmpeg_progress import FFMPEGProgressSchema
-
 from src.pipeline.schemas.streams import StreamsSchema
 from src.pipeline.types import RenderConfig
 from src.utils import ffmpeg_logger

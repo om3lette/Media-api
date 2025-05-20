@@ -1,4 +1,4 @@
-from src.config.enums import VideoCodecs, AudioCodecs
+from src.config.enums import AudioCodecs, VideoCodecs
 
 
 def get_suffix_by_video_codec(codec: VideoCodecs):

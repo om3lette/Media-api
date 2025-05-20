@@ -1,10 +1,10 @@
 from typing import Annotated
 
-from fastapi import APIRouter, UploadFile, Form, File
+from fastapi import APIRouter, File, Form, UploadFile
 
 from src.api.common.queue_request import queue_request
-from src.api.common.types.request import GeneralRequestType
 from src.api.common.schemas.requests import RequestsMapping
+from src.api.common.types.request import GeneralRequestType
 
 requests_router: APIRouter = APIRouter()
 
@@ -43,4 +43,13 @@ async def summarize(data: Annotated[str, Form()], file: UploadFile | None = File
 async def custom(data: Annotated[str, Form()], file: UploadFile | None = File(None)):
     return await queue_request(
         GeneralRequestType.CUSTOM, RequestsMapping.custom, data, file
+    )
+
+
+@requests_router.post("/file-to-text/")
+async def image_to_text(
+    data: Annotated[str, Form()], file: UploadFile | None = File(None)
+):
+    return await queue_request(
+        GeneralRequestType.FILE_TO_TEXT, RequestsMapping.file_to_text, data, file
     )

@@ -1,11 +1,11 @@
-from typing import Self
 from pathlib import Path
+from typing import Self
 
 from src.constants import DATA_FOLDER
 from src.pipeline.base_task import BaseTask
 from src.pipeline.enums import TaskType
-from src.pipeline.schemas.task_wrapper import TaskWrapper
 from src.pipeline.render.renderer import Renderer
+from src.pipeline.schemas.task_wrapper import TaskWrapper
 from src.utils import get_logger_from_filepath
 
 logger = get_logger_from_filepath(__file__)

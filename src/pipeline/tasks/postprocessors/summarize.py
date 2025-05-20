@@ -1,8 +1,8 @@
 from src.api.common.enums import RequestHelpersNames
 from src.api.common.request_helpers.gigachat_helper import GigachatHelper
 from src.api.common.request_helpers.helpers_handler import HelpersHandler
-from src.api.common.types.request import CustomRequestActions, GeneralRequestType
 from src.api.common.schemas.requests.summarize import SummarizeConfig
+from src.api.common.types.request import CustomRequestActions, GeneralRequestType
 from src.pipeline.base_task import BaseTask
 from src.pipeline.schemas.paths import PathsSchema
 from src.pipeline.schemas.streams import StreamsSchema

@@ -14,6 +14,10 @@ class AudioActions(StrEnum):
     EXTRACT_AUDIO = "extract_audio"
 
 
+class ImageActions(StrEnum):
+    TO_TEXT = "to_text"
+
+
 class VideoRequestType(StrEnum):
     COMPRESS = "video_compress"
     TRANSCRIBE = "video_transcribe"

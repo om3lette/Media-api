@@ -1,4 +1,5 @@
 from pydantic import Field
+
 from src.config.enums import GigachatModels, GigachatModelScopes
 from src.config.schemas.base_enum_model import BaseEnumModel
 

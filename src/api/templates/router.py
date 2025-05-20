@@ -1,12 +1,12 @@
 from pathlib import Path
 
 from fastapi import APIRouter, HTTPException
+from fastapi.requests import Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-from fastapi.requests import Request
 from starlette.responses import FileResponse
 
-from src.constants import TEMPLATES_PATH, OUT_FOLDER
+from src.constants import OUT_FOLDER, TEMPLATES_PATH
 
 static_router: APIRouter = APIRouter()
 

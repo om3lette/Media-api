@@ -4,7 +4,7 @@ from src.api.common.enums import FileType
 from src.api.common.services.base_handler import BaseHandler
 from src.api.common.types.request import CustomRequestActions, GeneralRequestType
 from src.api.tasks_handlers.audio.adjusted_tasks import audio_transcribe_task
-from src.pipeline.render import RendererBuilder, Renderer
+from src.pipeline.render import Renderer, RendererBuilder
 
 
 class TranscriptionAudioHandler(BaseHandler):

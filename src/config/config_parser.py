@@ -1,8 +1,8 @@
-from typing import Self
 from pathlib import Path
-from pydantic import Field
+from typing import Self
 
 import yaml
+from pydantic import Field
 
 from src.config.schemas.base_enum_model import BaseEnumModel
 from src.config.schemas.ffmpeg import FFMPEGProperties

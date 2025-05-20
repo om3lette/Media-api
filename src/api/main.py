@@ -1,19 +1,18 @@
-import logging
 import asyncio
-
+import logging
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, APIRouter
+from fastapi import APIRouter, FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
-from src.api.templates.router import static_router
-from src.api.common.router import requests_router
-from src.api.status.router import request_status_router
 from src.api.common.handlers import (
     global_requests_handler,
-    register_helpers,
     register_handlers,
+    register_helpers,
 )
+from src.api.common.router import requests_router
+from src.api.status.router import request_status_router
+from src.api.templates.router import static_router
 from src.app_config import app_config
 
 logging.basicConfig(

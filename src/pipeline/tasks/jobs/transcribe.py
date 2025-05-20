@@ -3,13 +3,13 @@ import asyncio
 from src.api.common.enums import RequestHelpersNames
 from src.api.common.request_helpers.helpers_handler import HelpersHandler
 from src.api.common.request_helpers.transcription_helper import TranscriptionHelper
-from src.api.common.types.request import CustomRequestActions, GeneralRequestType
 from src.api.common.schemas.requests.transcribe import TranscribeConfig
+from src.api.common.types.request import CustomRequestActions, GeneralRequestType
 from src.pipeline.base_task import BaseTask
 from src.pipeline.schemas.paths import PathsSchema
 from src.pipeline.schemas.streams import StreamsSchema
-from src.pipeline.tasks.jobs.extract_audio import ExtractAudioTask
 from src.pipeline.tasks.jobs.base_job import BaseJob
+from src.pipeline.tasks.jobs.extract_audio import ExtractAudioTask
 from src.pipeline.tasks.utils import extract_config_by_field_name
 from src.pipeline.types import RenderConfig
 

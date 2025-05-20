@@ -2,10 +2,10 @@ from fastapi import HTTPException, UploadFile
 from pydantic import ValidationError
 from starlette.responses import Response
 
-from src.api.common.types.request import GeneralRequestType
-from src.api.common.handlers import global_requests_handler
 from src.api.common.enums import RequestProcessCodes
+from src.api.common.handlers import global_requests_handler
 from src.api.common.schemas.media_request import MediaRequestDTO, MediaRequestSchema
+from src.api.common.types.request import GeneralRequestType
 
 
 async def queue_request(

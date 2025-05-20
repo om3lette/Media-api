@@ -3,7 +3,7 @@ from pathlib import Path
 from src.api.common.enums import FileType
 from src.api.common.services.base_handler import BaseHandler
 from src.api.common.types.request import CustomRequestActions, GeneralRequestType
-from src.pipeline.render import RendererBuilder, Renderer
+from src.pipeline.render import Renderer, RendererBuilder
 from src.pipeline.tasks import jobs
 
 

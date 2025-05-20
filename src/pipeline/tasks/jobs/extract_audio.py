@@ -1,8 +1,8 @@
 import ffmpeg
 
 from src.api.common.request_helpers.helpers_handler import HelpersHandler
-from src.api.common.types.request import CustomRequestActions, GeneralRequestType
 from src.api.common.schemas.requests import ExtractAudioConfig
+from src.api.common.types.request import CustomRequestActions, GeneralRequestType
 from src.pipeline.schemas.paths import PathsSchema
 from src.pipeline.schemas.streams import StreamsSchema
 from src.pipeline.tasks.jobs.base_job import BaseJob
