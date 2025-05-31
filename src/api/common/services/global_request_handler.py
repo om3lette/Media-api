@@ -2,8 +2,6 @@ import os
 import shutil
 from pathlib import Path
 
-from pydantic import HttpUrl
-
 from src.api.common.enums import (
     FileHelperNames,
     FileRetrievalCodes,
@@ -119,7 +117,7 @@ class GlobalRequestsHandler:
         )
 
         if return_code != FileRetrievalCodes.OK:
-            logger.info("Failed to retrieve input file")
+            logger.info("Failed to download input file")
             return RequestProcessCodes.FILE_NOT_FOUND
         logger.info("Input file retrieved")
 
@@ -173,17 +171,17 @@ class GlobalRequestsHandler:
                 return FileRetrievalCodes.OK, save_path.parent / f.name
 
         helper_name: FileHelperNames | None = FileHelperNames.UPLOAD_FILE
-        if isinstance(request_body.request.url, HttpUrl):
+        if request_body.request.url:
             helper_name = FileHelperNames.YADISK
-        elif isinstance(request_body.request.url, Path):
-            helper_name = (
-                FileHelperNames.LOCAL if app_config.allow_local_files else None
-            )
+        elif request_body.request.path and app_config.allow_local_files:
+            helper_name = FileHelperNames.LOCAL
+        elif request_body.request.path:
+            helper_name = None
 
         if not helper_name:
             return FileRetrievalCodes.UNSUPPORTED_METHOD, NULL_PATH
 
         helper: BaseFileHelper = self._file_helpers.get_helper_by_name(helper_name)
         return await helper.retrieve_file(
-            request_body.request.url or request_body.file, save_path
+            request_body.request.url or request_body.file or request_body.request.path, save_path
         )

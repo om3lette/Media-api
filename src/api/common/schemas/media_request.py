@@ -7,17 +7,16 @@ from pydantic import BaseModel, Field, HttpUrl, field_validator
 
 
 class MediaRequestSchema(BaseModel):
-    url: HttpUrl | Path | None = Field(default=None)
+    url: HttpUrl | None = Field(default=None)
+    path: Path | None = Field(default=None)
     config: dict[str, BaseModel]
 
     @field_validator("url")
     @classmethod
-    def validate_url(cls, value: HttpUrl | Path | None) -> HttpUrl | Path | None:
-        if value is None or isinstance(value, Path):
-            return value
+    def validate_url(cls, value: HttpUrl | None) -> HttpUrl | None:
         split_path: list[str] = value.path.split("/")
         if (
-            value.host != "disk.yandex.ru"
+            value.host not in ["disk.yandex.ru", "disk.360.yandex.ru"]
             or len(split_path) != 3
             or not split_path[-2].isalpha()
             or len(split_path[-1]) != 14
