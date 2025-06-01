@@ -1,5 +1,4 @@
 import os
-import shutil
 from pathlib import Path
 
 from src.api.common.enums import (
@@ -17,9 +16,10 @@ from src.api.common.types.request import GeneralRequestType
 from src.api.common.types.request_handler import RequestHandler
 from src.api.common.types.request_helper import RequestHelper
 from src.api.common.utils import (
+    archive_request_output,
+    delete_request_data,
     input_path_from_request_id,
     out_path_from_request_id,
-    request_data_dir_from_id,
 )
 from src.api.tasks_handlers.constants import INPUT_FILENAME
 from src.app_config import app_config
@@ -75,6 +75,7 @@ class GlobalRequestsHandler:
             )
 
             if return_code != FileRetrievalCodes.OK:
+                delete_request_data(request_id)
                 logger.info("Failed to retrieve input file")
                 return RequestProcessCodes.FILE_NOT_FOUND
 
@@ -91,6 +92,7 @@ class GlobalRequestsHandler:
                 await self._process_request(req, req_id, req_type)
             # pylint: disable=broad-exception-caught
             except Exception as e:
+                delete_request_data(req_id)
                 logger.error(
                     "Error occurred when processing request %s:\n%s", req_type, e
                 )
@@ -104,7 +106,7 @@ class GlobalRequestsHandler:
         out_dir: Path = out_path_from_request_id(request_id).parent
         # TODO: Reconsider
         if out_dir.is_dir():
-            shutil.rmtree(out_dir)
+            delete_request_data(request_id, delete_input=False)
         os.makedirs(out_dir)
 
     async def _process_request(
@@ -117,6 +119,7 @@ class GlobalRequestsHandler:
         )
 
         if return_code != FileRetrievalCodes.OK:
+            delete_request_data(request_id)
             logger.info("Failed to download input file")
             return RequestProcessCodes.FILE_NOT_FOUND
         logger.info("Input file retrieved")
@@ -126,7 +129,7 @@ class GlobalRequestsHandler:
         )
         if request_handler is None:
             # TODO: More descriptive error
-            shutil.rmtree(request_data_dir_from_id(request_id))
+            delete_request_data(request_id)
             return RequestProcessCodes.UNKNOWN_ERROR
 
         video_codec: VideoCodecs = app_config.ffmpeg.codecs.video
@@ -150,7 +153,10 @@ class GlobalRequestsHandler:
         # Save files retrieved from url in dev move
         if not app_config.dev_mode or dto.file:
             logger.info("Deleting input file")
-            shutil.rmtree(request_data_dir_from_id(request_id))
+            delete_request_data(request_id, delete_output=False)
+
+        logger.info("Archiving request output...")
+        archive_request_output(request_id)
 
         logger.info("Task done: %s", request_id)
         return RequestProcessCodes.OK
@@ -183,5 +189,6 @@ class GlobalRequestsHandler:
 
         helper: BaseFileHelper = self._file_helpers.get_helper_by_name(helper_name)
         return await helper.retrieve_file(
-            request_body.request.url or request_body.file or request_body.request.path, save_path
+            request_body.request.url or request_body.file or request_body.request.path,
+            save_path,
         )

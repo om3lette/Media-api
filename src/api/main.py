@@ -11,8 +11,8 @@ from src.api.common.handlers import (
     register_helpers,
 )
 from src.api.common.router import requests_router
+from src.api.download.router import static_router
 from src.api.status.router import request_status_router
-from src.api.templates.router import static_router
 from src.app_config import app_config
 
 logging.basicConfig(
@@ -40,7 +40,7 @@ app.add_middleware(
 
 app_router: APIRouter = APIRouter()
 app_router.include_router(requests_router)
-app_router.include_router(request_status_router, prefix="/status")
+app_router.include_router(request_status_router)
+app_router.include_router(static_router)
 
 app.include_router(app_router, prefix="/v1")
-app.include_router(static_router)

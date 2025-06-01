@@ -11,3 +11,5 @@ OUT_FOLDER: Path = PROJECT_ROOT_PATH / "out"
 # NUL for windows, /dev/null for linux
 NULL_PATH: Path = Path("NUL") if os.name == "nt" else Path("/dev/null")
 PASSLOG_PATH: Path = OUT_FOLDER / "ffmpeg2pass"
+
+ARCHIVE_FORMAT: str = "zip"

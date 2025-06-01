@@ -1,3 +1,4 @@
+import shutil
 from pathlib import Path
 
 from src.api.tasks_handlers.constants import (
@@ -11,7 +12,30 @@ from src.api.tasks_handlers.constants import (
     SUMMARY_FILENAME,
     TRANSCRIPTION_FILENAME,
 )
-from src.constants import DATA_FOLDER, OUT_FOLDER
+from src.constants import ARCHIVE_FORMAT, DATA_FOLDER, OUT_FOLDER
+
+
+def request_archive_from_id(request_id: str):
+    return OUT_FOLDER / (str(request_id) + "." + ARCHIVE_FORMAT)
+
+
+def archive_request_output(request_id: str, remove_folder: bool = False):
+    shutil.make_archive(
+        str(request_archive_from_id(request_id).with_suffix("")),
+        ARCHIVE_FORMAT,
+        request_out_dir_from_id(request_id),
+    )
+    if remove_folder:
+        delete_request_data(request_id, delete_input=False)
+
+
+def delete_request_data(
+    request_id: str, delete_input: bool = True, delete_output: bool = True
+):
+    if delete_input:
+        shutil.rmtree(request_data_dir_from_id(request_id))
+    if delete_output:
+        shutil.rmtree(request_out_dir_from_id(request_id))
 
 
 def file_path_from_name(
