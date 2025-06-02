@@ -21,4 +21,4 @@ async def output_browser(request_id: str):
                 "Content-Disposition": f'attachment; filename="{target_path.name}"'
             },
         )
-    raise HTTPException(status_code=400, detail="Invalid path")
+    raise HTTPException(status_code=410)

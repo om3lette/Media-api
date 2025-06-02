@@ -46,9 +46,9 @@ async def queue_request(
     )
 
     if return_code == RequestProcessCodes.ALREADY_QUEUED:
-        raise HTTPException(status_code=400, detail="Already queued")
+        raise HTTPException(status_code=409, detail="Already queued")
     if return_code == RequestProcessCodes.QUEUE_FULL:
         raise HTTPException(
             status_code=503, detail="Queue limit has been reached. Try again later"
         )
-    return Response(status_code=200, content=request_id)
+    return Response(status_code=202, content=request_id)
