@@ -8,9 +8,9 @@ from src.api.common.enums import FileRetrievalCodes
 from src.api.common.file_helpers.base_file_helper import BaseFileHelper
 from src.api.common.file_helpers.utils import get_adjusted_save_path
 from src.app_config import app_config
-from src.utils import get_logger_from_filepath
+from src.utils import get_logger_by_filepath
 
-logger = get_logger_from_filepath(__file__)
+logger = get_logger_by_filepath(__file__)
 
 
 class UploadFileHelper(BaseFileHelper):

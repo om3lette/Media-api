@@ -1,12 +1,16 @@
+import uuid
+
 from fastapi import HTTPException, UploadFile
 from pydantic import ValidationError
 from starlette.responses import Response
 
 from src.api.common.enums import RequestProcessCodes
 from src.api.common.handlers import global_requests_handler
+from src.api.common.io_handlers import requests_repository
 from src.api.common.schemas.media_request import MediaRequestDTO, MediaRequestSchema
 from src.api.common.types.request import GeneralRequestType
 from src.app_config import app_config
+from src.constants import DEV_MOD_RID
 
 
 async def queue_request(
@@ -16,7 +20,9 @@ async def queue_request(
     file: UploadFile | None,
 ):
     try:
-        parsed_data: MediaRequestSchema = data_schema.model_validate_json(data)
+        parsed_data: MediaRequestSchema = data_schema.model_validate_json(
+            data, by_alias=True
+        )
     except ValidationError as e:
         raise HTTPException(status_code=422, detail=str(e.errors())) from e
 
@@ -40,9 +46,9 @@ async def queue_request(
         )
 
     dto: MediaRequestDTO = MediaRequestDTO(parsed_data, file)
-    request_id: str = dto.request.get_request_id()
+    request_id: str = uuid.uuid4().hex if not app_config.dev_mode else DEV_MOD_RID
     return_code: RequestProcessCodes = await global_requests_handler.add_request(
-        request_id, dto, request_type
+        request_id, request_type, dto
     )
 
     if return_code == RequestProcessCodes.ALREADY_QUEUED:
@@ -51,4 +57,5 @@ async def queue_request(
         raise HTTPException(
             status_code=503, detail="Queue limit has been reached. Try again later"
         )
+    requests_repository.add_request(request_id, request_type, dto)
     return Response(status_code=202, content=request_id)

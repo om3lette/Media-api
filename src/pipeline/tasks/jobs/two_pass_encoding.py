@@ -11,6 +11,7 @@ from src.pipeline.tasks import preprocessors
 from src.pipeline.tasks.jobs.base_job import BaseJob
 from src.pipeline.tasks.utils import extract_config_by_field_name, ffmpeg_run
 from src.pipeline.types import RenderConfig
+from src.pipeline.types.state_callbacks import UpdateProgressCb
 
 
 class TwoPassEncodingTask(BaseJob):
@@ -27,6 +28,7 @@ class TwoPassEncodingTask(BaseJob):
         helpers: HelpersHandler,
         streams: StreamsSchema,
         paths: PathsSchema,
+        update_progress: UpdateProgressCb,
     ):
         first_pass_params = {
             "vcodec": config.codecs.video,
@@ -39,7 +41,7 @@ class TwoPassEncodingTask(BaseJob):
             "y": None,
         }
         output = ffmpeg.output(streams.video, str(NULL_PATH), **first_pass_params)
-        await ffmpeg_run(paths.raw_path, output)
+        await ffmpeg_run(paths.raw_path, output, update_progress)
 
         second_pass_params = {
             "vcodec": config.codecs.video,
@@ -55,4 +57,4 @@ class TwoPassEncodingTask(BaseJob):
         output = ffmpeg.output(
             streams.video, streams.audio, str(paths.out_path), **second_pass_params
         )
-        await ffmpeg_run(paths.raw_path, output)
+        await ffmpeg_run(paths.raw_path, output, update_progress)

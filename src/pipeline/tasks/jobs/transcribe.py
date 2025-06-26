@@ -12,6 +12,7 @@ from src.pipeline.tasks.jobs.base_job import BaseJob
 from src.pipeline.tasks.jobs.extract_audio import ExtractAudioTask
 from src.pipeline.tasks.utils import extract_config_by_field_name
 from src.pipeline.types import RenderConfig
+from src.pipeline.types.state_callbacks import UpdateProgressCb
 
 
 class TranscribeTask(BaseJob):
@@ -28,6 +29,7 @@ class TranscribeTask(BaseJob):
         helpers: HelpersHandler,
         streams: StreamsSchema,
         paths: PathsSchema,
+        update_progress: UpdateProgressCb,
     ):
         transcription_helper: TranscriptionHelper = helpers.get_helper_by_name(
             RequestHelpersNames.TRANSCRIPTION

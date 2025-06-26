@@ -1,8 +1,8 @@
 from src.api.common.request_helpers.base_helper import BaseHelper
 from src.app_config import app_config
-from src.utils import get_logger_from_filepath
+from src.utils import get_logger_by_filepath
 
-logger = get_logger_from_filepath(__file__)
+logger = get_logger_by_filepath(__file__)
 
 
 class HelpersHandler:

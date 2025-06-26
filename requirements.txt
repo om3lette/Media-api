@@ -9,6 +9,11 @@ pytesseract==0.3.13
 pillow==11.2.1
 opencv-python==4.11.0.86
 numpy==1.26.4
+apscheduler==3.11.0
+redis==6.2.0
+websockets==15.0.1
+camel-converter==4.0.1
+python-dotenv==1.1.1
 
 yadisk==3.3.0
 httpx==0.28.1

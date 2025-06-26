@@ -5,12 +5,13 @@ import yaml
 from pydantic import Field
 
 from src.config.schemas.base_enum_model import BaseEnumModel
+from src.config.schemas.cleanup import CleanupSchema
 from src.config.schemas.ffmpeg import FFMPEGProperties
 from src.config.schemas.summary import SummarySchema
 from src.config.schemas.transcription import TranscriptionSchema
-from src.utils import get_logger_from_filepath
+from src.utils import get_logger_by_filepath
 
-logger = get_logger_from_filepath(__file__)
+logger = get_logger_by_filepath(__file__)
 
 try:
     from yaml import CLoader as Loader
@@ -20,11 +21,14 @@ except ImportError:
 
 class ConfigParser(BaseEnumModel):
     dev_mode: bool = Field(default=False)
+    show_ffmpeg_commands: bool = Field(default=False)
+    update_progress_interval: int = Field(default=2)
     allow_local_files: bool = Field(default=False)
     file_read_chunk_size: int = Field(default=8192)
     ffmpeg: FFMPEGProperties = Field(default_factory=FFMPEGProperties)
     transcription: TranscriptionSchema = Field(default_factory=TranscriptionSchema)
     summary: SummarySchema = Field(default_factory=SummarySchema)
+    cleanup: CleanupSchema = Field(default_factory=CleanupSchema)
 
     def model_save_yaml(self, save_path: Path) -> None:
         with open(save_path, "w", encoding="UTF-8") as f:

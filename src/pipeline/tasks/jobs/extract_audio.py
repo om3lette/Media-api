@@ -8,6 +8,7 @@ from src.pipeline.schemas.streams import StreamsSchema
 from src.pipeline.tasks.jobs.base_job import BaseJob
 from src.pipeline.tasks.utils import extract_config_by_field_name, ffmpeg_run
 from src.pipeline.types import RenderConfig
+from src.pipeline.types.state_callbacks import UpdateProgressCb
 
 
 class ExtractAudioTask(BaseJob):
@@ -23,6 +24,7 @@ class ExtractAudioTask(BaseJob):
         helpers: HelpersHandler,
         streams: StreamsSchema,
         paths: PathsSchema,
+        update_progress: UpdateProgressCb,
     ):
         output = ffmpeg.output(
             streams.audio,
@@ -33,4 +35,4 @@ class ExtractAudioTask(BaseJob):
             ar=config.audio.sample_rate,
             y=None,
         )
-        await ffmpeg_run(paths.raw_path, output)
+        await ffmpeg_run(paths.raw_path, output, update_progress)

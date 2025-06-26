@@ -12,6 +12,7 @@ from src.pipeline.tasks.jobs import TranscribeTask
 from src.pipeline.tasks.postprocessors.base_postprocessor import BasePostprocessor
 from src.pipeline.tasks.utils import extract_config_by_field_name
 from src.pipeline.types import RenderConfig
+from src.pipeline.types.state_callbacks import UpdateProgressCb
 
 
 class SummarizeTask(BasePostprocessor):
@@ -28,6 +29,7 @@ class SummarizeTask(BasePostprocessor):
         helpers: HelpersHandler,
         streams: StreamsSchema,
         paths: PathsSchema,
+        update_progress: UpdateProgressCb,
     ):
         gigachat_helper: GigachatHelper = helpers.get_helper_by_name(
             RequestHelpersNames.GIGACHAT

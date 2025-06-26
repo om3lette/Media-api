@@ -13,6 +13,17 @@ class RequestQueue:
         # for quick existence checks or de‐duplication
         self._ids: set[str] = set()
 
+    def to_list(self) -> list[tuple[MediaRequestDTO, GeneralRequestType, str]]:
+        """
+        Returns a list representation of the queue.\n
+        Queue is cleared as a result
+        """
+        entries: list[tuple[MediaRequestDTO, GeneralRequestType, str]] = []
+        while not self._queue.empty():
+            entries.append(self._queue.get_nowait())
+            self._queue.task_done()
+        return entries
+
     async def join(self):
         await self._queue.join()
 

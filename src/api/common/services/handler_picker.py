@@ -5,9 +5,9 @@ import magic
 from src.api.common.enums import FileType
 from src.api.common.types.request import GeneralRequestType
 from src.api.common.types.request_handler import RequestHandler
-from src.utils import get_logger_from_filepath
+from src.utils import get_logger_by_filepath
 
-logger = get_logger_from_filepath(__file__)
+logger = get_logger_by_filepath(__file__)
 
 
 class HandlerPicker:

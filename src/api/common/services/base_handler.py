@@ -1,14 +1,15 @@
 from pathlib import Path
 
 from src.api.common.enums import FileType, RequestProcessCodes
+from src.api.common.io_handlers import progress_handler
 from src.api.common.request_helpers.helpers_handler import HelpersHandler
 from src.api.common.schemas import MediaRequestSchema
 from src.api.common.types.request import GeneralRequestType
 from src.pipeline.render import Renderer
 from src.pipeline.schemas.paths import PathsSchema
-from src.utils import get_logger_from_filepath
+from src.utils import get_logger_by_filepath
 
-logger = get_logger_from_filepath(__file__)
+logger = get_logger_by_filepath(__file__)
 
 
 class BaseHandler:
@@ -23,7 +24,11 @@ class BaseHandler:
         raise NotImplementedError("No implementation provided for _build_renderer")
 
     async def handle(
-        self, request: MediaRequestSchema, helpers: HelpersHandler, paths: PathsSchema
+        self,
+        request_id: str,
+        request: MediaRequestSchema,
+        helpers: HelpersHandler,
+        paths: PathsSchema,
     ) -> RequestProcessCodes:
         logger.info("Building renderer for %s request", self.event_type)
 
@@ -36,7 +41,21 @@ class BaseHandler:
             logger.error("Unable to create renderer, exiting")
             return RequestProcessCodes.UNKNOWN_ERROR
 
+        await progress_handler.init_progress(request_id, renderer.stages)
+
+        async def update_progress_wrapper(percentage: int = -1) -> None:
+            await progress_handler.update_progress(request_id, percentage)
+
+        async def update_stage_wrapper(stage: int) -> None:
+            await progress_handler.update_stage(request_id, stage)
+
         logger.info("Starting the renderer")
-        await renderer.run(request.config, helpers, paths)
+        await renderer.run(
+            request.config,
+            helpers,
+            paths,
+            update_stage_wrapper,
+            update_progress_wrapper,
+        )
 
         return RequestProcessCodes.OK

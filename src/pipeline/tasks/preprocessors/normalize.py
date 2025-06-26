@@ -7,6 +7,7 @@ from src.pipeline.schemas.streams import StreamsSchema
 from src.pipeline.tasks.preprocessors.base_preprocessor import BasePreprocessor
 from src.pipeline.tasks.utils import extract_config_by_field_name
 from src.pipeline.types import AudioStream, RenderConfig, VideoStream
+from src.pipeline.types.state_callbacks import UpdateProgressCb
 
 
 class NormalizeTask(BasePreprocessor):
@@ -22,6 +23,7 @@ class NormalizeTask(BasePreprocessor):
         helpers: HelpersHandler,
         streams: StreamsSchema,
         paths: PathsSchema,
+        update_progress: UpdateProgressCb,
     ) -> StreamsSchema:
         filtered_video: VideoStream = streams.video.filter(
             "scale", config.video.width, config.video.height, flags="lanczos"

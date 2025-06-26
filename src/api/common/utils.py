@@ -15,13 +15,13 @@ from src.api.tasks_handlers.constants import (
 from src.constants import ARCHIVE_FORMAT, DATA_FOLDER, OUT_FOLDER
 
 
-def request_archive_from_id(request_id: str):
+def request_archive_path_from_id(request_id: str):
     return OUT_FOLDER / (str(request_id) + "." + ARCHIVE_FORMAT)
 
 
 def archive_request_output(request_id: str, remove_folder: bool = False):
     shutil.make_archive(
-        str(request_archive_from_id(request_id).with_suffix("")),
+        str(request_archive_path_from_id(request_id).with_suffix("")),
         ARCHIVE_FORMAT,
         request_out_dir_from_id(request_id),
     )

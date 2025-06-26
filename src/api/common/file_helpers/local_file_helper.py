@@ -5,9 +5,9 @@ from yadisk import AsyncClient
 from src.api.common.enums import FileRetrievalCodes
 from src.api.common.file_helpers.base_file_helper import BaseFileHelper
 from src.constants import NULL_PATH
-from src.utils import get_logger_from_filepath
+from src.utils import get_logger_by_filepath
 
-logger = get_logger_from_filepath(__file__)
+logger = get_logger_by_filepath(__file__)
 
 
 class LocalFileHelper(BaseFileHelper):

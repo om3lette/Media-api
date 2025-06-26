@@ -6,9 +6,9 @@ from src.pipeline.base_task import BaseTask
 from src.pipeline.enums import TaskType
 from src.pipeline.render.renderer import Renderer
 from src.pipeline.schemas.task_wrapper import TaskWrapper
-from src.utils import get_logger_from_filepath
+from src.utils import get_logger_by_filepath
 
-logger = get_logger_from_filepath(__file__)
+logger = get_logger_by_filepath(__file__)
 
 
 class RendererBuilder:

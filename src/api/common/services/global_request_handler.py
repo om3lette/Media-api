@@ -7,6 +7,7 @@ from src.api.common.enums import (
     RequestProcessCodes,
 )
 from src.api.common.file_helpers import BaseFileHelper
+from src.api.common.io_handlers import requests_repository, progress_handler
 from src.api.common.request_helpers.helpers_handler import HelpersHandler
 from src.api.common.schemas.media_request import MediaRequestDTO
 from src.api.common.services.handler_picker import HandlerPicker
@@ -26,9 +27,9 @@ from src.app_config import app_config
 from src.config.enums import AudioCodecs, VideoCodecs
 from src.constants import NULL_PATH
 from src.pipeline.schemas.paths import PathsSchema
-from src.utils import get_logger_from_filepath
+from src.utils import get_logger_by_filepath
 
-logger = get_logger_from_filepath(__file__)
+logger = get_logger_by_filepath(__file__)
 
 
 class GlobalRequestsHandler:
@@ -57,10 +58,7 @@ class GlobalRequestsHandler:
         await self._helpers.register_helper(helper)
 
     async def add_request(
-        self,
-        request_id: str,
-        request: MediaRequestDTO,
-        request_type: GeneralRequestType,
+        self, request_id: str, request_type: GeneralRequestType, dto: MediaRequestDTO
     ) -> RequestProcessCodes:
         if self.queue.exists(request_id):
             return RequestProcessCodes.ALREADY_QUEUED
@@ -69,9 +67,9 @@ class GlobalRequestsHandler:
         # By the time _process_request is called UploadFile is destroyed
         # To fix that file needs to be saved during add_request
         self._request_folders_setup(request_id)
-        if request.file:
+        if dto.file:
             return_code, _ = await self._retrieve_file(
-                request, input_path_from_request_id(request_id)
+                dto, input_path_from_request_id(request_id)
             )
 
             if return_code != FileRetrievalCodes.OK:
@@ -80,7 +78,7 @@ class GlobalRequestsHandler:
                 return RequestProcessCodes.FILE_NOT_FOUND
 
         logger.info("Queued request: %s", request_id)
-        success = await self.queue.push(request, request_type, request_id)
+        success = await self.queue.push(dto, request_type, request_id)
         return RequestProcessCodes.OK if success else RequestProcessCodes.QUEUE_FULL
 
     async def start(self):
@@ -93,6 +91,14 @@ class GlobalRequestsHandler:
             # pylint: disable=broad-exception-caught
             except Exception as e:
                 delete_request_data(req_id)
+                request_progress_data = await progress_handler.get_progress_data(req_id)
+
+                status_code: int = requests_repository.CANCELED
+                if request_progress_data["current_stage"] > 0:
+                    status_code = requests_repository.DONE_PARTIALLY
+
+                requests_repository.update_status(req_id, status_code)
+                await progress_handler.request_finished(req_id, status_code)
                 logger.error(
                     "Error occurred when processing request %s:\n%s", req_type, e
                 )
@@ -113,6 +119,7 @@ class GlobalRequestsHandler:
         self, dto: MediaRequestDTO, request_id: str, request_type: GeneralRequestType
     ) -> RequestProcessCodes:
         logger.info("Starting to process request: %s", request_id)
+        requests_repository.processing_started(request_id)
 
         return_code, input_file_path = await self._retrieve_file(
             dto, input_path_from_request_id(request_id)
@@ -121,6 +128,7 @@ class GlobalRequestsHandler:
         if return_code != FileRetrievalCodes.OK:
             delete_request_data(request_id)
             logger.info("Failed to download input file")
+            requests_repository.update_status(request_id, requests_repository.CANCELED)
             return RequestProcessCodes.FILE_NOT_FOUND
         logger.info("Input file retrieved")
 
@@ -128,8 +136,10 @@ class GlobalRequestsHandler:
             input_file_path, request_type
         )
         if request_handler is None:
+            logger.info("No request handler found for request. Canceled %s", request_id)
             # TODO: More descriptive error
             delete_request_data(request_id)
+            requests_repository.update_status(request_id, requests_repository.CANCELED)
             return RequestProcessCodes.UNKNOWN_ERROR
 
         video_codec: VideoCodecs = app_config.ffmpeg.codecs.video
@@ -143,22 +153,24 @@ class GlobalRequestsHandler:
             audio_codec = dto.request.config.audio.codec
 
         await request_handler.handle(
+            request_id,
             dto.request,
             self._helpers,
             PathsSchema(input_file_path, request_id, video_codec, audio_codec),
         )
-        logger.info("Render complete")
+        logger.info("Render complete, deleting input files...")
 
         # Cleanup input files
-        # Save files retrieved from url in dev move
-        if not app_config.dev_mode or dto.file:
-            logger.info("Deleting input file")
-            delete_request_data(request_id, delete_output=False)
+        delete_request_data(request_id, delete_output=False)
 
         logger.info("Archiving request output...")
         archive_request_output(request_id)
 
         logger.info("Task done: %s", request_id)
+        requests_repository.update_status(request_id, requests_repository.FINISHED)
+        await progress_handler.request_finished(
+            request_id, requests_repository.FINISHED
+        )
         return RequestProcessCodes.OK
 
     async def _retrieve_file(

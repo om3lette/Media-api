@@ -6,6 +6,7 @@ from src.pipeline.enums import TaskType
 from src.pipeline.schemas.paths import PathsSchema
 from src.pipeline.schemas.streams import StreamsSchema
 from src.pipeline.types import RenderConfig
+from src.pipeline.types.state_callbacks import UpdateProgressCb
 
 
 class BaseTask(BaseModel):
@@ -22,6 +23,7 @@ class BaseTask(BaseModel):
         helpers: HelpersHandler,
         streams: StreamsSchema,
         paths: "PathsSchema",
+        update_progress: UpdateProgressCb,
     ):
         return
 

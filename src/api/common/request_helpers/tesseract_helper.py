@@ -5,9 +5,9 @@ import pytesseract
 from src.api.common.enums import FileToTextLanguages, RequestHelpersNames
 from src.api.common.request_helpers.base_helper import BaseHelper
 from src.api.common.schemas.requests import FileToTextConfig
-from src.utils import get_logger_from_filepath
+from src.utils import get_logger_by_filepath
 
-logger = get_logger_from_filepath(__file__)
+logger = get_logger_by_filepath(__file__)
 
 
 class TesseractHelper(BaseHelper):

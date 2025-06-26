@@ -10,6 +10,7 @@ from src.pipeline.schemas.paths import PathsSchema
 from src.pipeline.schemas.streams import StreamsSchema
 from src.pipeline.tasks.jobs.base_job import BaseJob
 from src.pipeline.tasks.utils import extract_config_by_field_name
+from src.pipeline.types.state_callbacks import UpdateProgressCb
 
 
 class ImageToTextTask(BaseJob):
@@ -28,6 +29,7 @@ class ImageToTextTask(BaseJob):
         helpers: HelpersHandler,
         streams: StreamsSchema,
         paths: PathsSchema,
+        update_progress: UpdateProgressCb,
     ):
         tesseract_helper: TesseractHelper = helpers.get_helper_by_name(
             RequestHelpersNames.TESSERACT

@@ -9,9 +9,9 @@ from src.api.common.schemas.requests.summarize import SummarizeConfig
 from src.app_config import app_config
 from src.config.enums import GigachatModels
 from src.config.schemas.default_system_prompt import SYSTEM_PROMPT
-from src.utils import get_logger_from_filepath
+from src.utils import get_logger_by_filepath
 
-logger = get_logger_from_filepath(__file__)
+logger = get_logger_by_filepath(__file__)
 
 
 class GigachatHelper(BaseHelper):
@@ -53,6 +53,10 @@ class GigachatHelper(BaseHelper):
                 Messages(
                     role=MessagesRole.USER,
                     content=self._assemble_user_query(transcription_path),
+                ),
+                Messages(
+                    role=MessagesRole.USER,
+                    content="Не выражай личное мнение. Отвечай с опорой на текст",
                 ),
             ]
             chat = Chat(messages=messages)
