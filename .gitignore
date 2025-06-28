@@ -1,12 +1,3 @@
-.idea
-__pycache__
-.env
-
 .venv
-data
-out
-
-config.yaml
-*.db
-*.log
-*.log.mbtree
+node_modules
+.idea/
