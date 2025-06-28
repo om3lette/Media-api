@@ -17,6 +17,7 @@ class RequestsRepository:
     FINISHED = 2
     DONE_PARTIALLY = 3
     CANCELED = 4
+    DELETED = 5
 
     _SCHEMA = """
         CREATE TABLE IF NOT EXISTS requests (

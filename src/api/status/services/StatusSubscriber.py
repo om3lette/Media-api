@@ -40,13 +40,14 @@ class StatusSubscriber:
             rid: str = msg["channel"].split(":")[1]
             data = json.loads(msg["data"])
 
-            if data.get("status"):
+            if "status" in data.keys():
                 data["type"] = "status"
-            elif data.get("cur_stage"):
+            elif "cur_stage" in data.keys():
                 data["type"] = "stage"
-            elif data.get("pct"):
+            elif "pct" in data.keys():
                 data["type"] = "progress"
 
+            data["rid"] = rid
             data = dict_to_camel(data)
 
             await asyncio.gather(

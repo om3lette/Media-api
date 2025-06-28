@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 
 
@@ -7,8 +7,9 @@ class ProgressSchema(BaseModel):
         validate_by_name=True, validate_by_alias=True, alias_generator=to_camel
     )
 
-    cur_stage: int
-    total_stages: int
+    rid: str
+    cur_stage: int = Field(default=-1)
+    total_stages: int = Field(default=-1)
     elapsed_time: int
     status: int
-    pct: int
+    pct: int = Field(default=0)

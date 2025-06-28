@@ -24,7 +24,7 @@ class ProgressHandler:
 
     async def update_stage(self, request_id, new_stage: int) -> None:
         key: str = self.__get_key_by_id(request_id)
-        payload = {"cur_stage": new_stage, "pct": 0}
+        payload = {"cur_stage": new_stage}
 
         pipe = self.redis.pipeline()
         pipe.hset(key, mapping=payload)
@@ -40,14 +40,13 @@ class ProgressHandler:
         pipe = self.redis.pipeline()
         pipe.hset(key, mapping=payload)
         pipe.expire(key, self.status_ttl)
-        await pipe.execute()
-
-        await self.redis.publish(
+        pipe.publish(
             self.get_status_key_by_id(request_id), json.dumps(payload)
         )
+        await pipe.execute()
 
     async def request_finished(self, request_id: str, status_code: int) -> None:
-        payload = {"request_id": request_id, "status": status_code}
+        payload = {"status": status_code}
         await self.redis.publish(
             self.get_status_key_by_id(request_id), json.dumps(payload)
         )
@@ -57,7 +56,7 @@ class ProgressHandler:
         if raw is None:
             return {}
         return {
-            "cur_stage": int(raw["cur_stage"]),
-            "total_stages": int(raw["total_stages"]),
-            "pct": int(raw["pct"]),
+            "cur_stage": int(raw.get("cur_stage", -1)),
+            "total_stages": int(raw.get("total_stages", -1)),
+            "pct": int(raw.get("pct", 0)),
         }

@@ -23,20 +23,22 @@ async def websocket_status(websocket: WebSocket):
             request_id: str | None = message.get("rid")
 
             error_message: str = ""
+            invalid_rid: bool = False
             if not msg_type or not request_id:
                 error_message = "'type' and 'rid' fields must be of type str"
-            elif request_id in subscribed:
-                error_message = "Already subscribed"
             elif msg_type not in ALLOWED_WS_EVENT_TYPES:
                 error_message = (
                     f"'type' should be one of: {', '.join(ALLOWED_WS_EVENT_TYPES)}"
                 )
+            elif msg_type == "sub" and request_id in subscribed:
+                error_message = "Already subscribed"
             elif not requests_repository.is_subscribable(request_id):
                 error_message = "Request does not exist"
+                invalid_rid = True
 
             if error_message:
                 await websocket.send_json(
-                    json.dumps({"type": "error", "detail": error_message})
+                    {"type": "error", "invalidId": invalid_rid, "rid": request_id, "detail": error_message}
                 )
                 continue
 
@@ -47,7 +49,9 @@ async def websocket_status(websocket: WebSocket):
                 subscribed.remove(request_id)
                 status_subscriber.unsubscribe(websocket, request_id)
             elif msg_type == "sync":
-                await websocket.send_json(await build_request_status(request_id))
+                sync_data = await build_request_status(request_id)
+                sync_data["type"] = "sync"
+                await websocket.send_json(sync_data)
 
     try:
         await listen_for_subscriptions()
