@@ -3,7 +3,9 @@ from backend.src.api.common.file_helpers.local_file_helper import LocalFileHelpe
 from backend.src.api.common.file_helpers.ya_disk_helper import YaDiskHelper
 from backend.src.api.common.request_helpers.gigachat_helper import GigachatHelper
 from backend.src.api.common.request_helpers.tesseract_helper import TesseractHelper
-from backend.src.api.common.request_helpers.transcription_helper import TranscriptionHelper
+from backend.src.api.common.request_helpers.transcription_helper import (
+    TranscriptionHelper,
+)
 from backend.src.api.common.services.global_request_handler import GlobalRequestsHandler
 from backend.src.api.tasks_handlers.audio.custom import CustomAudioHandler
 from backend.src.api.tasks_handlers.audio.summarize import SummarizeAudioHandler

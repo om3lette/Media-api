@@ -43,7 +43,7 @@ export const statusToReadable = (status: number): string => {
       return "processing";
     case 2:
     case 3:
-      return "finished";
+      return "completed";
     case 4:
       return "canceled";
     case 5:

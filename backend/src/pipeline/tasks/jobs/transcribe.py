@@ -2,9 +2,14 @@ import asyncio
 
 from backend.src.api.common.enums import RequestHelpersNames
 from backend.src.api.common.request_helpers.helpers_handler import HelpersHandler
-from backend.src.api.common.request_helpers.transcription_helper import TranscriptionHelper
+from backend.src.api.common.request_helpers.transcription_helper import (
+    TranscriptionHelper,
+)
 from backend.src.api.common.schemas.requests.transcribe import TranscribeConfig
-from backend.src.api.common.types.request import CustomRequestActions, GeneralRequestType
+from backend.src.api.common.types.request import (
+    CustomRequestActions,
+    GeneralRequestType,
+)
 from backend.src.pipeline.base_task import BaseTask
 from backend.src.pipeline.schemas.paths import PathsSchema
 from backend.src.pipeline.schemas.streams import StreamsSchema

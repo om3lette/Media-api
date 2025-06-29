@@ -2,7 +2,10 @@ import ffmpeg
 
 from backend.src.api.common.request_helpers.helpers_handler import HelpersHandler
 from backend.src.api.common.schemas.requests import ExtractAudioConfig
-from backend.src.api.common.types.request import CustomRequestActions, GeneralRequestType
+from backend.src.api.common.types.request import (
+    CustomRequestActions,
+    GeneralRequestType,
+)
 from backend.src.pipeline.schemas.paths import PathsSchema
 from backend.src.pipeline.schemas.streams import StreamsSchema
 from backend.src.pipeline.tasks.jobs.base_job import BaseJob

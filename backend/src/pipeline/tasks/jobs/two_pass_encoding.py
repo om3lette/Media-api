@@ -2,7 +2,10 @@ import ffmpeg
 
 from backend.src.api.common.request_helpers.helpers_handler import HelpersHandler
 from backend.src.api.common.schemas.requests.compress import CompressConfig
-from backend.src.api.common.types.request import CustomRequestActions, GeneralRequestType
+from backend.src.api.common.types.request import (
+    CustomRequestActions,
+    GeneralRequestType,
+)
 from backend.src.constants import NULL_PATH, PASSLOG_PATH
 from backend.src.pipeline.base_task import BaseTask
 from backend.src.pipeline.schemas.paths import PathsSchema

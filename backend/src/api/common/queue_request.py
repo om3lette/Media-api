@@ -7,10 +7,12 @@ from starlette.responses import Response
 from backend.src.api.common.enums import RequestProcessCodes
 from backend.src.api.common.handlers import global_requests_handler
 from backend.src.api.common.io_handlers import requests_repository
-from backend.src.api.common.schemas.media_request import MediaRequestDTO, MediaRequestSchema
+from backend.src.api.common.schemas.media_request import (
+    MediaRequestDTO,
+    MediaRequestSchema,
+)
 from backend.src.api.common.types.request import GeneralRequestType
 from backend.src.app_config import app_config
-from backend.src.constants import DEV_MOD_RID
 
 
 async def queue_request(
@@ -46,7 +48,7 @@ async def queue_request(
         )
 
     dto: MediaRequestDTO = MediaRequestDTO(parsed_data, file)
-    request_id: str = uuid.uuid4().hex if not app_config.dev_mode else DEV_MOD_RID
+    request_id: str = uuid.uuid4().hex
     return_code: RequestProcessCodes = await global_requests_handler.add_request(
         request_id, request_type, dto
     )

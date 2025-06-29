@@ -2,7 +2,10 @@ from pathlib import Path
 
 from backend.src.api.common.enums import FileType
 from backend.src.api.common.services.base_handler import BaseHandler
-from backend.src.api.common.types.request import CustomRequestActions, GeneralRequestType
+from backend.src.api.common.types.request import (
+    CustomRequestActions,
+    GeneralRequestType,
+)
 from backend.src.pipeline.render import Renderer, RendererBuilder
 from backend.src.pipeline.tasks import postprocessors
 

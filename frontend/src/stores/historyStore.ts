@@ -85,12 +85,11 @@ export const useHistoryStore = defineStore("history", () => {
 
     // TODO: Add checks for data validation?
     requestEntry.status = statusToReadable(payload.status);
-    requestEntry.currentStage = payload.curStage;
-    requestEntry.totalStages = payload.totalStages;
-    requestEntry.stageProgress = payload.pct;
-    requestEntry.stageProgress = payload.status;
+    requestEntry.currentStage = payload.curStage as number;
+    requestEntry.totalStages = payload.totalStages as number;
+    requestEntry.stageProgress = payload.pct as number;
 
-    if (payload.totalStages <= 0) return true;
+    if (!payload.totalStages || payload.totalStages <= 0) return true;
 
     initialized.value.add(payload.rid);
     if (initialized.value.size > MAX_ENTRIES) {

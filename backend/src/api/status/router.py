@@ -1,12 +1,15 @@
+import json
+
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
+from pydantic import ValidationError
 
 from backend.src.api.common.io_handlers import requests_repository
 from backend.src.api.status.handlers import status_subscriber
+from backend.src.api.status.schemas.status import StatusEventSchema
+from backend.src.api.status.services.mapping import event_type_to_handlers
 from backend.src.api.status.utils import build_request_status
 
 request_status_router: APIRouter = APIRouter()
-
-ALLOWED_WS_EVENT_TYPES: tuple[str, str, str] = ("sub", "unsub", "sync")
 
 
 @request_status_router.websocket("/status/ws/")
@@ -17,39 +20,28 @@ async def websocket_status(websocket: WebSocket):
     async def listen_for_subscriptions():
         while True:
             message = await websocket.receive_json()
-            msg_type: str | None = message.get("type")
-            request_id: str | None = message.get("rid")
-
-            error_message: str = ""
-            invalid_rid: bool = False
-            if not msg_type or not request_id:
-                error_message = "'type' and 'rid' fields must be of type str"
-            elif msg_type not in ALLOWED_WS_EVENT_TYPES:
-                error_message = (
-                    f"'type' should be one of: {', '.join(ALLOWED_WS_EVENT_TYPES)}"
-                )
-            elif msg_type == "sub" and request_id in subscribed:
-                error_message = "Already subscribed"
-            elif not requests_repository.is_subscribable(request_id):
-                error_message = "Request does not exist"
-                invalid_rid = True
-
-            if error_message:
+            try:
+                payload: StatusEventSchema = StatusEventSchema.model_validate(message)
+            except ValidationError as e:
                 await websocket.send_json(
-                    {"type": "error", "invalidId": invalid_rid, "rid": request_id, "detail": error_message}
+                    json.dumps({"type": "error", "detail": e, "isValidation": True})
                 )
                 continue
 
-            if msg_type == "sub":
-                subscribed.add(request_id)
-                status_subscriber.subscribe(websocket, request_id)
-            elif msg_type == "unsub":
-                subscribed.remove(request_id)
-                status_subscriber.unsubscribe(websocket, request_id)
-            elif msg_type == "sync":
-                sync_data = await build_request_status(request_id)
-                sync_data["type"] = "sync"
-                await websocket.send_json(sync_data)
+            validator, handler = event_type_to_handlers[payload.type]
+            error_code, is_missing = validator(payload, subscribed, requests_repository)
+            if error_code:
+                err_payload: dict[str, int | str | bool] = {
+                    "type": "error",
+                    "rid": payload.rid,
+                    "code": error_code,
+                }
+                if is_missing:
+                    err_payload["isMissing"] = True
+                await websocket.send_json(err_payload)
+                continue
+
+            await handler(websocket, subscribed, payload, status_subscriber)
 
     try:
         await listen_for_subscriptions()

@@ -15,7 +15,7 @@ import { isValidURL } from "@/utils";
 import emitter from "@/plugins/emitter";
 import toastWrapper from "@/plugins/toastWrapper";
 import { useHistoryStore } from "@/stores/historyStore";
-import { getSubPayload, getSyncPayload, getUnSubPayload } from "@/api/status";
+import { getRequestStatus, getSubPayload, getSyncPayload, getUnSubPayload } from "@/api/status";
 
 import Toast from "primevue/toast";
 import { postNewRequest } from "@/api/upload";
@@ -42,11 +42,18 @@ const resetStores = () => {
   sourceStore.$reset();
   operationsStore.$reset();
 };
-onMounted(() => {
+const syncRequestState = async (rid: string): Promise<SyncPayload | undefined> => {
+  const res = await getRequestStatus(rid);
+  if (!res) return;
+  const data: SyncPayload = await res.json();
+  historyStore.syncRequestStatus(data);
+  return data;
+};
+onMounted(async () => {
   resetStores();
   // Synchronize requests state
   for (const request of historyStore.getRequestsInProgress()) {
-    send(getSyncPayload(request.id));
+    await syncRequestState(request.id);
   }
 });
 
@@ -114,14 +121,17 @@ watch(data, async () => {
 
   if (parsedData.type === "error") {
     const payload: ErrorPayload = parsedData;
-    // Invalid id means that request had expired and was deleted
-    // This is not an error as such
-    if (payload.invalidId) {
+
+    if (payload.isValidation) {
+      console.error(payload.code);
+      toastWrapper.error(t("process.errors.validation-error"));
+      return;
+    }
+    if (payload.isMissing) {
       historyStore.updateStatus(payload.rid, "deleted", true);
       return;
     }
-    console.error(parsedData.detail ?? "WS error. No description provided.");
-    toastWrapper.error(t("process.errors.validation-error"));
+    // Other errors are not critical
     return;
   }
   let isHistoryEntryPresent: boolean = false;

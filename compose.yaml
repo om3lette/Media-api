@@ -1,13 +1,48 @@
 services:
-  redis:
+  cache:
     image: redis:8-alpine
-    container_name: my_redis
     restart: unless-stopped
-    ports:
-      - "6379:6379"
     volumes:
       - redis_data:/data
     command: redis-server --save 60 1 --loglevel warning
+    networks:
+      - server
+  api:
+    build: backend
+    volumes:
+      - api_persistent_data:/api/backend/persistence
+      - whisper_models:/root/.cache/whisper
+    networks:
+      - front
+      - server
+    environment:
+      REDIS_CONNECTION_STRING: redis://cache:6379/0
+    depends_on:
+      - cache
+  frontend:
+    build: frontend
+    networks:
+      - front
+  gateway:
+    build: gateway
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    networks:
+      - front
+    environment:
+      FRONTEND_BASE_URL: http://frontend:80
+      API_BASE_URL: http://api:8081
+    depends_on:
+      - frontend
+      - api
 
 volumes:
-  redis_data:
+  api_persistent_data: {}
+  whisper_models: {}
+  redis_data: {}
+
+networks:
+  server: {}
+  front: {}

@@ -6,10 +6,10 @@ export enum UrlType {
 export interface SyncPayload {
   rid: string;
   status: number;
-  elapsedTime: number;
-  curStage: number;
-  totalStages: number;
-  pct: number;
+  elapsedTime?: number;
+  curStage?: number;
+  totalStages?: number;
+  pct?: number;
 }
 
 export interface StatusPayload {
@@ -27,8 +27,16 @@ export interface StagePayload {
   curStage: number;
 }
 
+export enum ErrorCode {
+  REQUEST_NOT_FOUND = 1,
+  SUB_NOT_ACCEPTED,
+  ALREADY_SUBSCRIBED,
+  NOT_SUBSCRIBED
+}
+
 export interface ErrorPayload {
   rid: string;
-  invalidId: boolean;
-  detail: string;
+  isMissing?: boolean;
+  isValidation?: boolean;
+  code: ErrorCode;
 }

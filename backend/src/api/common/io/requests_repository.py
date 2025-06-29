@@ -43,11 +43,11 @@ class RequestsRepository:
             self.conn.executescript(self._SCHEMA)
             self.conn.commit()
 
-    def is_subscribable(self, request_id: str) -> bool:
-        status = self.get_request_status(request_id)
-        if status is None:
-            return False
-        return status["end_time"] is None
+    def is_subscribable(self, request_id: str) -> tuple[bool, bool]:
+        data = self.get_request_status(request_id)
+        if data is None:
+            return False, False
+        return data["status"] in [self.QUEUED, self.PROCESSING], True
 
     def add_request(self, request_id: str, request_type, dto: MediaRequestDTO) -> int:
         sql = """

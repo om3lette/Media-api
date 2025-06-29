@@ -7,7 +7,7 @@ from backend.src.api.common.schemas.progress.progress_schema import ProgressSche
 async def build_request_status(request_id: str):
     request_status: dict = requests_repository.get_request_status(request_id)
     if not request_status:
-        return {"status": requests_repository.DELETED}
+        return {"rid": request_id, "status": requests_repository.DELETED}
 
     request_progress: dict = await progress_handler.get_progress_data(request_id)
     end_time = (

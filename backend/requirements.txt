@@ -8,7 +8,7 @@ filemagic==1.6
 pytesseract==0.3.13
 pillow==11.2.1
 opencv-python==4.11.0.86
-numpy==1.26.4
+numpy==2.2.6
 apscheduler==3.11.0
 redis==6.2.0
 websockets==15.0.1
@@ -27,5 +27,5 @@ pydantic==2.11.5
 
 # Pipeline
 ffmpeg-python==0.2.0
-openai-whisper==20240930
-gigachat==0.1.39.post1
+openai-whisper==20250625
+gigachat==0.1.40

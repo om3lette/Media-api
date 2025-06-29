@@ -2,9 +2,9 @@
 __pycache__
 
 .venv
-data
-out
+persistence/data
+persistence/out
 
-config.yaml
+persistence/config.yaml
 *.log
 *.log.mbtree

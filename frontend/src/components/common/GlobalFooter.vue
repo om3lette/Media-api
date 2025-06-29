@@ -17,7 +17,7 @@ const { t } = useI18n();
       <div class="flex flex-col space-y-1">
         <p class="text-center md:text-left">
           {{ t("common.made-with-love") }}
-          <a href="https://github.com/om3lette">om3lette</a>
+          <a target="_blank" href="https://github.com/om3lette">om3lette</a>
         </p>
         <small>© 2025 {{ PROJECT_NAME }}. All rights reserved.</small>
       </div>

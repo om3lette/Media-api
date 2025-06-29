@@ -40,9 +40,7 @@ class ProgressHandler:
         pipe = self.redis.pipeline()
         pipe.hset(key, mapping=payload)
         pipe.expire(key, self.status_ttl)
-        pipe.publish(
-            self.get_status_key_by_id(request_id), json.dumps(payload)
-        )
+        pipe.publish(self.get_status_key_by_id(request_id), json.dumps(payload))
         await pipe.execute()
 
     async def request_finished(self, request_id: str, status_code: int) -> None:
