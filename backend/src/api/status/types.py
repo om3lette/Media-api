@@ -4,7 +4,7 @@ from starlette.websockets import WebSocket
 
 from backend.src.api.common.io.requests_repository import RequestsRepository
 from backend.src.api.status.schemas.status import StatusEventSchema
-from backend.src.api.status.services.StatusSubscriber import StatusSubscriber
+from backend.src.api.status.services.status_subscriber import StatusSubscriber
 from backend.src.api.status.constants import ValidationStatusCode
 
 SubChannels = set[str]

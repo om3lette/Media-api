@@ -3,7 +3,7 @@ from pathlib import Path
 
 from backend.src.api.common.utils import (
     audio_path_from_request_id,
-    out_path_from_request_id,
+    video_path_from_request_id,
     request_data_dir_from_id,
     request_out_dir_from_id,
     summary_path_from_request_id,
@@ -36,7 +36,7 @@ class PathsSchema:
         audio_codec: AudioCodecs,
     ):
         self.raw_path = input_path
-        self.out_path = out_path_from_request_id(
+        self.out_path = video_path_from_request_id(
             request_id, extension=get_suffix_by_video_codec(video_codec)
         )
         self.audio_path = audio_path_from_request_id(

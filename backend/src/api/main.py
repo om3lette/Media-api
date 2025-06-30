@@ -59,14 +59,14 @@ async def lifespan(fastapi_app: FastAPI):
 
 
 app: FastAPI = FastAPI(lifespan=lifespan)
-# if app_config.dev_mode:
-app.add_middleware(
-    CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
-)
+if app_config.dev_mode:
+    app.add_middleware(
+        CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
+    )
 
 app_router: APIRouter = APIRouter()
 app_router.include_router(requests_router)
 app_router.include_router(request_status_router)
-app_router.include_router(download_router)
+app_router.include_router(download_router, prefix="/download")
 
 app.include_router(app_router, prefix="/api/v1")

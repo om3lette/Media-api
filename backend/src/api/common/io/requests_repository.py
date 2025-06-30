@@ -49,6 +49,12 @@ class RequestsRepository:
             return False, False
         return data["status"] in [self.QUEUED, self.PROCESSING], True
 
+    def is_download_ready(self, request_id: str) -> tuple[bool, bool]:
+        data = self.get_request_status(request_id)
+        if data is None:
+            return False, False
+        return data["status"] in [self.DONE_PARTIALLY, self.FINISHED], True
+
     def add_request(self, request_id: str, request_type, dto: MediaRequestDTO) -> int:
         sql = """
             INSERT OR REPLACE INTO requests (ext_id, request_type, input_type, input_value, config)
@@ -135,9 +141,10 @@ class RequestsRepository:
                     file="tmp" if row["input_type"] == "blob" else None,
                 ),
             )
-            for row in map(lambda row: dict(row), rows)
+            for row in map(dict, rows)
         ]
 
+    # for row in map(lambda row: dict(row), rows)
     def get_expired_requests(self, cutoff_hours: float) -> list[dict[str, Any]]:
         sql = """
             SELECT id, ext_id FROM requests

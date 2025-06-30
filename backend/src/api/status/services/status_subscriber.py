@@ -1,13 +1,14 @@
-from camel_converter import dict_to_camel
 import asyncio
 import json
 
-from fastapi import WebSocket
-
-from redis.asyncio import Redis
 from collections import defaultdict
 
+from fastapi import WebSocket
+from camel_converter import dict_to_camel
+from redis.asyncio import Redis
+
 from backend.src.api.common.io.progress_handler import ProgressHandler
+from backend.src.app_config import app_config
 from backend.src.utils import get_logger_by_filepath
 
 logger = get_logger_by_filepath(__file__)
@@ -40,12 +41,16 @@ class StatusSubscriber:
             rid: str = msg["channel"].split(":")[1]
             data = json.loads(msg["data"])
 
+
             if "status" in data.keys():
                 data["type"] = "status"
-            elif "cur_stage" in data.keys():
-                data["type"] = "stage"
-            elif "pct" in data.keys():
-                data["type"] = "progress"
+            else:
+                if app_config.websockets.no_progress_updates and "status" not in data.keys():
+                    continue
+                if "cur_stage" in data.keys():
+                    data["type"] = "stage"
+                elif "pct" in data.keys():
+                    data["type"] = "progress"
 
             data["rid"] = rid
             data = dict_to_camel(data)

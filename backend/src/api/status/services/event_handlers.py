@@ -1,7 +1,7 @@
 from starlette.websockets import WebSocket
 
 from backend.src.api.status.schemas.status import StatusEventSchema
-from backend.src.api.status.services.StatusSubscriber import StatusSubscriber
+from backend.src.api.status.services.status_subscriber import StatusSubscriber
 from backend.src.api.status.types import SubChannels
 from backend.src.api.status.utils import build_request_status
 

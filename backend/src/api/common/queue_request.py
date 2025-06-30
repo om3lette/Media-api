@@ -39,7 +39,7 @@ async def queue_request(
     if provided_sources != 1:
         raise HTTPException(
             status_code=400,
-            detail=f"Only one of the following: url/file/path should be provided, received {provided_sources} options",
+            detail="Only one of the following: url/file/path should be provided",
         )
 
     if parsed_data.path and not app_config.allow_local_files:

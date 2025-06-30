@@ -6,3 +6,7 @@ disable=
     unused-argument,
     too-few-public-methods,
     too-many-return-statements
+
+[DESIGN]
+    max-args=6
+    max-positional-arguments=6

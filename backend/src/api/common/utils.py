@@ -58,7 +58,7 @@ def input_path_from_request_id(
     return file_path_from_name(DATA_FOLDER, request_id, filename, extension)
 
 
-def out_path_from_request_id(
+def video_path_from_request_id(
     request_id: str, filename: str = OUT_FILENAME, extension: str = OUT_FILE_EXTENSION
 ) -> Path:
     return file_path_from_name(OUT_FOLDER, request_id, filename, extension)

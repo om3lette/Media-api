@@ -1,24 +1,51 @@
-from pathlib import Path
+from fastapi import APIRouter
 
-from fastapi import APIRouter, HTTPException
-from starlette.responses import FileResponse
-
-from backend.src.constants import ARCHIVE_FORMAT, OUT_FOLDER
+from backend.src.api.common.utils import (
+    request_archive_path_from_id,
+    transcription_path_from_request_id,
+    audio_path_from_request_id,
+    video_path_from_request_id,
+    summary_path_from_request_id,
+)
+from backend.src.api.download.utils import (
+    download_request_wrapper,
+    file_response_builder,
+    json_response_builder,
+)
 
 download_router: APIRouter = APIRouter()
 
 
-@download_router.get("/download/")
-async def output_browser(request_id: str):
-    target_path: Path = (OUT_FOLDER / request_id).with_suffix(f".{ARCHIVE_FORMAT}")
+@download_router.get("/{request_id}/")
+async def download_archive(request_id: str):
+    return download_request_wrapper(
+        request_id, request_archive_path_from_id, file_response_builder
+    )
 
-    if target_path.is_file():
-        return FileResponse(
-            target_path,
-            filename=target_path.name,
-            media_type="application/octet-stream",
-            headers={
-                "Content-Disposition": f'attachment; filename="{target_path.name}"'
-            },
-        )
-    raise HTTPException(status_code=410)
+
+@download_router.get("/{request_id}/video/")
+async def download_video(request_id: str):
+    return download_request_wrapper(
+        request_id, video_path_from_request_id, file_response_builder
+    )
+
+
+@download_router.get("/{request_id}/audio/")
+async def download_audio(request_id: str):
+    return download_request_wrapper(
+        request_id, audio_path_from_request_id, file_response_builder
+    )
+
+
+@download_router.get("/{request_id}/text/")
+async def get_text(request_id: str):
+    return download_request_wrapper(
+        request_id, transcription_path_from_request_id, json_response_builder
+    )
+
+
+@download_router.get("/{request_id}/summary/")
+async def get_summary(request_id: str):
+    return download_request_wrapper(
+        request_id, summary_path_from_request_id, json_response_builder
+    )

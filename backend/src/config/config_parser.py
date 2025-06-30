@@ -9,6 +9,7 @@ from backend.src.config.schemas.cleanup import CleanupSchema
 from backend.src.config.schemas.ffmpeg import FFMPEGProperties
 from backend.src.config.schemas.summary import SummarySchema
 from backend.src.config.schemas.transcription import TranscriptionSchema
+from backend.src.config.schemas.websockets import WebsocketsSchema
 from backend.src.utils import get_logger_by_filepath
 
 logger = get_logger_by_filepath(__file__)
@@ -22,13 +23,14 @@ except ImportError:
 class ConfigParser(BaseEnumModel):
     dev_mode: bool = Field(default=False)
     show_ffmpeg_commands: bool = Field(default=False)
-    update_progress_interval: int = Field(default=15)
     allow_local_files: bool = Field(default=False)
     file_read_chunk_size: int = Field(default=8192)
+    update_progress_interval: int = Field(default=10)
     ffmpeg: FFMPEGProperties = Field(default_factory=FFMPEGProperties)
     transcription: TranscriptionSchema = Field(default_factory=TranscriptionSchema)
     summary: SummarySchema = Field(default_factory=SummarySchema)
     cleanup: CleanupSchema = Field(default_factory=CleanupSchema)
+    websockets: WebsocketsSchema = Field(default_factory=WebsocketsSchema)
 
     def model_save_yaml(self, save_path: Path) -> None:
         with open(save_path, "w", encoding="UTF-8") as f:

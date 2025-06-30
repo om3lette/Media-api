@@ -20,7 +20,7 @@ from backend.src.api.common.utils import (
     archive_request_output,
     delete_request_data,
     input_path_from_request_id,
-    out_path_from_request_id,
+    video_path_from_request_id,
 )
 from backend.src.api.tasks_handlers.constants import INPUT_FILENAME
 from backend.src.app_config import app_config
@@ -74,7 +74,7 @@ class GlobalRequestsHandler:
 
             if return_code != FileRetrievalCodes.OK:
                 delete_request_data(request_id)
-                logger.info("Failed to retrieve input file")
+                logger.error("Failed to retrieve input file")
                 return RequestProcessCodes.FILE_NOT_FOUND
 
         logger.info("Queued request: %s", request_id)
@@ -109,7 +109,7 @@ class GlobalRequestsHandler:
     @staticmethod
     def _request_folders_setup(request_id: str):
         os.makedirs(input_path_from_request_id(request_id).parent, exist_ok=True)
-        out_dir: Path = out_path_from_request_id(request_id).parent
+        out_dir: Path = video_path_from_request_id(request_id).parent
         # TODO: Reconsider
         if out_dir.is_dir():
             delete_request_data(request_id, delete_input=False)
@@ -127,7 +127,7 @@ class GlobalRequestsHandler:
 
         if return_code != FileRetrievalCodes.OK:
             delete_request_data(request_id)
-            logger.info("Failed to download input file")
+            logger.error("Failed to download input file")
             requests_repository.update_status(request_id, requests_repository.CANCELED)
             return RequestProcessCodes.FILE_NOT_FOUND
         logger.info("Input file retrieved")
