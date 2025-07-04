@@ -59,12 +59,14 @@ async def lifespan(fastapi_app: FastAPI):
     db_connection.close()
     await status_subscriber.unsub_and_close()
 
+
 def custom_openapi():
     if app.openapi_schema:
         return app.openapi_schema
 
     app.openapi_schema = OPENAPI_SCHEMA
     return app.openapi_schema
+
 
 app: FastAPI = FastAPI(lifespan=lifespan)
 app.openapi = custom_openapi

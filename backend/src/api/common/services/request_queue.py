@@ -2,11 +2,10 @@ import asyncio
 
 from backend.src.api.common.schemas.media_request import MediaRequestDTO
 from backend.src.api.common.types.request import GeneralRequestType
-from backend.src.api.tasks_handlers.constants import MAX_REQUESTS_BACKLOG
 
 
 class RequestQueue:
-    def __init__(self, maxsize: int = MAX_REQUESTS_BACKLOG):
+    def __init__(self, maxsize: int):
         self._queue: asyncio.Queue[tuple[MediaRequestDTO, GeneralRequestType, str]] = (
             asyncio.Queue(maxsize)
         )

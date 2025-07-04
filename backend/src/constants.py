@@ -25,4 +25,3 @@ PASSLOG_PATH: Path = OUT_FOLDER / "ffmpeg2pass"
 ARCHIVE_FORMAT: str = "zip"
 
 OPENAPI_SCHEMA = yaml.safe_load(OPENAPI_PATH.read_text())
-

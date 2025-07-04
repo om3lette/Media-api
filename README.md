@@ -30,4 +30,4 @@ cd Media-api && \
 docker compose build && docker compose up -d
 ```
 
-Visit `localhost:80` or `localhost:443` to access site
+Visit `localhost:80` or `localhost:443` to access the site

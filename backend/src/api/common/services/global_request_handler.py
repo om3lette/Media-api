@@ -36,7 +36,7 @@ class GlobalRequestsHandler:
     current_request_id: str = ""
 
     def __init__(self):
-        self.queue: RequestQueue = RequestQueue()
+        self.queue: RequestQueue = RequestQueue(app_config.requests_queue_size)
         self.__handler_picker: HandlerPicker = HandlerPicker()
         self._file_helpers: HelpersHandler = HelpersHandler()
         self._helpers: HelpersHandler = HelpersHandler()

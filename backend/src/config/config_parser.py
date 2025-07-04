@@ -25,7 +25,7 @@ class ConfigParser(BaseEnumModel):
     show_ffmpeg_commands: bool = Field(default=False)
     allow_local_files: bool = Field(default=False)
     file_read_chunk_size: int = Field(default=8192)
-    update_progress_interval: int = Field(default=10)
+    requests_queue_size: int = Field(default=10)
     ffmpeg: FFMPEGProperties = Field(default_factory=FFMPEGProperties)
     transcription: TranscriptionSchema = Field(default_factory=TranscriptionSchema)
     summary: SummarySchema = Field(default_factory=SummarySchema)
