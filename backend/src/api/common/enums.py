@@ -41,6 +41,13 @@ class FileToTextModels(StrEnum):
     TESSERACT = "tesseract"
 
 
+# TODO: Add proper different formats support
+class TranscribeLanguages(StrEnum):
+    RU = "ru"
+    EN = "en"
+    AUTO = "auto"
+
+
 class FileToTextLanguages(StrEnum):
     RU = "rus"
     ENG = "eng"

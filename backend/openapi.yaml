@@ -457,7 +457,7 @@ components:
       enum: ["GigaChat-2", "GigaChat-2-Pro", "GigaChat-2-Max"]
     Language:
       type: string
-      enum: ["ru", "en"]
+      enum: ["ru", "en", "auto"]
     RequestCreatedResponseModel:
       type: object
       properties:

@@ -2,7 +2,7 @@ from pathlib import Path
 
 import whisper
 
-from backend.src.api.common.enums import RequestHelpersNames
+from backend.src.api.common.enums import RequestHelpersNames, TranscribeLanguages
 from backend.src.api.common.request_helpers.base_helper import BaseHelper
 from backend.src.api.common.schemas.requests.transcribe import TranscribeConfig
 from backend.src.config.config_parser import ConfigParser
@@ -30,6 +30,13 @@ class TranscriptionHelper(BaseHelper):
             raise RuntimeError(
                 "Model was not loaded when 'transcribe' was called. Use 'load_model' first"
             )
-        result = self._model.transcribe(str(file_path), verbose=False)
+        selected_language: str | None = (
+            config.transcribe.language
+            if config.transcribe.language != TranscribeLanguages.AUTO
+            else None
+        )
+        result = self._model.transcribe(
+            str(file_path), verbose=False, language=selected_language
+        )
         with open(save_path, "w", encoding="UTF-8") as f:
             f.write(result["text"] or "No words detected")
