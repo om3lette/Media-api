@@ -1,0 +1,509 @@
+openapi: 3.1.0
+info:
+  title: Media Api
+  version: 0.1.0
+  description: |-
+    This api is meant to provide an easy access to media handling such as compression, transcription, audio extraction etc.
+    
+    There are three ways to supply an input file:
+    1) Using `file` octet-stream field
+
+    2) One of: `path`, `url` (see data field)
+    
+    `data` field is required and must be a valid json. If config is not provided the server will default to the config values.
+
+    Therefore one can supply a file and provide data = {}. 
+    
+    This request is valid for all request creation endpoints except `custom` which needs `actions` to work.
+
+    Passing both url and path or providing a file at the same time will result in a HTTPValidationException
+paths:
+
+  /api/v1/compress/:
+    post:
+      summary: Compress video
+      operationId: compress_api_v1_compress__post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MediaCompressRequest'
+              encoding:
+              data:
+                contentType: application/json
+      responses:
+        '200': { $ref: '#/components/responses/RequestCreated' }
+        '400': { $ref: '#/components/responses/InvalidSourceError' }
+        '409': { $ref: '#/components/responses/AlreadyQueued' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+        '503': { $ref: '#/components/responses/QueueFull' }
+  /api/v1/extract-audio/:
+    post:
+      summary: Extract audio
+      operationId: extract_api_v1_extract_audio__post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MediaExtractAudioRequest'
+        required: true
+      responses:
+        '200': { $ref: '#/components/responses/RequestCreated' }
+        '400': { $ref: '#/components/responses/InvalidSourceError' }
+        '409': { $ref: '#/components/responses/AlreadyQueued' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+        '503': { $ref: '#/components/responses/QueueFull' }
+  /api/v1/transcribe/:
+    post:
+      summary: Transcribe video or audio
+      operationId: transcribe_api_v1_transcribe__post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MediaTranscribeRequest'
+        required: true
+      responses:
+        '200': { $ref: '#/components/responses/RequestCreated' }
+        '400': { $ref: '#/components/responses/InvalidSourceError' }
+        '409': { $ref: '#/components/responses/AlreadyQueued' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+        '503': { $ref: '#/components/responses/QueueFull' }
+  /api/v1/summarize/:
+    post:
+      summary: Summarize the given file
+      operationId: summarize_api_v1_summarize__post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MediaSummarizeRequest'
+        required: true
+      responses:
+        '200': { $ref: '#/components/responses/RequestCreated' }
+        '400': { $ref: '#/components/responses/InvalidSourceError' }
+        '409': { $ref: '#/components/responses/AlreadyQueued' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+        '503': { $ref: '#/components/responses/QueueFull' }
+  /api/v1/custom/:
+    post:
+      summary: Mix and match available functionality in a single request
+      operationId: custom_api_v1_custom__post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MediaCustomRequest'
+      responses:
+        '200': { $ref: '#/components/responses/RequestCreated' }
+        '400': { $ref: '#/components/responses/InvalidSourceError' }
+        '409': { $ref: '#/components/responses/AlreadyQueued' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+        '503': { $ref: '#/components/responses/QueueFull' }
+  /api/v1/file-to-text/:
+    post:
+      summary: Image To Text
+      operationId: image_to_text_api_v1_file_to_text__post
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MediaFileToTextRequest'
+      responses:
+        '200': { $ref: '#/components/responses/RequestCreated' }
+        '400': { $ref: '#/components/responses/InvalidSourceError' }
+        '409': { $ref: '#/components/responses/AlreadyQueued' }
+        '422': { $ref: '#/components/responses/ValidationError' }
+        '503': { $ref: '#/components/responses/QueueFull' }
+  /api/v1/status/:
+    get:
+      summary: Get request status
+      operationId: rest_status_api_v1_status__get
+      parameters:
+        - name: request_id
+          in: query
+          required: true
+          schema:
+            type: string
+            title: Request Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/RequestStatusModel'
+                  - $ref: '#/components/schemas/RequestStatusNotFoundModel'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/v1/download/{request_id}/:
+    get:
+      summary: Download request archive
+      operationId: download_archive_api_v1_download__request_id___get
+      parameters:
+        - name: request_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: Request Id
+      responses:
+        '200': { $ref: '#/components/responses/SuccessfullFileDownload'}
+        '422': { $ref: '#/components/schemas/HTTPValidationError'}
+  /api/v1/download/{request_id}/video/:
+    get:
+      summary: Download Video
+      operationId: download_video_api_v1_download__request_id__video__get
+      parameters:
+        - name: request_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: Request Id
+      responses:
+        '200': { $ref: '#/components/responses/SuccessfullFileDownload'}
+        '422': { $ref: '#/components/schemas/HTTPValidationError'}
+  /api/v1/download/{request_id}/audio/:
+    get:
+      summary: Download Audio
+      operationId: download_audio_api_v1_download__request_id__audio__get
+      parameters:
+        - name: request_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: Request Id
+      responses:
+        '200': { $ref: '#/components/responses/SuccessfullFileDownload'}
+        '422': { $ref: '#/components/schemas/HTTPValidationError'}
+  /api/v1/download/{request_id}/text/:
+    get:
+      summary: Get Text
+      operationId: get_text_api_v1_download__request_id__text__get
+      parameters:
+        - name: request_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: Request Id
+      responses:
+        '200': { $ref: '#/components/responses/SuccessfullContentDownload'}
+        '422': { $ref: '#/components/schemas/HTTPValidationError'}
+  /api/v1/download/{request_id}/summary/:
+    get:
+      summary: Get Summary
+      operationId: get_summary_api_v1_download__request_id__summary__get
+      parameters:
+        - name: request_id
+          in: path
+          required: true
+          schema:
+            type: string
+            title: Request Id
+      responses:
+        '200': { $ref: '#/components/responses/SuccessfullContentDownload'}
+        '422': { $ref: '#/components/schemas/HTTPValidationError'}
+components:
+  responses:
+    RequestCreated:
+      description: Request successfully created
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RequestCreatedResponseModel'
+
+    InvalidSourceError:
+      description: Invalid number of sources (url, path, file) or the provided source is disabled via API config
+
+    AlreadyQueued:
+      description: Already Queued
+
+    ValidationError:
+      description: Validation Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HTTPValidationError'
+
+    QueueFull:
+      description: Request queue size exceeded
+    
+    ProcessingRequest:
+      description: Request is being processed, data not yet ready
+
+    DownloadNotFound:
+      description: Either the request or the requested file/data was not found
+    
+    SuccessfullContentDownload:
+      description: Data is ready
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DownloadDataModel'
+    
+    SuccessfullFileDownload:
+      description: File is ready
+      content:
+        application/octet-stream:
+          encoding:
+            file:
+              headers:
+                Content-Disposition:
+                  schema:
+                    type: string
+                    format: binary
+
+  schemas:
+    MediaSource:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+
+        data:
+          type: object
+          properties:
+            url:
+              type: string
+              format: uri
+            path:
+              type: string
+      oneOf:
+        - required: [file]
+        - required: [data]
+          properties:
+            data:
+              required: [url]
+        - required: [data]
+          properties:
+            data:
+              required: [path]
+
+    MediaCompressRequest:
+      allOf:
+        - $ref: '#/components/schemas/MediaSource'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                config:
+                  $ref: '#/components/schemas/CompressConfig'
+          required:
+            - data
+    MediaExtractAudioRequest:
+      allOf:
+        - $ref: '#/components/schemas/MediaSource'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                config:
+                  $ref: '#/components/schemas/ExtractAudioConfig'
+          required:
+            - data
+    MediaTranscribeRequest:
+      allOf:
+        - $ref: '#/components/schemas/MediaSource'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                config:
+                  $ref: '#/components/schemas/TranscribeConfig'
+          required:
+            - data
+    MediaCustomRequest:
+      allOf:
+        - $ref: '#/components/schemas/MediaSource'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                config:
+                  $ref: '#/components/schemas/CustomConfig'
+          required:
+            - data
+    MediaSummarizeRequest:
+      allOf:
+        - $ref: '#/components/schemas/MediaSource'
+        - type: object
+          properties:
+            data:
+              type: object
+              properties:
+                config:
+                  $ref: '#/components/schemas/SummarizeConfig'
+          required:
+            - data
+    MediaFileToTextRequest:
+      allOf:
+        - $ref: '#/components/schemas/MediaSource'
+        - type: object
+          required:
+            - data
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+              - type: string
+              - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+        - loc
+        - msg
+        - type
+      title: ValidationError
+    CompressConfig:
+      type: object
+      properties:
+        preset:
+          $ref: '#/components/schemas/FFMPEGPreset'
+        video:
+          type: object
+          properties:
+            width:           { type: integer }
+            height:          { type: integer }
+            videoBitrate:    { type: integer }
+            audioBitrate:    { type: integer }
+            audioSampleRate: { type: integer }
+            fps:             { type: integer }
+        codecs:
+          type: object
+          properties:
+            video:
+              $ref: '#/components/schemas/VideoCodec'
+            audio:
+              $ref: '#/components/schemas/AudioCodec'
+    ExtractAudioConfig:
+      properties:
+        audio:
+          properties:
+            codec:
+              type: string
+              $ref: "#/components/schemas/AudioCodec"
+            bitrate:
+              type: integer
+            sampleRate:
+              type: integer
+    SummarizeConfig:
+      properties:
+        summary:
+          properties:
+            model:
+              type: string
+              $ref: "#/components/schemas/GigaChatModel"
+    TranscribeConfig:
+      properties:
+        transcribe:
+          properties:
+            language:
+              type: string
+              $ref: "#/components/schemas/Language"
+    CustomConfig:
+        allOf:
+          - $ref: "#/components/schemas/ExtractAudioConfig"
+          - $ref: "#/components/schemas/TranscribeConfig"
+          - $ref: "#/components/schemas/SummarizeConfig"
+          - properties:
+              ffmpeg:
+                $ref: "#/components/schemas/CompressConfig"
+              actions:
+                type: array
+                items:
+                  type: string
+                  enum: ["compress", "transcribe", "extract_audio", "summarize", "to_text"]
+    FFMPEGPreset: 
+      type: string
+      enum: ["ultrafast", "superfast", "veryfast", "faster", "medium", "slow", "slower", "veryslow"]
+    VideoCodec:
+      type: string
+      enum: ["libx264", "libx265"]
+    AudioCodec:
+      type: string
+      enum: ["libmp3lame", "aac"]
+    GigaChatModel:
+      type: string
+      enum: ["GigaChat-2", "GigaChat-2-Pro", "GigaChat-2-Max"]
+    Language:
+      type: string
+      enum: ["ru", "en"]
+    RequestCreatedResponseModel:
+      type: object
+      properties:
+        rid:
+          type: string
+          description: Request Id (hex uuid)
+          examples:
+            - "00000000000000000000000000000000"
+            - "0c845b46cd7e46f8af4f4a671526d23b"
+    RequestStatusModel:
+      type: object
+      properties:
+        rid:
+          type: string
+        curStage:
+          type: integer
+          description: Index of the current stage starting from 1
+        totalStages:
+          type: integer
+          description: Total number stages in request
+        elapsedTime:
+          type: integer
+        status:
+          type: integer
+          description: |
+            QUEUED         = 0 \
+            PROCESSING     = 1 \
+            FINISHED       = 2 \
+            DONE_PARTIALLY = 3 (Error occured while processing the request, but at least one stage was completed)\
+            CANCELED       = 4 (Error occured while processing the request or unsupported file type was provided) \
+            DELETED        = 5 (Request data was deleted. Can also indicate invalid rid)
+        pct:
+          type: integer
+          description: Current stage progress (%)
+    RequestStatusNotFoundModel:
+      type: object
+      properties:
+        rid:
+          type: string
+        status:
+          type: integer
+          description: |
+            DELETED        = 5 (Request data was deleted. Can also indicate invalid rid)
+          const: 5
+    DownloadDataModel:
+      type: object
+      properties:
+        content: 
+          type: string

@@ -1,6 +1,7 @@
 import asyncio
 import logging
 from contextlib import asynccontextmanager
+
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from fastapi import APIRouter, FastAPI
@@ -18,6 +19,7 @@ from backend.src.api.status.handlers import status_subscriber
 from backend.src.api.status.router import request_status_router
 from backend.src.api.common.background_cleaner import disk_cleanup
 from backend.src.app_config import app_config
+from backend.src.constants import OPENAPI_SCHEMA
 
 logging.basicConfig(
     level=logging.INFO,
@@ -57,8 +59,16 @@ async def lifespan(fastapi_app: FastAPI):
     db_connection.close()
     await status_subscriber.unsub_and_close()
 
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+
+    app.openapi_schema = OPENAPI_SCHEMA
+    return app.openapi_schema
 
 app: FastAPI = FastAPI(lifespan=lifespan)
+app.openapi = custom_openapi
+
 if app_config.dev_mode:
     app.add_middleware(
         CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
