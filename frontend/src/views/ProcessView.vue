@@ -28,7 +28,8 @@ import type {
   StatusPayload,
   ProgressPayload,
   StagePayload,
-  ErrorPayload
+  ErrorPayload,
+  RequestCreatedPayload
 } from "@/types/api";
 import { useNotification } from "@/composables/useNotification";
 
@@ -208,7 +209,7 @@ const submitRequest = async () => {
   processButtonLoading.value = false;
 
   switch (response.status) {
-    case 202:
+    case 200:
       // Request accepted
       break;
     case 400:
@@ -229,7 +230,7 @@ const submitRequest = async () => {
     toastWrapper.error(errorMessage);
     return;
   }
-  const requestId = await response.text();
+  const requestId: string = ((await response.json()) as RequestCreatedPayload).rid;
   send(getSubPayload(requestId));
 
   historyStore.addEntry(

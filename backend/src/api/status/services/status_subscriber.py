@@ -41,11 +41,13 @@ class StatusSubscriber:
             rid: str = msg["channel"].split(":")[1]
             data = json.loads(msg["data"])
 
-
             if "status" in data.keys():
                 data["type"] = "status"
             else:
-                if app_config.websockets.no_progress_updates and "status" not in data.keys():
+                if (
+                    app_config.websockets.no_progress_updates
+                    and "status" not in data.keys()
+                ):
                     continue
                 if "cur_stage" in data.keys():
                     data["type"] = "stage"

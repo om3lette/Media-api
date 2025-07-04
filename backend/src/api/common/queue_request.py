@@ -2,7 +2,7 @@ import uuid
 
 from fastapi import HTTPException, UploadFile
 from pydantic import ValidationError
-from starlette.responses import Response
+from starlette.responses import JSONResponse
 
 from backend.src.api.common.enums import RequestProcessCodes
 from backend.src.api.common.handlers import global_requests_handler
@@ -60,4 +60,4 @@ async def queue_request(
             status_code=503, detail="Queue limit has been reached. Try again later"
         )
     requests_repository.add_request(request_id, request_type, dto)
-    return Response(status_code=202, content=request_id)
+    return JSONResponse(status_code=200, content={"rid": request_id})

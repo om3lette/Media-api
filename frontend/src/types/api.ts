@@ -3,6 +3,10 @@ export enum UrlType {
   WS_STATUS = 1
 }
 
+export interface RequestCreatedPayload {
+  rid: string;
+}
+
 export interface SyncPayload {
   rid: string;
   status: number;

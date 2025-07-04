@@ -5,7 +5,7 @@ from backend.src.api.common.schemas.requests.compress import CompressConfig
 from backend.src.api.common.schemas.requests.extract_audio import ExtractAudioConfig
 from backend.src.api.common.schemas.requests.summarize import SummarizeConfig
 from backend.src.api.common.schemas.requests.transcribe import TranscribeConfig
-from backend.src.api.tasks_handlers.enums import VideoActions
+from backend.src.api.common.types.request import CustomRequestActions
 
 
 class CustomConfig(ExtractAudioConfig, SummarizeConfig, TranscribeConfig):
@@ -14,4 +14,4 @@ class CustomConfig(ExtractAudioConfig, SummarizeConfig, TranscribeConfig):
 
 class CustomSchema(MediaRequestSchema):
     config: CustomConfig = Field(default_factory=CustomConfig)
-    actions: list[VideoActions]
+    actions: list[CustomRequestActions]
