@@ -43,7 +43,7 @@ async def display_progress(
     )
     if (
         not on_progress_cb
-        or seconds_since_last_update < app_config.update_progress_interval
+        or seconds_since_last_update < app_config.websockets.update_progress_interval
     ):
         return last_progress_update
     await on_progress_cb(percentage)
