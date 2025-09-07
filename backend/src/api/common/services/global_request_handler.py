@@ -94,7 +94,8 @@ class GlobalRequestsHandler:
                 request_progress_data = await progress_handler.get_progress_data(req_id)
 
                 status_code: int = requests_repository.CANCELED
-                if request_progress_data["current_stage"] > 0:
+                current_stage: int = request_progress_data.get("current_stage") or 0
+                if current_stage > 0:
                     status_code = requests_repository.DONE_PARTIALLY
 
                 requests_repository.update_status(req_id, status_code)

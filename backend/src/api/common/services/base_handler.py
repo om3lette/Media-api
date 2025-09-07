@@ -43,8 +43,12 @@ class BaseHandler:
 
         await progress_handler.init_progress(request_id, renderer.stages)
 
-        async def update_progress_wrapper(percentage: int = -1) -> None:
-            await progress_handler.update_progress(request_id, percentage)
+        async def update_progress_wrapper(
+            percentage: int = -1, pct_multiplier: float = 1, pct_offset: int = 0
+        ) -> None:
+            await progress_handler.update_progress(
+                request_id, int(pct_offset + percentage * pct_multiplier)
+            )
 
         async def update_stage_wrapper(stage: int) -> None:
             await progress_handler.update_stage(request_id, stage)

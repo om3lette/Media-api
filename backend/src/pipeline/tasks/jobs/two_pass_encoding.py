@@ -44,7 +44,10 @@ class TwoPassEncodingTask(BaseJob):
             "y": None,
         }
         output = ffmpeg.output(streams.video, str(NULL_PATH), **first_pass_params)
-        await ffmpeg_run(paths.raw_path, output, update_progress)
+        # First pass progress is 50% of the total job progress => pct * 0.5
+        await ffmpeg_run(
+            paths.raw_path, output, lambda pct: update_progress(pct, pct_multiplier=0.5)
+        )
 
         second_pass_params = {
             "vcodec": config.codecs.video,
@@ -60,4 +63,9 @@ class TwoPassEncodingTask(BaseJob):
         output = ffmpeg.output(
             streams.video, streams.audio, str(paths.out_path), **second_pass_params
         )
-        await ffmpeg_run(paths.raw_path, output, update_progress)
+        # Second pass progress (%) = 50 + pct * 0.5
+        await ffmpeg_run(
+            paths.raw_path,
+            output,
+            lambda pct: update_progress(pct, pct_multiplier=0.5, pct_offset=50),
+        )
