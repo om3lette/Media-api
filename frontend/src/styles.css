@@ -1,15 +1,24 @@
-@import url('https://fonts.googleapis.com/css?family=Inter:700|Inter:500');
-@import 'tailwindcss';
+@import url("https://fonts.googleapis.com/css?family=Inter:700|Inter:500");
+@import "tailwindcss";
 
 @theme {
   --breakpoint-xs: 26.25rem;
 }
 
 @layer base {
+  .p-toast {
+    @apply max-w-[80%];
+  }
+
+  .p-toast.p-toast-top-right,
+  .p-toast.p-toast-bottom-right {
+    @apply left-auto right-[10px];
+  }
+
   body {
-    background-color: #F6F7F8;
+    background-color: #f6f7f8;
     color: black;
-    font-family: 'Inter';
+    font-family: "Inter";
     font-weight: 500;
   }
 
@@ -18,7 +27,7 @@
   h3,
   h4,
   h5 {
-    font-family: 'Inter';
+    font-family: "Inter";
     font-weight: 700;
   }
 
