@@ -33,7 +33,7 @@ const operationOptions = computed(() =>
 watchEffect(() => {
   if (operationsStore.has(activeStep.value)) return;
   if (operationsStore.size !== 0) {
-    activeStep.value = operationsStore.selectedOperations[0];
+    activeStep.value = operationsStore.selectedOperations[0]!;
     return;
   }
   activeStep.value = defaultStep;

@@ -32,25 +32,33 @@ const validateCondition = (
   errorCondition: CallableFunction,
   errorSelector: string,
   tArgs: Record<string, string> = {}
-) => {
-  if (!errorCondition()) return;
+): Boolean => {
+  if (!errorCondition()) return false;
   fileInput.value = "";
   toastWrapper.error(t(errorSelector, tArgs));
-  throw Error("Validation failed");
+  return true;
 };
 
 const onFileInput = (e: Event) => {
-  const files: FileList | null = (e.target as HTMLInputElement).files;
-  try {
-    validateCondition(() => !files || files.length < 1, "process.errors.file-not-found");
-    validateCondition(() => files![0].size > MAX_FILESIZE, "process.errors.file-size-exceeded", {
-      maxSize: `${fileSizeToString(MAX_FILESIZE)}`
-    });
-  } catch (_) {
-    return;
-  }
+  let files: FileList | null = (e.target as HTMLInputElement).files;
 
-  const file = files![0];
+  const filesNotFoundError = validateCondition(
+    () => !files || files.length < 1,
+    "process.errors.file-not-found"
+  );
+  if (filesNotFoundError) return;
+
+  files = files as FileList;
+  const filesizeError: Boolean = validateCondition(
+    () => files[0]!.size > MAX_FILESIZE,
+    "process.errors.file-size-exceeded",
+    {
+      maxSize: `${fileSizeToString(MAX_FILESIZE)}`
+    }
+  );
+  if (filesizeError) return;
+
+  const file = files[0]!;
   fileSizeString.value = fileSizeToString(file.size);
 
   sourceStore.setFile(file);
