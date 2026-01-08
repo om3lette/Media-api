@@ -3,7 +3,7 @@ __pycache__
 
 .venv
 ruff.toml
-dev-requirements.txt
+requirements-dev.txt
 .pylintrc
 
 .env
