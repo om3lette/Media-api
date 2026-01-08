@@ -5,4 +5,4 @@ from backend.src.pipeline.enums import WhisperModelType
 
 
 class TranscriptionSchema(BaseEnumModel):
-    model: WhisperModelType = Field(default=WhisperModelType.TURBO)
+    model: WhisperModelType = Field(default=WhisperModelType.SMALL)

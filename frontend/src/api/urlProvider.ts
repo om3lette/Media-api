@@ -15,7 +15,7 @@ export const getUrl = (type: UrlType) => {
       subpath = "api/v1/";
       break;
     case UrlType.WS_STATUS:
-      fullUrl = env.VITE_API_BASE_URL;
+      fullUrl = env.VITE_WS_STATUS_URL;
       subpath = "api/v1/status/ws/";
       if (location.protocol === "https:") {
         protocol = "wss";

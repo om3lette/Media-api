@@ -59,6 +59,14 @@ Install the required packages:
 sudo apt install ffmpeg libmagic-dev tesseract-ocr tesseract-ocr-rus
 ```
 
+#### Fedora
+
+`--allowerasing` is used to replace `ffmpeg-free`'s deps with `ffpeg`'s
+
+```bash
+sudo dnf install ffmpeg file-devel tesseract tesseract-langpack-rus --allowerasing
+```
+
 To use the command bellow also install `virtualenv`
 > [!NOTE]
 > Note that dependencies for the project exceed 6gb in size, if `/tmp` runs out of space one can create a folder elsewhere and
