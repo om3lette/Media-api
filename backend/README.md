@@ -64,7 +64,7 @@ sudo apt install ffmpeg libmagic-dev tesseract-ocr tesseract-ocr-rus
 `--allowerasing` is used to replace `ffmpeg-free`'s deps with `ffpeg`'s
 
 ```bash
-sudo dnf install ffmpeg file-devel tesseract tesseract-rus --allowerasing
+sudo dnf install ffmpeg file-devel tesseract tesseract-langpack-rus --allowerasing
 ```
 
 To use the command bellow also install `virtualenv`
