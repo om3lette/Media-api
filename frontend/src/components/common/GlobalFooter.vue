@@ -19,7 +19,7 @@ const { t } = useI18n();
           {{ t("common.made-with-love") }}
           <a target="_blank" href="https://github.com/om3lette">om3lette</a>
         </p>
-        <small>© 2025 {{ PROJECT_NAME }}. All rights reserved.</small>
+        <small>2025-2026 {{ PROJECT_NAME }}</small>
       </div>
     </div>
   </footer>
