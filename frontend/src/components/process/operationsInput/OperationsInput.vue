@@ -50,7 +50,7 @@ const getIconByName = (name: string) => {
             @click="emit('submit')"
             :loading="buttonLoading"
             :disabled="!enableProcessButton || buttonLoading"
-            class="w-full p-6 hover:cursor-pointer hover:bg-gray-800 transition-colors duration-200 disabled:pointer-events-none disabled:bg-gray-500 space-x-2 bg-black text-white"
+            class="w-full p-6 hover:cursor-pointer hover:bg-surface-700 dark:hover:bg-surface-800 transition-colors duration-200 disabled:pointer-events-none disabled:bg-surface-400 space-x-2 bg-surface-900 text-surface-0"
             icon="pi pi-file-edit"
             severity="contrast"
             unstyled

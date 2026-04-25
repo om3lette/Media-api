@@ -5,21 +5,22 @@ import "./styles.css";
 import App from "./App.vue";
 
 import PrimeVue from "primevue/config";
-import Aura from "@primevue/themes/aura";
+import Aura from "@primeuix/themes/aura";
 import "primeicons/primeicons.css";
 
 import router from "./router/router";
 import Tooltip from "primevue/tooltip";
 import ToastService from "primevue/toastservice";
 import { createI18n } from "vue-i18n";
-import { defaultLocale, fallbackLocale, languages } from "./locales/locales";
+import { defaultLocale, fallbackLocale, languages, localeStorageKey } from "./locales/locales";
 
 export const app = createApp(App);
 const pinia = createPinia();
 
+const savedLocale: string = localStorage.getItem(localeStorageKey) || defaultLocale;
 const i18n = createI18n({
   legacy: false,
-  locale: defaultLocale,
+  locale: savedLocale,
   fallbackLocale: fallbackLocale,
   messages: {
     ru: languages.ru,

@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Inter:700|Inter:500");
 @import "tailwindcss";
+@import "tailwindcss-primeui";
 
 @theme {
   --breakpoint-xs: 26.25rem;
@@ -12,12 +13,13 @@
 
   .p-toast.p-toast-top-right,
   .p-toast.p-toast-bottom-right {
-    @apply left-auto right-[10px];
+    @apply left-auto right-2.5;
   }
 
   body {
-    background-color: #f6f7f8;
-    color: black;
+    @apply bg-surface-100! dark:bg-surface-900!;
+    /*background-color: var(--p-surface-100) !important;*/
+    color: var(--p-text-color);
     font-family: "Inter";
     font-weight: 500;
   }

@@ -81,6 +81,9 @@ uvicorn backend.src.api.main:app --host 0.0.0.0 --port 8081
 
 ### Docker
 
+`Dockerfile` will install CPU only pytorch by default.
+Pass `--build-arg PYTORCH_INSTALL=xpu|cuda` for intel or nvidia gpus.
+
 ```bash
 git clone https://github.com/om3lette/Media-api.git && \
 cd Media-api/backend && \

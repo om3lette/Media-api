@@ -17,7 +17,7 @@ const sourceType = ref<string>("file");
   >
     <template #body>
       <div class="flex flex-col h-full">
-        <div class="flex border-b-1 border-gray-200">
+        <div class="flex border-b border-surface-200 dark:border-surface-600">
           <SourceTypeButton
             v-model="sourceType"
             class="w-1/2"

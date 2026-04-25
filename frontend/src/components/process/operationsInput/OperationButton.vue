@@ -30,12 +30,12 @@ const onSelected = () => {
 <template>
   <div
     @click="onSelected"
-    :class="{ 'border-black bg-gray-100': isSelected, 'border-gray-200': !isSelected }"
-    class="transition-[background-color] duration-200 ease-linear hover:cursor-pointer hover:bg-gray-200 rounded-md border-3 select-none p-4 flex items-center space-x-6"
+    :class="{ 'border-surface-700 bg-surface-100 dark:border-surface-400 dark:bg-surface-500 ': isSelected, 'border-surface-200 dark:border-surface-600': !isSelected }"
+    class="transition-[background-color] duration-200 ease-linear hover:cursor-pointer hover:bg-surface-200 dark:hover:bg-surface-600 rounded-md border-3 select-none p-4 flex items-center space-x-3"
   >
     <div
-      :class="{ 'border-black bg-black': isSelected, 'border-gray-300 bg-gray-50': !isSelected }"
-      class="border-1 py-2 px-3 rounded-full"
+      :class="{ 'border-surface-700 bg-surface-700 dark:border-surface-400 dark:bg-surface-400': isSelected, 'border-surface-300 bg-surface-100 dark:border-surface-700 dark:bg-surface-600': !isSelected }"
+      class="border py-2 px-3 rounded-full"
     >
       <i :class="iconClass" class="pi" :style="{ color: iconColor }"></i>
     </div>

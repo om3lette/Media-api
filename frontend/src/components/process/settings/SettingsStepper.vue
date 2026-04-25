@@ -19,7 +19,6 @@ const { t } = useI18n();
 const defaultStep: string = "no-operation-selected";
 
 const operationsStore = useOperationsStore();
-//const { selectedOperations } = storeToRefs(operationsStore);
 
 const operations = inject<Ref<Operations>>("availableOperations", ref([]));
 const activeStep = ref<string>(defaultStep);
@@ -44,7 +43,7 @@ watchEffect(() => {
   <transition name="resize" appear>
     <div class="w-full space-y-4">
       <SelectButton
-        class="stepper-selectbutton !grid !grid-cols-1 xs:!grid-cols-2 md:!flex"
+        class="stepper-selectbutton grid! grid-cols-1! xs:grid-cols-2! md:flex!"
         v-model="activeStep"
         :options="operationOptions"
         optionLabel="label"
@@ -54,9 +53,9 @@ watchEffect(() => {
       <transition name="fade">
         <div
           v-show="operationsStore.size > 0"
-          class="p-4 border-2 rounded-md border-gray-100 bg-gray-50"
+          class="p-4 border-2 rounded-md border-surface-100 bg-surface-100 dark:bg-surface-500 dark:border-surface-600"
         >
-          <Stepper :value="activeStep" class="bg-gray-50">
+          <Stepper :value="activeStep" class="bg-surface-100 dark:bg-surface-500">
             <StepList></StepList>
             <StepPanels class="settings-step-pannel">
               <StepPanel value="compress">
@@ -80,6 +79,8 @@ watchEffect(() => {
 </template>
 
 <style>
+@reference "@/styles.css";
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;
@@ -102,6 +103,36 @@ watchEffect(() => {
 }
 
 .settings-step-pannel > * {
-  background-color: oklch(0.984 0.003 247.858) !important;
+  @apply bg-surface-100! dark:bg-surface-500!
+}
+
+.p-togglebutton:first-child {
+  @media (width < 26.25rem) {
+    border-end-start-radius: 0 !important;
+    border-start-end-radius: var(--p-selectbutton-border-radius) !important;
+  }
+  @media (26.25rem <= width < 48rem) {
+    border-end-start-radius: 0 !important;
+  }
+}
+
+.p-togglebutton:last-child {
+  @media (width < 26.25rem) {
+    border-end-start-radius: var(--p-selectbutton-border-radius) !important;
+    border-start-end-radius: 0 !important;
+  }
+  @media (26.25rem <= width < 48rem) {
+    border-start-end-radius: 0 !important;
+  }
+}
+.p-togglebutton:nth-child(2) {
+  @media (26.25rem <= width < 48rem) {
+    border-start-end-radius: var(--p-selectbutton-border-radius) !important;
+  }
+}
+.p-togglebutton:nth-child(3) {
+  @media (26.25rem <= width < 48rem) {
+    border-end-start-radius: var(--p-selectbutton-border-radius) !important;
+  }
 }
 </style>

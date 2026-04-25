@@ -7,14 +7,14 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <main class="flex justify-center my-10 bg-gray-50">
+  <main class="flex justify-center my-10">
     <div class="w-11/12 2xl:w-9/12 space-y-8 flex flex-col items-center">
       <div class="mt-10 w-5/6 xl:w-2/3 flex flex-col justify-center items-center space-y-8">
-        <h1 class="text-center !text-4xl lg:!text-5xl">{{ t("home.process-files") }}</h1>
+        <h1 class="text-center text-4xl! lg:text-5xl!">{{ t("home.process-files") }}</h1>
         <p class="text-xl text-center xl:max-w-[45vw]">{{ t("home.description") }}</p>
         <RouterLink to="/process/">
           <Button
-            class="!px-10 !py-3"
+            class="px-10! py-3!"
             severity="contrast"
             icon-pos="right"
             icon="pi pi-arrow-right"
@@ -42,11 +42,11 @@ const { t } = useI18n();
       </div>
       <div class="text-center">
         <div
-          class="rounded-lg border border-gray-300 shadow-sm max-w-2xl mx-auto bg-gradient-to-r from-[#E8E8E8] from-25%"
+          class="rounded-lg border border-surface-300 dark:bg-surface-700 dark:border-surface-800 shadow-sm max-w-2xl mx-auto bg-surface-200"
         >
           <div class="p-6 py-8">
             <h3 class="text-2xl font-bold mb-4">{{ t("home.ready-to-start") }}</h3>
-            <p class="text-gray-600 mb-6">
+            <p class="text-surface-600 dark:text-surface-400 mb-6">
               {{ t("home.process-files-2") }}
             </p>
             <RouterLink to="/process/">
@@ -61,6 +61,6 @@ const { t } = useI18n();
 
 <style>
 body {
-  background-color: #f9fafb !important;
+  background-color: var(--p-surface-ground) !important;
 }
 </style>

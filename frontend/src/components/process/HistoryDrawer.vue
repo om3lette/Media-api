@@ -41,22 +41,33 @@ const drawerPosition = computed<string>(() =>
 </script>
 
 <template>
-  <Drawer v-model:visible="visibility" :position="drawerPosition" class="lg:!w-4/9">
+  <Drawer v-model:visible="visibility" :position="drawerPosition" class="lg:w-4/9!">
     <template #container="{ closeCallback }">
-      <div class="w-full min-h-[100vh] overflow-y-auto flex flex-col space-y-3">
+      <div class="w-full min-h-screen overflow-y-auto flex flex-col space-y-3">
         <div class="px-6 pt-6 flex items-center justify-between">
           <span class="flex space-x-2 items-center">
-            <i class="pi pi-history !text-xl"></i>
+            <i class="pi pi-history text-xl!"></i>
             <h2>{{ t("process.history.title") }}</h2>
           </span>
-          <Button
-            type="button"
-            @click="closeCallback"
-            severity="contrast"
-            icon="pi pi-times"
-            rounded
-            outlined
-          ></Button>
+          <div class="flex gap-2">
+            <Button
+              type="button"
+              @click="historyStore.$reset()"
+              severity="danger"
+              icon="pi pi-trash"
+              rounded
+              outlined
+              v-tooltip.left="t('actions.clear')"
+            ></Button>
+            <Button
+              type="button"
+              @click="closeCallback"
+              severity="contrast"
+              icon="pi pi-times"
+              rounded
+              outlined
+            ></Button>
+          </div>
         </div>
         <div v-if="historyStore.history.length > 0">
           <Divider />
@@ -73,7 +84,7 @@ const drawerPosition = computed<string>(() =>
                 <p>{{ timestampToReadable(entry.timestamp) }}</p>
                 <div class="grid grid-cols-2 gap-2">
                   <Chip
-                    class="!flex !justify-center text-sm xs:text-base"
+                    class="flex! justify-center! text-sm xs:text-base"
                     v-for="operation in entry.operations"
                     :key="`operation-${operation}`"
                     :label="t(`process.operations.types.${operation}.title`)"
@@ -106,10 +117,10 @@ const drawerPosition = computed<string>(() =>
                   </div>
                   <div>{{ entry.stageProgress }}%</div>
                 </div>
-                <div class="bg-gray-200 w-full h-3 rounded-full overflow-hidden relative">
+                <div class="bg-surface-300 w-full h-3 rounded-full overflow-hidden relative">
                   <div
                     :style="`width: ${entry.stageProgress}%`"
-                    class="absolute left-0 h-full bg-gray-800 ease-linear transition-all duration-300"
+                    class="absolute left-0 h-full bg-surface-800 ease-linear transition-all duration-300"
                   ></div>
                 </div>
               </div>

@@ -1,8 +1,10 @@
 {
   "common": {
     "made-with-love": "Сделано с ❤️",
-    "get-started": "Начать",
     "home": "На главную"
+  },
+  "actions": {
+    "clear": "Очистить"
   },
   "home": {
     "process-files": "Легко обрабатывайте ваши файлы",
@@ -51,7 +53,7 @@
       "start": "Обработать файл",
       "types": {
         "compress": {
-          "title": "Сжатие",
+          "title": "Сжать",
           "description": "Уменьшить размер файла"
         },
         "extract-audio": {
@@ -98,9 +100,10 @@
     },
     "history": {
       "title": "История запросов",
+      "button-label": "История",
       "download": "Скачать",
       "stage": "Стадия",
-      "remote-file": "Удаленный файл",
+      "remote-file": "Файл по ссылке",
       "notifications": {
         "status-update": "Обновление статуса запроса",
         "request-completed": "Обработка {filename} завершена",

@@ -252,7 +252,7 @@ const visibleHistory = ref<boolean>(false);
         <h1 class="max-w-2/3">{{ t("process.title") }}</h1>
         <Button
           @click="visibleHistory = true"
-          label="История"
+          :label="t('process.history.button-label')"
           icon="pi pi-history"
           severity="contrast"
           class="h-1/2"

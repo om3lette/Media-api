@@ -70,7 +70,11 @@ const onFileInput = (e: Event) => {
 <template>
   <label v-if="!fileUploaded" for="source-file-input" class="h-full block">
     <div
-      class="py-5 h-full rounded-md border-2 border-gray-300 border-dashed bg-gray-50 hover:cursor-pointer hover:bg-gray-100 ease-out duration-200 transition-colors"
+      class="
+        py-5 h-full rounded-md border-2
+        border-surface-300 border-dashed bg-surface-100 hover:cursor-pointer hover:bg-surface-200 ease-out duration-200 transition-colors
+        dark:bg-surface-600 dark:border-surface-700 dark:hover:bg-surface-500
+        "
     >
       <input
         @input="onFileInput"
@@ -86,11 +90,11 @@ const onFileInput = (e: Event) => {
       />
     </div>
   </label>
-  <div v-else class="py-5 h-full rounded-md bg-gray-50">
+  <div v-else class="py-5 h-full rounded-md bg-surface-100 dark:bg-surface-600">
     <FileWrapper icon="file" :title="filename" :description="fileSizeString">
       <template #footer>
         <label class="hover:cursor-pointer" for="change-source-file-input">
-          <button class="pointer-events-none border-1 border-gray-300 rounded-md bg-white p-2">
+          <button class="pointer-events-none border border-surface-300 bg-surface-0 dark:bg-surface-600 dark:border-surface-700 rounded-md p-2">
             <Message severity="contrast" variant="simple" size="small">{{
               t("process.source.selection.change-file")
             }}</Message>

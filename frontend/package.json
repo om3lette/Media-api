@@ -11,25 +11,26 @@
     "pretty": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json,vue}\""
   },
   "dependencies": {
-    "@primevue/themes": "^4.5.4",
-    "@tailwindcss/vite": "^4.1.18",
+    "@primeuix/themes": "^2.0.3",
+    "@tailwindcss/vite": "^4.2.4",
     "@vueuse/core": "^14.2.1",
     "mitt": "^3.0.1",
     "pinia": "^3.0.4",
     "primeicons": "^7.0.0",
-    "primevue": "^4.5.4",
+    "primevue": "^4.5.5",
+    "tailwindcss-primeui": "^0.6.1",
     "vue": "^3.5.14",
-    "vue-i18n": "^11.2.8",
-    "vue-router": "^5.0.2"
+    "vue-i18n": "^11.4.0",
+    "vue-router": "^5.0.6"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.4",
-    "@vue/tsconfig": "^0.8.1",
-    "autoprefixer": "^10.4.24",
-    "prettier": "^3.8.1",
+    "@vitejs/plugin-vue": "^6.0.6",
+    "@vue/tsconfig": "^0.9.1",
+    "autoprefixer": "^10.5.0",
+    "prettier": "^3.8.3",
     "tailwindcss": "^4.1.7",
-    "typescript": "^5.9.3",
-    "vite": "^7.3.1",
-    "vue-tsc": "^3.2.4"
+    "typescript": "^6.0.3",
+    "vite": "^8.0.10",
+    "vue-tsc": "^3.2.7"
   }
 }

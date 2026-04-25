@@ -4,3 +4,8 @@ export type Operations = Operation[];
 export type Severity = "success" | "info" | "warn" | "error" | "secondary" | "contrast" | undefined;
 
 export type WindowSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
+
+export type Locale = {
+  code: string,
+  name: string
+}

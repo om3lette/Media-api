@@ -6,12 +6,12 @@ const { t } = useI18n();
 </script>
 
 <template>
-  <div class="flex flex-col border-3 border-gray-200 rounded-md overflow-hidden">
-    <div class="p-4 border-b-1 border-gray-200 bg-gray-50">
+  <div class="flex flex-col border-3 border-surface-200 dark:border-surface-600 rounded-md overflow-hidden">
+    <div class="p-4 border-b border-surface-200 dark:border-surface-600 bg-surface-100 dark:bg-surface-800">
       <h2>{{ t(titleSelector) }}</h2>
-      <small class="text-gray-500">{{ t(descriptionSelector) }}</small>
+      <small class="text-surface-500">{{ t(descriptionSelector) }}</small>
     </div>
-    <div class="h-full relative bg-white">
+    <div class="h-full relative bg-surface-0 dark:bg-surface-700">
       <slot name="body"></slot>
     </div>
   </div>

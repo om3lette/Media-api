@@ -13,14 +13,14 @@ const { t } = useI18n();
 
 <template>
   <div class="flex flex-col justify-center space-y-4 items-center h-full">
-    <div class="flex justify-center border-1 bg-white p-6 border-gray-400 rounded-full">
-      <i style="font-size: 2rem; color: #708090" :class="`pi pi-${icon}`"></i>
+    <div class="flex justify-center border bg-surface-0 p-6 border-surface-400 dark:bg-surface-500 rounded-full">
+      <i :class="['pi', `pi-${icon}`, 'text-surface-500', 'dark:text-surface-300']" style="font-size: 2rem"></i>
     </div>
     <div class="flex flex-col">
       <p class="text-center mb-1">{{ title ?? t("process.source.selection.title") }}</p>
-      <small class="text-center text-gray-500">{{
+       <small class="text-center text-surface-500 dark:text-surface-400 ">{{
         description ?? t("process.source.selection.formats")
-      }}</small>
+      }}</small> 
     </div>
     <div>
       <slot name="footer"></slot>

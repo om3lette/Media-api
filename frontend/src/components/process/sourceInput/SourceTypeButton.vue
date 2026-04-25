@@ -11,8 +11,8 @@ const isSelected = computed<boolean>(() => sourceTypeModel.value === props.type)
 <template>
   <div
     @click="() => (sourceTypeModel = type)"
-    :class="{ 'border-b-2 bg-gray-50': isSelected }"
-    class="transition-colors ease-out duration-200 hover:cursor-pointer hover:bg-gray-100 flex justify-center p-5"
+    :class="{ 'bg-surface-100 dark:bg-surface-600': isSelected }"
+    class="transition-colors ease-out duration-200 hover:cursor-pointer hover:bg-surface-100 dark:hover:bg-surface-500 flex justify-center p-5"
   >
     <div class="flex items-center space-x-4">
       <span class="pi" :class="iconClass"></span>

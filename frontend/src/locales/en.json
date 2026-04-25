@@ -1,3 +1,141 @@
 {
-  "hello": "Hello world!"
+  "common": {
+    "made-with-love": "Made with ❤️",
+    "home": "Home"
+  },
+  "actions": {
+    "clear": "Clear"
+  },
+  "home": {
+    "process-files": "Easily process your files",
+    "description": "Compress videos, extract audio, transcribe speech, summarize content, and extract text from documents - all in one powerful tool.",
+    "start": "Start processing",
+    "ready-to-start": "Ready to start?",
+    "what-you-can-do": "What you can do",
+    "process-files-2": "Process your files quickly and efficiently with our powerful tools.",
+    "cards": {
+      "media": {
+        "title": "Media processing",
+        "description": "Work with video and audio files",
+        "points": {
+          "compress": "Video compression",
+          "extract-audio": "Audio extraction",
+          "transcribe": "Speech to text",
+          "summary": "Content summarization"
+        }
+      },
+      "files": {
+        "title": "File processing",
+        "description": "Coming soon..."
+      }
+    }
+  },
+  "process": {
+    "title": "File processor",
+    "source": {
+      "title": "Select source",
+      "description": "Select a file or enter a URL",
+      "type": {
+        "file": "File",
+        "url": "URL"
+      },
+      "selection": {
+        "title": "Click to upload, or drag and drop",
+        "formats": "MP4, MOV, MP3, M4A, WAV (up to 5 gb)",
+        "change-file": "Change file"
+      },
+      "enter-url": "Enter URL",
+      "check-url": "Check"
+    },
+    "operations": {
+      "title": "Operations",
+      "description": "Select operations to perform on the file",
+      "start": "Process file",
+      "types": {
+        "compress": {
+          "title": "Compress",
+          "description": "Reduce file size"
+        },
+        "extract-audio": {
+          "title": "Extract audio",
+          "description": "Get audio track"
+        },
+        "transcribe": {
+          "title": "Transcribe",
+          "description": "Convert to text"
+        },
+        "summarize": {
+          "title": "Summarize",
+          "description": "Brief summary"
+        }
+      }
+    },
+    "settings": {
+      "title": "Operation settings",
+      "description": "Configure each selected operation",
+      "inputs": {
+        "video": {
+          "title": "Video settings",
+          "codec": "Video codec",
+          "bitrate": "Video bitrate",
+          "resolution": "Resolution",
+          "framerate": "Frame rate (FPS)",
+          "encoding-preset": "Encoding preset"
+        },
+        "audio": {
+          "title": "Audio settings",
+          "bitrate": "Audio bitrate",
+          "codec": "Audio codec",
+          "samplerate": "Sample rate"
+        },
+        "transcription": {
+          "title": "Transcription settings",
+          "language": "Language"
+        },
+        "summarize": {
+          "title": "Summarization settings"
+        }
+      },
+      "no-settings-available": "No settings available for the selected category"
+    },
+    "history": {
+      "title": "Request history",
+      "button-label": "History",
+      "download": "Download",
+      "stage": "Stage",
+      "remote-file": "Remote file",
+      "notifications": {
+        "status-update": "Request status updated",
+        "request-completed": "Processing of {filename} completed",
+        "request-canceled": "Processing of {filename} canceled"
+      },
+      "status": {
+        "queued": "Queued",
+        "processing": "Processing",
+        "canceled": "Canceled",
+        "completed": "Completed",
+        "deleted": "Deleted"
+      }
+    },
+    "errors": {
+      "no-source-provided": "Source file/URL is not specified.",
+      "file-not-found": "File not found",
+      "no-operations-selected": "No operations selected for the file.",
+      "request-expired": "Request data has expired, please try again.",
+      "file-size-exceeded": "File is too large. Maximum size: {maxSize}.",
+      "validation-error": "Server could not process the request. Contact developers",
+      "server-unavailable": "Server is overloaded. Try again later.",
+      "already-queued": "Request is already in queue",
+      "unknown-error": "Could not connect to server. Try again later"
+    },
+    "request-sent": "Request sent."
+  },
+  "toast-default": {
+    "summary": {
+      "info": "Notification",
+      "warn": "Warning",
+      "success": "Success",
+      "error": "Error"
+    }
+  }
 }

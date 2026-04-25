@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import PrimeUI from 'tailwindcss-primeui';
+
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx,vue}"],
   theme: {
@@ -12,5 +14,5 @@ export default {
       "h-2xl": { raw: "(min-height: 2160px)" }
     }
   },
-  plugins: []
+  plugins: [PrimeUI]
 };
