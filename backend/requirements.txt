@@ -2,7 +2,7 @@
 uvicorn==0.46.0
 starlette==1.0.0
 fastapi==0.136.1
-python-multipart==0.0.26
+python-multipart==0.0.28
 tqdm==4.67.3
 filemagic==1.6
 pytesseract==0.3.13
