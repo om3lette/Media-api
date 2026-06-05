@@ -1,16 +1,16 @@
 # Api
-uvicorn==0.46.0
-starlette==1.0.0
-fastapi==0.136.1
-python-multipart==0.0.28
-tqdm==4.67.3
+uvicorn==0.49.0
+starlette==1.2.1
+fastapi==0.136.3
+python-multipart==0.0.32
+tqdm==4.68.0
 filemagic==1.6
 pytesseract==0.3.13
 pillow==12.2.0
 opencv-python==4.13.0.92
-numpy==2.4.4
+numpy==2.4.6
 apscheduler==3.11.2
-redis==7.4.0
+redis==8.0.0
 websockets==16.0
 camel-converter==5.1.0
 python-dotenv==1.2.2
@@ -19,13 +19,13 @@ yadisk==3.4.1
 httpx==0.28.1
 
 aiofiles==25.1.0
-aiohttp==3.13.5
+aiohttp==3.14.0
 
 # Config
 pyyaml==6.0.3
-pydantic==2.13.3
+pydantic==2.13.4
 
 # Pipeline
 ffmpeg-python==0.2.0
 openai-whisper==20250625
-gigachat==0.2.0
+gigachat==0.2.1
